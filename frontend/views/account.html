@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .account-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .account-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .account-sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            align-self: start;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+            margin-right: 15px;
+        }
+        
+        .user-details {
+            flex-grow: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .user-email {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .nav-menu {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .nav-menu a.active {
+            background-color: #ff6b00;
+            color: white;
+        }
+        
+        .nav-menu i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .account-content {
+            width: 100%;
+        }
+        
+        .dashboard-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .welcome-message {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .account-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .summary-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #ff6b00;
+        }
+        
+        .summary-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .summary-value {
+            font-size: 20px;
+            color: #333;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #f8f8f8;
+            border-color: #ddd;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #ff6b00;
+        }
+        
+        .action-title {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .dashboard-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .view-all {
+            color: #ff6b00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .view-all:hover {
+            text-decoration: underline;
+        }
+        
+        .recent-orders {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .order-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr auto;
+            padding: 15px;
+            align-items: center;
+        }
+        
+        .order-header {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .order-row:not(.order-header) {
+            border-top: 1px solid #eee;
+        }
+        
+        .order-id {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .order-date, .order-total {
+            color: #666;
+        }
+        
+        .order-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .status-delivered {
+            background-color: #e6f7e6;
+            color: #2e7d32;
+        }
+        
+        .status-shipped {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .status-processing {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .status-cancelled {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .order-action a {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .order-action a:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .saved-items {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .saved-item {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .saved-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .saved-item-img {
+            height: 120px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .saved-item-img img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .saved-item-info {
+            padding: 10px;
+        }
+        
+        .saved-item-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .saved-item-price {
+            color: #ff6b00;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .saved-item-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .saved-item-actions button {
+            flex: 1;
+            padding: 5px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .saved-item-actions button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .saved-item-actions button.cart-btn {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .saved-item-actions button.cart-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .empty-dashboard {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .empty-dashboard i {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .empty-dashboard h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .empty-dashboard p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .account-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .nav-menu li {
+                margin-bottom: 0;
+            }
+            
+            .account-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .saved-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .account-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                padding: 15px 10px;
+            }
+            
+            .order-header {
+                display: none;
+            }
+            
+            .order-row:not(.order-header) {
+                border-bottom: 1px solid #eee;
+            }
+            
+            .order-row:not(.order-header) > * {
+                position: relative;
+                padding-left: 30%;
+            }
+            
+            .order-row:not(.order-header) > *::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 28%;
+                font-weight: bold;
+                color: #333;
+            }
+            
+            .saved-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/contact.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="account-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; My Account
+            </div>
+            
+            <h1 class="page-title">My Account</h1>
+            
+            <div class="account-layout">
+                <aside class="account-sidebar">
+                    <div class="user-info">
+                        <div class="user-avatar">J</div>
+                        <div class="user-details">
+                            <div class="user-name">John Smith</div>
+                            <div class="user-email">john.smith@example.com</div>
+                        </div>
+                    </div>
+                    
+                    <ul class="nav-menu">
+                        <li><a href="/account.html" class="active"><i>📋</i> Dashboard</a></li>
+                        <li><a href="/orders.html"><i>📦</i> Orders</a></li>
+                        <li><a href="/track.html"><i>🔍</i> Track Order</a></li>
+                        <li><a href="/addresses.html"><i>📍</i> Addresses</a></li>
+                        <li><a href="/payment-methods.html"><i>💳</i> Payment Methods</a></li>
+                        <li><a href="/wishlist.html"><i>❤️</i> Wishlist</a></li>
+                        <li><a href="/returns.html"><i>↩️</i> Returns</a></li>
+                        <li><a href="/account-settings.html"><i>⚙️</i> Account Settings</a></li>
+                    </ul>
+                    
+                    <button class="logout-btn">Logout</button>
+                </aside>
+                
+                <div class="account-content">
+                    <div class="dashboard-container">
+                        <h2 class="welcome-message">Welcome back, John!</h2>
+                        
+                        <div class="account-summary">
+                            <div class="summary-card">
+                                <div class="summary-icon">📦</div>
+                                <div class="summary-title">Total Orders</div>
+                                <div class="summary-value">12</div>
+                            </div>
+                            
+                            <div class="summary-card">
+                                <div class="summary-icon">📝</div>
+                                <div class="summary-title">Reviews</div>
+                                <div class="summary-value">5</div>
+                            </div>
+                            
+                            <div class="summary-card">
+                                <div class="summary-icon">⭐</div>
+                                <div class="summary-title">Reward Points</div>
+                                <div class="summary-value">350</div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="/track.html" class="action-btn">
+                                <div class="action-icon">🔍</div>
+                                <div class="action-title">Track Order</div>
+                            </a>
+                            
+                            <a href="/returns.html" class="action-btn">
+                                <div class="action-icon">↩️</div>
+                                <div class="action-title">Start a Return</div>
+                            </a>
+                            
+                            <a href="/contact.html" class="action-btn">
+                                <div class="action-icon">📞</div>
+                                <div class="action-title">Contact Support</div>
+                            </a>
+                        </div>
+                        
+                        <div class="dashboard-section">
+                            <div class="section-header">
+                                <h3 class="section-title">Recent Orders</h3>
+                                <a href="/orders.html" class="view-all">View All Orders</a>
+                            </div>
+                            
+                            <div class="recent-orders">
+                                <div class="order-row order-header">
+                                    <div>Order</div>
+                                    <div>Date</div>
+                                    <div>Status</div>
+                                    <div>Total</div>
+                                    <div></div>
+                                </div>
+                                
+                                <div class="order-row">
+                                    <div class="order-id" data-label="Order:">TS87654321</div>
+                                    <div class="order-date" data-label="Date:">March 15, 2025</div>
+                                    <div data-label="Status:"><span class="order-status status-delivered">Delivered</span></div>
+                                    <div class="order-total" data-label="Total:">$1,328.00</div>
+                                    <div class="order-action"><a href="/orders.html">View</a></div>
+                                </div>
+                                
+                                <div class="order-row">
+                                    <div class="order-id" data-label="Order:">TS87654315</div>
+                                    <div class="order-date" data-label="Date:">March 5, 2025</div>
+                                    <div data-label="Status:"><span class="order-status status-shipped">Shipped</span></div>
+                                    <div class="order-total" data-label="Total:">$329.00</div>
+                                    <div class="order-action"><a href="/orders.html">View</a></div>
+                                </div>
+                                
+                                <div class="order-row">
+                                    <div class="order-id" data-label="Order:">TS87653948</div>
+                                    <div class="order-date" data-label="Date:">February 20, 2025</div>
+                                    <div data-label="Status:"><span class="order-status status-processing">Processing</span></div>
+                                    <div class="order-total" data-label="Total:">$3,999.00</div>
+                                    <div class="order-action"><a href="/orders.html">View</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-section">
+                            <div class="section-header">
+                                <h3 class="section-title">Saved Items</h3>
+                                <a href="/wishlist.html" class="view-all">View Wishlist</a>
+                            </div>
+                            
+                            <div class="saved-items">
+                                <div class="saved-item">
+                                    <div class="saved-item-img">
+                                        <img src="images/product2.jpg" alt="Graphics Card">
+                                    </div>
+                                    <div class="saved-item-info">
+                                        <div class="saved-item-name">NVIDIA GeForce RTX 4070 Graphics Card</div>
+                                        <div class="saved-item-price">$599</div>
+                                        <div class="saved-item-actions">
+                                            <button class="cart-btn">Add to Cart</button>
+                                            <button>Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="saved-item">
+                                    <div class="saved-item-img">
+                                        <img src="images/product5.jpg" alt="Gaming Mouse">
+                                    </div>
+                                    <div class="saved-item-info">
+                                        <div class="saved-item-name">Logitech G Pro X Superlight Wireless Gaming Mouse</div>
+                                        <div class="saved-item-price">$129</div>
+                                        <div class="saved-item-actions">
+                                            <button class="cart-btn">Add to Cart</button>
+                                            <button>Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="saved-item">
+                                    <div class="saved-item-img">
+                                        <img src="images/product6.jpg" alt="Gaming Chair">
+                                    </div>
+                                    <div class="saved-item-info">
+                                        <div class="saved-item-name">Secretlab Titan Evo 2022 Gaming Chair</div>
+                                        <div class="saved-item-price">$499</div>
+                                        <div class="saved-item-actions">
+                                            <button class="cart-btn">Add to Cart</button>
+                                            <button>Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="saved-item">
+                                    <div class="saved-item-img">
+                                        <img src="images/product7.jpg" alt="Gaming Headset">
+                                    </div>
+                                    <div class="saved-item-info">
+                                        <div class="saved-item-name">SteelSeries Arctis Pro Wireless Gaming Headset</div>
+                                        <div class="saved-item-price">$329</div>
+                                        <div class="saved-item-actions">
+                                            <button class="cart-btn">Add to Cart</button>
+                                            <button>Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Empty dashboard state (hidden by default) -->
+                        <!--
+                        <div class="empty-dashboard">
+                            <i>📋</i>
+                            <h3>Your Dashboard is Empty</h3>
+                            <p>Start shopping to see your order history and saved items here.</p>
+                            <a href="/" class="shop-now-btn">Start Shopping</a>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout button functionality
+            const logoutButton = document.querySelector('.logout-btn');
+            
+            logoutButton.addEventListener('click', function() {
+                alert('This would log you out and redirect to the homepage.');
+            });
+            
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.cart-btn');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemName = this.closest('.saved-item-info').querySelector('.saved-item-name').textContent;
+                    alert('Added "' + itemName + '" to your cart.');
+                });
+            });
+            
+            // Remove from wishlist functionality
+            const removeButtons = document.querySelectorAll('.saved-item-actions button:not(.cart-btn)');
+            
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const item = this.closest('.saved-item');
+                    const itemName = item.querySelector('.saved-item-name').textContent;
+                    
+                    if (confirm('Remove "' + itemName + '" from your wishlist?')) {
+                        item.remove();
+                        
+                        if (document.querySelectorAll('.saved-item').length === 0) {
+                            document.querySelector('.saved-items').innerHTML = '<p>No items in your wishlist.</p>';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

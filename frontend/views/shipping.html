@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Information - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .info-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .info-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+        }
+        
+        .info-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .info-list {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .info-list li {
+            margin-bottom: 10px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .shipping-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .shipping-table th, 
+        .shipping-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .shipping-table th {
+            background-color: #f8f8f8;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .shipping-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .note-box {
+            background-color: #f8f8f8;
+            border-left: 4px solid #ff6b00;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .contact-support {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .contact-support h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .contact-support p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            background-color: #ff6b00;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .contact-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        @media (max-width: 768px) {
+            .shipping-table {
+                font-size: 14px;
+            }
+            
+            .shipping-table th, 
+            .shipping-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/contact.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="info-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; <a href="/contact.html">Support</a> &gt; Shipping Information
+            </div>
+            
+            <h1 class="page-title">Shipping Information</h1>
+            
+            <div class="info-content">
+                <div class="info-section">
+                    <h2 class="section-title">Shipping Methods</h2>
+                    <p class="info-text">At TechStore, we offer several shipping options to meet your needs. All orders are processed and shipped from our warehouse within 1-2 business days after payment confirmation.</p>
+                    
+                    <table class="shipping-table">
+                        <thead>
+                            <tr>
+                                <th>Shipping Method</th>
+                                <th>Estimated Delivery Time</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Standard Shipping</td>
+                                <td>3-5 Business Days</td>
+                                <td>$9.99 (Free for orders over $50)</td>
+                            </tr>
+                            <tr>
+                                <td>Express Shipping</td>
+                                <td>2 Business Days</td>
+                                <td>$14.99</td>
+                            </tr>
+                            <tr>
+                                <td>Next-Day Shipping</td>
+                                <td>1 Business Day</td>
+                                <td>$24.99</td>
+                            </tr>
+                            <tr>
+                                <td>International Shipping</td>
+                                <td>7-14 Business Days</td>
+                                <td>Starting at $29.99 (varies by country)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="note-box">
+                        <strong>Note:</strong> Next-Day and Express shipping options are only available for orders placed before 1:00 PM EST, Monday through Friday. Orders placed after 1:00 PM EST or on weekends will be processed the following business day.
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h2 class="section-title">Shipping Restrictions</h2>
+                    <p class="info-text">Please be aware of the following shipping restrictions:</p>
+                    <ul class="info-list">
+                        <li>We currently ship to all 50 U.S. states and select international destinations.</li>
+                        <li>Some large items (such as certain gaming PCs and monitors) may incur additional shipping charges due to size and weight.</li>
+                        <li>We cannot ship to P.O. boxes for orders containing large items.</li>
+                        <li>Certain products may not be eligible for international shipping due to regional restrictions.</li>
+                        <li>International customers are responsible for any customs fees, taxes, and duties that may be charged upon delivery.</li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h2 class="section-title">Order Tracking</h2>
+                    <p class="info-text">Once your order has shipped, you will receive a confirmation email with tracking information. You can also track your order by:</p>
+                    <ul class="info-list">
+                        <li>Logging into your account and viewing your order history</li>
+                        <li>Using our <a href="/track.html">Order Tracking</a> page with your order number and email address</li>
+                        <li>Contacting our customer support team</li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h2 class="section-title">Shipping Insurance</h2>
+                    <p class="info-text">All orders are automatically insured up to $100 against loss or damage during shipping at no additional cost. For orders valued over $100, additional insurance is automatically added to your shipping cost.</p>
+                </div>
+                
+                <div class="info-section">
+                    <h2 class="section-title">Delivery Issues</h2>
+                    <p class="info-text">If you experience any of the following issues with your delivery, please contact our customer support team within 48 hours of the delivery date:</p>
+                    <ul class="info-list">
+                        <li>Missing items in your package</li>
+                        <li>Damaged items upon arrival</li>
+                        <li>Package delivered to the wrong address</li>
+                        <li>Significant delivery delays beyond the estimated delivery timeframe</li>
+                    </ul>
+                </div>
+                
+                <div class="contact-support">
+                    <h3>Need Assistance with Shipping?</h3>
+                    <p>Our customer support team is here to help with any shipping questions or concerns.</p>
+                    <a href="/contact.html" class="contact-btn">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

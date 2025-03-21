@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .track-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .track-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .track-form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .track-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .track-btn {
+            display: inline-block;
+            background-color: #ff6b00;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .track-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .login-note {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+        }
+        
+        .login-note a {
+            color: #ff6b00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .login-note a:hover {
+            text-decoration: underline;
+        }
+        
+        .tracking-info {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .order-summary {
+            margin-bottom: 30px;
+        }
+        
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .delivery-info {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .delivery-address {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .delivery-estimate {
+            color: #ff6b00;
+            font-weight: bold;
+        }
+        
+        .tracking-container {
+            margin-bottom: 30px;
+        }
+        
+        .tracking-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .carrier-logo {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .tracking-number {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .tracking-steps {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .tracking-steps::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #ddd;
+        }
+        
+        .tracking-step {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .tracking-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-marker {
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+        }
+        
+        .tracking-step.completed .step-marker {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .tracking-step.current .step-marker {
+            background-color: #ff6b00;
+            border-color: #ff6b00;
+        }
+        
+        .step-content {
+            padding-left: 10px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .tracking-step.completed .step-title {
+            color: #4CAF50;
+        }
+        
+        .tracking-step.current .step-title {
+            color: #ff6b00;
+        }
+        
+        .step-details {
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .step-time {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .package-items {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .package-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .item-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .item-details {
+            flex-grow: 1;
+        }
+        
+        .item-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .item-quantity {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .support-options {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .support-options h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .support-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .support-btn {
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .support-btn:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .track-another {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .track-another-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .track-another-btn:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .empty-tracking {
+            display: none; /* Hidden by default, shown when no tracking results */
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .empty-tracking i {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .empty-tracking h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .empty-tracking p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .track-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .tracking-info {
+                display: none; /* Hide initially on smaller screens */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .support-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/contact.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="track-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; <a href="/account.html">My Account</a> &gt; Track Order
+            </div>
+            
+            <h1 class="page-title">Track Your Order</h1>
+            
+            <div class="track-content">
+                <div class="track-form-container">
+                    <h2 class="section-title">Enter Order Details</h2>
+                    
+                    <form class="track-form">
+                        <div class="form-group">
+                            <label for="order-number">Order Number</label>
+                            <input type="text" id="order-number" name="order_number" placeholder="Example: TS87654321" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Enter the email used for your order" required>
+                        </div>
+                        
+                        <button type="submit" class="track-btn">Track Order</button>
+                    </form>
+                    
+                    <div class="login-note">
+                        <p>Have an account? <a href="/login.html">Log in</a> to view all your orders and tracking information in one place.</p>
+                    </div>
+                </div>
+                
+                <div class="tracking-info">
+                    <div class="order-summary">
+                        <h2 class="section-title">Order Information</h2>
+                        
+                        <div class="order-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Order Number</div>
+                                <div class="detail-value">TS87654321</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Order Date</div>
+                                <div class="detail-value">March 15, 2025</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Status</div>
+                                <div class="detail-value">In Transit</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Payment Method</div>
+                                <div class="detail-value">Credit Card (VISA ****5678)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="delivery-info">
+                            <div class="detail-label">Shipping Address</div>
+                            <div class="delivery-address">
+                                John Smith<br>
+                                123 Main Street, Apt 4B<br>
+                                New York, NY 10001<br>
+                                United States
+                            </div>
+                            <div class="delivery-estimate">Estimated Delivery: March 22, 2025</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tracking-container">
+                        <h3 class="tracking-title">Shipping Updates <span class="carrier-logo">FedEx</span></h3>
+                        <div class="tracking-number">Tracking Number: <strong>FDX1234567890</strong></div>
+                        
+                        <div class="tracking-steps">
+                            <div class="tracking-step completed">
+                                <div class="step-marker"></div>
+                                <div class="step-content">
+                                    <div class="step-title">Order Placed</div>
+                                    <div class="step-details">Your order has been received and confirmed</div>
+                                    <div class="step-time">March 15, 2025 - 10:32 AM</div>
+                                </div>
+                            </div>
+                            
+                            <div class="tracking-step completed">
+                                <div class="step-marker"></div>
+                                <div class="step-content">
+                                    <div class="step-title">Order Processed</div>
+                                    <div class="step-details">Your order has been prepared and packed</div>
+                                    <div class="step-time">March 16, 2025 - 2:45 PM</div>
+                                </div>
+                            </div>
+                            
+                            <div class="tracking-step completed">
+                                <div class="step-marker"></div>
+                                <div class="step-content">
+                                    <div class="step-title">Shipped</div>
+                                    <div class="step-details">Your order has been shipped via FedEx</div>
+                                    <div class="step-time">March 17, 2025 - 11:20 AM</div>
+                                </div>
+                            </div>
+                            
+                            <div class="tracking-step current">
+                                <div class="step-marker"></div>
+                                <div class="step-content">
+                                    <div class="step-title">In Transit</div>
+                                    <div class="step-details">Your package is in transit to the delivery address</div>
+                                    <div class="step-time">March 18, 2025 - 9:15 AM</div>
+                                </div>
+                            </div>
+                            
+                            <div class="tracking-step">
+                                <div class="step-marker"></div>
+                                <div class="step-content">
+                                    <div class="step-title">Out for Delivery</div>
+                                    <div class="step-details">Your package is out for delivery</div>
+                                    <div class="step-time">Expected: March 22, 2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="tracking-step">
+                                <div class="step-marker"></div>
+                                <div class="step-content">
+                                    <div class="step-title">Delivered</div>
+                                    <div class="step-details">Your package has been delivered</div>
+                                    <div class="step-time">Expected: March 22, 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="package-items">
+                        <h3 class="package-title">Package Contents</h3>
+                        
+                        <div class="item">
+                            <div class="item-image">
+                                <img src="images/product1.jpg" alt="Gaming Laptop">
+                            </div>
+                            <div class="item-details">
+                                <div class="item-name">Acer Predator Helios 300 Gaming Laptop</div>
+                                <div class="item-quantity">Quantity: 1</div>
+                            </div>
+                        </div>
+                        
+                        <div class="item">
+                            <div class="item-image">
+                                <img src="images/product4.jpg" alt="Gaming Keyboard">
+                            </div>
+                            <div class="item-details">
+                                <div class="item-name">Logitech G Pro X Mechanical Gaming Keyboard</div>
+                                <div class="item-quantity">Quantity: 1</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="support-options">
+                        <h3>Need Help?</h3>
+                        <div class="support-buttons">
+                            <button class="support-btn">Contact Customer Support</button>
+                            <button class="support-btn">Report a Problem</button>
+                            <button class="support-btn">View Order Details</button>
+                        </div>
+                    </div>
+                    
+                    <div class="track-another">
+                        <a href="/track.html" class="track-another-btn">Track Another Order</a>
+                    </div>
+                </div>
+                
+                <!-- Empty state (hidden by default, shown when no tracking results) -->
+                <div class="empty-tracking">
+                    <i>🔍</i>
+                    <h3>Order Not Found</h3>
+                    <p>We couldn't find tracking information for the provided order number and email. Please check your details and try again.</p>
+                    <p>If you continue to have issues, please contact our customer support team.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission handling
+            const trackForm = document.querySelector('.track-form');
+            const trackingInfo = document.querySelector('.tracking-info');
+            const emptyTracking = document.querySelector('.empty-tracking');
+            
+            trackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const orderNumber = document.getElementById('order-number').value.trim();
+                const email = document.getElementById('email').value.trim();
+                
+                // Validate order number and email
+                if (!orderNumber || !email) {
+                    alert('Please enter both Order Number and Email Address.');
+                    return;
+                }
+                
+                // In a real application, this would make an API call to fetch tracking data
+                // For demonstration, we'll just toggle the display for the sample order
+                
+                if (orderNumber === 'TS87654321' && email === 'john.smith@example.com') {
+                    trackingInfo.style.display = 'block';
+                    emptyTracking.style.display = 'none';
+                    
+                    // On mobile, scroll to the tracking info
+                    if (window.innerWidth <= 1024) {
+                        trackingInfo.scrollIntoView({behavior: 'smooth'});
+                    }
+                } else {
+                    trackingInfo.style.display = 'none';
+                    emptyTracking.style.display = 'block';
+                }
+            });
+            
+            // Support button functionality
+            const supportButtons = document.querySelectorAll('.support-btn');
+            
+            supportButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.toLowerCase();
+                    
+                    if (action.includes('contact')) {
+                        window.location.href = '/contact.html';
+                    } else if (action.includes('report')) {
+                        alert('This would open a form to report issues with your order.');
+                    } else if (action.includes('view')) {
+                        window.location.href = '/orders.html';
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

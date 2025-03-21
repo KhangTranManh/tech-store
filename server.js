@@ -19,6 +19,7 @@ const safeRequire = (modulePath) => {
   }
 };
 
+const pagesRoutes = require('./routes/pages');
 const authRoutes = safeRequire('./routes/auth');
 const productRoutes = safeRequire('./routes/products');
 const cartRoutes = safeRequire('./routes/cart');
@@ -94,7 +95,13 @@ const staticPages = [
   '/product-detail.html',
   '/components.html',
   '/monitors.html',
-  '/accessories.html'
+  '/accessories.html',
+  '/shipping.html',
+  '/returns.html',
+  '/faq.html',
+  '/orders.html',
+  '/track.html',
+  '/account.html'
 ];
 
 staticPages.forEach(page => {
