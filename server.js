@@ -88,9 +88,13 @@ const staticPages = [
   '/login.html',
   '/register.html',
   '/laptops.html',
+  '/gaming-pcs.html',
   '/cart.html',
   '/contact.html',
-  '/product-detail.html'
+  '/product-detail.html',
+  '/components.html',
+  '/monitors.html',
+  '/accessories.html'
 ];
 
 staticPages.forEach(page => {

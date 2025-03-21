@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo"><a href="/">TechStore</a></div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html" class="active">Components</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/contact.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="category-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; Components
+            </div>
+            
+            <div class="category-header">
+                <h1 class="category-title">Computer Components</h1>
+                <p class="category-description">
+                    Explore our extensive range of high-performance computer components. 
+                    From powerful graphics cards to cutting-edge processors, 
+                    find the perfect parts to build or upgrade your dream PC.
+                </p>
+            </div>
+            
+            <div class="filter-sort-section">
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">Grid View</button>
+                    <button class="view-btn" data-view="list">List View</button>
+                </div>
+                
+                <div class="results-count">
+                    Showing 1-9 of 36 products
+                </div>
+                
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Customer Rating</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-layout">
+                <aside class="filters-sidebar">
+                    <div class="filter-group">
+                        <h3>Subcategories</h3>
+                        <label>
+                            <input type="checkbox" checked> All Components
+                        </label>
+                        <label>
+                            <input type="checkbox"> Graphics Cards
+                        </label>
+                        <label>
+                            <input type="checkbox"> Processors
+                        </label>
+                        <label>
+                            <input type="checkbox"> Motherboards
+                        </label>
+                        <label>
+                            <input type="checkbox"> RAM
+                        </label>
+                        <label>
+                            <input type="checkbox"> Storage
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Price Range</h3>
+                        <input type="range" min="0" max="1000" value="1000" class="price-range" id="price-range">
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Min" class="price-input" min="0" value="0">
+                            <input type="number" placeholder="Max" class="price-input" max="1000" value="1000">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Brands</h3>
+                        <label>
+                            <input type="checkbox"> NVIDIA
+                        </label>
+                        <label>
+                            <input type="checkbox"> AMD
+                        </label>
+                        <label>
+                            <input type="checkbox"> Intel
+                        </label>
+                        <label>
+                            <input type="checkbox"> Corsair
+                        </label>
+                        <label>
+                            <input type="checkbox"> Samsung
+                        </label>
+                        <label>
+                            <input type="checkbox"> Western Digital
+                        </label>
+                    </div>
+                    
+                    <button class="filter-btn">Apply Filters</button>
+                    <a href="#" class="clear-filters">Clear All Filters</a>
+                </aside>
+                
+                <div class="products-container">
+                    <div class="products-grid">
+                        <!-- Products will be dynamically loaded here -->
+                    </div>
+                    
+                    <div class="pagination">
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">&raquo;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and computer components. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="/js/products.js"></script>
+</body>
+</html>

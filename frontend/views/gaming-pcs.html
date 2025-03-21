@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming PCs - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo"><a href="/">TechStore</a></div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html" class="active">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/support.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="category-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; Gaming PCs
+            </div>
+            
+            <div class="category-header">
+                <h1 class="category-title">Gaming PCs</h1>
+                <p class="category-description">
+                    Explore our collection of high-performance gaming computers. 
+                    From entry-level rigs to top-tier gaming machines, 
+                    find the perfect system to elevate your gaming experience.
+                </p>
+            </div>
+            
+            <div class="filter-sort-section">
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">Grid View</button>
+                    <button class="view-btn" data-view="list">List View</button>
+                </div>
+                
+                <div class="results-count">
+                    Showing 1-9 of 36 products
+                </div>
+                
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Customer Rating</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-layout">
+                <aside class="filters-sidebar">
+                    <div class="filter-group">
+                        <h3>PC Types</h3>
+                        <label>
+                            <input type="checkbox" checked> All Gaming PCs
+                        </label>
+                        <label>
+                            <input type="checkbox"> High-End Gaming PCs
+                        </label>
+                        <label>
+                            <input type="checkbox"> Mid-Range Gaming PCs
+                        </label>
+                        <label>
+                            <input type="checkbox"> Entry-Level Gaming PCs
+                        </label>
+                        <label>
+                            <input type="checkbox"> Custom Build PCs
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Price Range</h3>
+                        <input type="range" min="0" max="5000" value="5000" class="price-range" id="price-range">
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Min" class="price-input" min="0" value="0">
+                            <input type="number" placeholder="Max" class="price-input" max="5000" value="5000">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Brands</h3>
+                        <label>
+                            <input type="checkbox"> Alienware
+                        </label>
+                        <label>
+                            <input type="checkbox"> ASUS ROG
+                        </label>
+                        <label>
+                            <input type="checkbox"> HP Omen
+                        </label>
+                        <label>
+                            <input type="checkbox"> Lenovo Legion
+                        </label>
+                        <label>
+                            <input type="checkbox"> MSI
+                        </label>
+                        <label>
+                            <input type="checkbox"> Custom Builds
+                        </label>
+                    </div>
+                    
+                    <button class="filter-btn">Apply Filters</button>
+                    <a href="#" class="clear-filters">Clear All Filters</a>
+                </aside>
+                
+                <div class="products-container">
+                    <div class="products-grid">
+                        <!-- Products will be dynamically loaded here -->
+                    </div>
+                    
+                    <div class="pagination">
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">&raquo;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming systems. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="/js/products.js"></script>
+</body>
+</html>
