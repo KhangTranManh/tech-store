@@ -5,12 +5,334 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accessories - TechStore</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .category-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .category-header {
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .category-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .filter-sort-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-btn {
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .view-btn.active {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .sort-options {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sort-options label {
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .sort-select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .products-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .filters-sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            align-self: start;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+        }
+        
+        .filter-group h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .price-range {
+            margin-top: 15px;
+        }
+        
+        .price-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .price-input {
+            width: 45%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .filter-btn {
+            padding: 10px 15px;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .clear-filters {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .clear-filters:hover {
+            color: #ff6b00;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            height: 200px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-img img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-specs {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            color: #ff6b00;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .product-original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        
+        .product-discount {
+            background-color: #ff6b00;
+            color: white;
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stars {
+            color: #FFD700;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .rating-count {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .add-to-cart {
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #e05f00;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #f2f2f2;
+        }
+        
+        @media (max-width: 1024px) {
+            .products-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-sidebar {
+                margin-bottom: 20px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filter-sort-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <!-- Same header as index.html -->
         <div class="top-header">
-            <div class="logo"><a href="/">TechStore</a></div>
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
             <div class="search-bar">
                 <input type="text" placeholder="Search for products...">
                 <button>Search</button>
@@ -29,7 +351,6 @@
                 <li><a href="/components.html">Components</a></li>
                 <li><a href="/monitors.html">Monitors</a></li>
                 <li><a href="/accessories.html" class="active">Accessories</a></li>
-                <li><a href="/deals.html">Deals</a></li>
                 <li><a href="/contact.html">Support</a></li>
             </ul>
         </nav>
@@ -37,17 +358,410 @@
 
     <main>
         <div class="category-container">
-            <h1 class="category-title">Accessories</h1>
-            <div class="products-grid" id="accessories-grid">
-                <!-- Accessories will be dynamically loaded here -->
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; Accessories
+            </div>
+            
+            <div class="category-header">
+                <h1 class="category-title">Tech Accessories</h1>
+                <p class="category-description">Complete your tech setup with our wide range of accessories. From high-performance gaming peripherals to essential everyday gadgets, find the perfect additions to enhance your digital experience.</p>
+            </div>
+            
+            <div class="filter-sort-section">
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">Grid View</button>
+                    <button class="view-btn" data-view="list">List View</button>
+                </div>
+                
+                <div class="results-count">
+                    Showing 1-9 of 45 products
+                </div>
+                
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Customer Rating</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-layout">
+                <aside class="filters-sidebar">
+                    <div class="filter-group">
+                        <h3>Category</h3>
+                        <label>
+                            <input type="checkbox" checked> All Accessories
+                        </label>
+                        <label>
+                            <input type="checkbox"> Keyboards
+                        </label>
+                        <label>
+                            <input type="checkbox"> Mice
+                        </label>
+                        <label>
+                            <input type="checkbox"> Headsets
+                        </label>
+                        <label>
+                            <input type="checkbox"> Webcams
+                        </label>
+                        <label>
+                            <input type="checkbox"> USB Hubs
+                        </label>
+                        <label>
+                            <input type="checkbox"> Speakers
+                        </label>
+                        <label>
+                            <input type="checkbox"> Microphones
+                        </label>
+                        <label>
+                            <input type="checkbox"> Mouse Pads
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Brand</h3>
+                        <label>
+                            <input type="checkbox"> Logitech
+                        </label>
+                        <label>
+                            <input type="checkbox"> Razer
+                        </label>
+                        <label>
+                            <input type="checkbox"> Corsair
+                        </label>
+                        <label>
+                            <input type="checkbox"> SteelSeries
+                        </label>
+                        <label>
+                            <input type="checkbox"> HyperX
+                        </label>
+                        <label>
+                            <input type="checkbox"> Asus
+                        </label>
+                        <label>
+                            <input type="checkbox"> JBL
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Price Range</h3>
+                        <input type="range" min="0" max="500" value="500" class="price-range" id="price-range">
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Min" class="price-input" min="0" value="0">
+                            <input type="number" placeholder="Max" class="price-input" max="500" value="500">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Connection Type</h3>
+                        <label>
+                            <input type="checkbox"> Wired
+                        </label>
+                        <label>
+                            <input type="checkbox"> Wireless
+                        </label>
+                        <label>
+                            <input type="checkbox"> Bluetooth
+                        </label>
+                        <label>
+                            <input type="checkbox"> USB-C
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>RGB Lighting</h3>
+                        <label>
+                            <input type="checkbox"> Yes
+                        </label>
+                        <label>
+                            <input type="checkbox"> No
+                        </label>
+                    </div>
+                    
+                    <button class="filter-btn">Apply Filters</button>
+                    <a href="#" class="clear-filters">Clear All Filters</a>
+                </aside>
+                
+                <div class="products-container">
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/keyboard1.jpg" alt="Mechanical Keyboard">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Logitech G Pro X Mechanical Gaming Keyboard</h3>
+                                <div class="product-specs">Tenkeyless Design, RGB, GX Blue Switches</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(142)</div>
+                                </div>
+                                <div class="product-price">
+                                    $129 <span class="product-original-price">$149</span>
+                                    <span class="product-discount">-13%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/mouse1.jpg" alt="Gaming Mouse">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Razer DeathAdder V2 Gaming Mouse</h3>
+                                <div class="product-specs">20K DPI Optical Sensor, 8 Programmable Buttons</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(98)</div>
+                                </div>
+                                <div class="product-price">
+                                    $69 <span class="product-original-price">$79</span>
+                                    <span class="product-discount">-13%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/headset1.jpg" alt="Gaming Headset">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">HyperX Cloud II Gaming Headset</h3>
+                                <div class="product-specs">7.1 Surround Sound, Memory Foam Ear Cushions</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(207)</div>
+                                </div>
+                                <div class="product-price">
+                                    $89 <span class="product-original-price">$99</span>
+                                    <span class="product-discount">-10%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/mousepad1.jpg" alt="Gaming Mouse Pad">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">SteelSeries QcK XXL Gaming Mouse Pad</h3>
+                                <div class="product-specs">900mm x 400mm, Micro-Woven Cloth Surface</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(83)</div>
+                                </div>
+                                <div class="product-price">
+                                    $29 <span class="product-original-price">$39</span>
+                                    <span class="product-discount">-26%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/webcam1.jpg" alt="Webcam">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Logitech C920x HD Pro Webcam</h3>
+                                <div class="product-specs">1080p, Dual Stereo Microphones, Privacy Shutter</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(165)</div>
+                                </div>
+                                <div class="product-price">
+                                    $69 <span class="product-original-price">$89</span>
+                                    <span class="product-discount">-22%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/speakers1.jpg" alt="Speakers">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Logitech G560 RGB PC Gaming Speakers</h3>
+                                <div class="product-specs">2.1 System, DTS:X Ultra Surround Sound, LIGHTSYNC RGB</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(117)</div>
+                                </div>
+                                <div class="product-price">
+                                    $199 <span class="product-original-price">$249</span>
+                                    <span class="product-discount">-20%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/microphone1.jpg" alt="Microphone">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Blue Yeti USB Microphone</h3>
+                                <div class="product-specs">Multiple Pattern Selection, Gain Control, Zero-Latency</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(189)</div>
+                                </div>
+                                <div class="product-price">
+                                    $129 <span class="product-original-price">$149</span>
+                                    <span class="product-discount">-13%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/usb-hub1.jpg" alt="USB Hub">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Anker 7-Port USB 3.0 Data Hub</h3>
+                                <div class="product-specs">7 USB 3.0 Ports, 5Gbps Transfer Speed, Individual Switches</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(75)</div>
+                                </div>
+                                <div class="product-price">
+                                    $29 <span class="product-original-price">$39</span>
+                                    <span class="product-discount">-26%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/keyboard2.jpg" alt="Mechanical Keyboard">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Corsair K95 RGB Platinum XT Mechanical Keyboard</h3>
+                                <div class="product-specs">Cherry MX Speed, Per-Key RGB, 6 Macro Keys</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(128)</div>
+                                </div>
+                                <div class="product-price">
+                                    $169 <span class="product-original-price">$199</span>
+                                    <span class="product-discount">-15%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination">
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">5</a>
+                        <a href="#">&raquo;</a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <footer>
-        <!-- Same footer as index.html -->
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
     </footer>
 
+    <script>
+        // View switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewButtons = document.querySelectorAll('.view-btn');
+            const productsGrid = document.querySelector('.products-grid');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the view type (grid or list)
+                    const viewType = this.getAttribute('data-view');
+                    
+                    // Toggle views (would need additional code for list view implementation)
+                    if (viewType === 'grid') {
+                        productsGrid.style.display = 'grid';
+                    } else {
+                        // This would switch to list view in a complete implementation
+                        alert('List view is under development');
+                    }
+                });
+            });
+            
+            // Price range functionality
+            const priceRange = document.getElementById('price-range');
+            const maxPriceInput = document.querySelector('.price-input[max="500"]');
+            
+            priceRange.addEventListener('input', function() {
+                maxPriceInput.value = this.value;
+            });
+            
+            maxPriceInput.addEventListener('input', function() {
+                priceRange.value = this.value;
+            });
+            
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Product added to cart!');
+                    // In a real app, this would add the product to the cart
+                });
+            });
+        });
+    </script>
     <script src="/js/products.js"></script>
 </body>
 </html>

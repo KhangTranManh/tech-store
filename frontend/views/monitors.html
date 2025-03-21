@@ -5,12 +5,334 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitors - TechStore</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .category-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .category-header {
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .category-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .filter-sort-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-btn {
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .view-btn.active {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .sort-options {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sort-options label {
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .sort-select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .products-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .filters-sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            align-self: start;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+        }
+        
+        .filter-group h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .price-range {
+            margin-top: 15px;
+        }
+        
+        .price-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .price-input {
+            width: 45%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .filter-btn {
+            padding: 10px 15px;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .clear-filters {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .clear-filters:hover {
+            color: #ff6b00;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            height: 200px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-img img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-specs {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            color: #ff6b00;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .product-original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        
+        .product-discount {
+            background-color: #ff6b00;
+            color: white;
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stars {
+            color: #FFD700;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .rating-count {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .add-to-cart {
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #e05f00;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #f2f2f2;
+        }
+        
+        @media (max-width: 1024px) {
+            .products-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-sidebar {
+                margin-bottom: 20px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filter-sort-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <!-- Same header as index.html -->
         <div class="top-header">
-            <div class="logo"><a href="/">TechStore</a></div>
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
             <div class="search-bar">
                 <input type="text" placeholder="Search for products...">
                 <button>Search</button>
@@ -29,7 +351,6 @@
                 <li><a href="/components.html">Components</a></li>
                 <li><a href="/monitors.html" class="active">Monitors</a></li>
                 <li><a href="/accessories.html">Accessories</a></li>
-                <li><a href="/deals.html">Deals</a></li>
                 <li><a href="/contact.html">Support</a></li>
             </ul>
         </nav>
@@ -37,17 +358,430 @@
 
     <main>
         <div class="category-container">
-            <h1 class="category-title">Monitors</h1>
-            <div class="products-grid" id="monitors-grid">
-                <!-- Monitors will be dynamically loaded here -->
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; Monitors
+            </div>
+            
+            <div class="category-header">
+                <h1 class="category-title">Monitors</h1>
+                <p class="category-description">Experience vibrant visuals with our selection of high-quality monitors. From ultra-wide displays for immersive gaming to professional-grade monitors for content creation, find the perfect screen for your needs.</p>
+            </div>
+            
+            <div class="filter-sort-section">
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">Grid View</button>
+                    <button class="view-btn" data-view="list">List View</button>
+                </div>
+                
+                <div class="results-count">
+                    Showing 1-9 of 24 products
+                </div>
+                
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Customer Rating</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-layout">
+                <aside class="filters-sidebar">
+                    <div class="filter-group">
+                        <h3>Monitor Type</h3>
+                        <label>
+                            <input type="checkbox" checked> All Monitors
+                        </label>
+                        <label>
+                            <input type="checkbox"> Gaming Monitors
+                        </label>
+                        <label>
+                            <input type="checkbox"> Ultrawide Monitors
+                        </label>
+                        <label>
+                            <input type="checkbox"> 4K Monitors
+                        </label>
+                        <label>
+                            <input type="checkbox"> Professional Monitors
+                        </label>
+                        <label>
+                            <input type="checkbox"> Curved Monitors
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Screen Size</h3>
+                        <label>
+                            <input type="checkbox"> 24" and below
+                        </label>
+                        <label>
+                            <input type="checkbox"> 25" - 27"
+                        </label>
+                        <label>
+                            <input type="checkbox"> 28" - 31"
+                        </label>
+                        <label>
+                            <input type="checkbox"> 32" - 34"
+                        </label>
+                        <label>
+                            <input type="checkbox"> 35" and above
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Resolution</h3>
+                        <label>
+                            <input type="checkbox"> Full HD (1920x1080)
+                        </label>
+                        <label>
+                            <input type="checkbox"> QHD (2560x1440)
+                        </label>
+                        <label>
+                            <input type="checkbox"> 4K UHD (3840x2160)
+                        </label>
+                        <label>
+                            <input type="checkbox"> 5K (5120x2880)
+                        </label>
+                        <label>
+                            <input type="checkbox"> Ultrawide
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Price Range</h3>
+                        <input type="range" min="0" max="2000" value="2000" class="price-range" id="price-range">
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Min" class="price-input" min="0" value="0">
+                            <input type="number" placeholder="Max" class="price-input" max="2000" value="2000">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Brand</h3>
+                        <label>
+                            <input type="checkbox"> ASUS
+                        </label>
+                        <label>
+                            <input type="checkbox"> Dell
+                        </label>
+                        <label>
+                            <input type="checkbox"> LG
+                        </label>
+                        <label>
+                            <input type="checkbox"> Samsung
+                        </label>
+                        <label>
+                            <input type="checkbox"> MSI
+                        </label>
+                        <label>
+                            <input type="checkbox"> ViewSonic
+                        </label>
+                        <label>
+                            <input type="checkbox"> Acer
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Refresh Rate</h3>
+                        <label>
+                            <input type="checkbox"> 60Hz
+                        </label>
+                        <label>
+                            <input type="checkbox"> 75Hz
+                        </label>
+                        <label>
+                            <input type="checkbox"> 144Hz
+                        </label>
+                        <label>
+                            <input type="checkbox"> 165Hz
+                        </label>
+                        <label>
+                            <input type="checkbox"> 240Hz+
+                        </label>
+                    </div>
+                    
+                    <button class="filter-btn">Apply Filters</button>
+                    <a href="#" class="clear-filters">Clear All Filters</a>
+                </aside>
+                
+                <div class="products-container">
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor1.jpg" alt="LG UltraGear">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">LG UltraGear 27" 1ms 144Hz Gaming Monitor</h3>
+                                <div class="product-specs">27" IPS, 2560x1440, HDR10, G-Sync Compatible</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(128)</div>
+                                </div>
+                                <div class="product-price">
+                                    $329 <span class="product-original-price">$399</span>
+                                    <span class="product-discount">-18%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor2.jpg" alt="Samsung Odyssey G7">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Samsung Odyssey G7 32" Curved Gaming Monitor</h3>
+                                <div class="product-specs">32" VA, 2560x1440, 240Hz, 1ms, HDR600</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(96)</div>
+                                </div>
+                                <div class="product-price">
+                                    $649 <span class="product-original-price">$799</span>
+                                    <span class="product-discount">-19%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor3.jpg" alt="Dell Ultrasharp">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Dell Ultrasharp 27" 4K USB-C Monitor</h3>
+                                <div class="product-specs">27" IPS, 3840x2160, 60Hz, USB-C Hub</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(75)</div>
+                                </div>
+                                <div class="product-price">
+                                    $499 <span class="product-original-price">$599</span>
+                                    <span class="product-discount">-17%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor4.jpg" alt="ASUS TUF Gaming">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">ASUS TUF Gaming 24.5" 280Hz Gaming Monitor</h3>
+                                <div class="product-specs">24.5" IPS, 1920x1080, 280Hz, 1ms, G-Sync</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(112)</div>
+                                </div>
+                                <div class="product-price">
+                                    $299 <span class="product-original-price">$349</span>
+                                    <span class="product-discount">-14%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor5.jpg" alt="LG UltraWide">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">LG UltraWide 34" Curved Monitor</h3>
+                                <div class="product-specs">34" IPS, 3440x1440, 75Hz, HDR10</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(87)</div>
+                                </div>
+                                <div class="product-price">
+                                    $449 <span class="product-original-price">$549</span>
+                                    <span class="product-discount">-18%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor6.jpg" alt="Acer Predator">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Acer Predator XB273K 27" 4K Gaming Monitor</h3>
+                                <div class="product-specs">27" IPS, 3840x2160, 144Hz, G-Sync, HDR400</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(65)</div>
+                                </div>
+                                <div class="product-price">
+                                    $799 <span class="product-original-price">$999</span>
+                                    <span class="product-discount">-20%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor7.jpg" alt="MSI Optix">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">MSI Optix MAG274QRF-QD 27" Gaming Monitor</h3>
+                                <div class="product-specs">27" IPS, 2560x1440, 165Hz, 1ms, G-Sync</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(92)</div>
+                                </div>
+                                <div class="product-price">
+                                    $429 <span class="product-original-price">$499</span>
+                                    <span class="product-discount">-14%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor8.jpg" alt="ViewSonic Elite">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">ViewSonic Elite XG270QG 27" Gaming Monitor</h3>
+                                <div class="product-specs">27" IPS, 2560x1440, 165Hz, 1ms, G-Sync</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(78)</div>
+                                </div>
+                                <div class="product-price">
+                                    $479 <span class="product-original-price">$599</span>
+                                    <span class="product-discount">-20%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/monitor9.jpg" alt="Samsung Smart Monitor">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Samsung Smart Monitor M7 32" 4K UHD</h3>
+                                <div class="product-specs">32" VA, 3840x2160, 60Hz, Smart TV Features</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(54)</div>
+                                </div>
+                                <div class="product-price">
+                                    $399 <span class="product-original-price">$449</span>
+                                    <span class="product-discount">-11%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination">
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">&raquo;</a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <footer>
-        <!-- Same footer as index.html -->
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
     </footer>
 
+    <script>
+        // View switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewButtons = document.querySelectorAll('.view-btn');
+            const productsGrid = document.querySelector('.products-grid');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the view type (grid or list)
+                    const viewType = this.getAttribute('data-view');
+                    
+                    // Toggle views (would need additional code for list view implementation)
+                    if (viewType === 'grid') {
+                        productsGrid.style.display = 'grid';
+                    } else {
+                        // This would switch to list view in a complete implementation
+                        alert('List view is under development');
+                    }
+                });
+            });
+            
+            // Price range functionality
+            const priceRange = document.getElementById('price-range');
+            const maxPriceInput = document.querySelector('.price-input[max="2000"]');
+            
+            priceRange.addEventListener('input', function() {
+                maxPriceInput.value = this.value;
+            });
+            
+            maxPriceInput.addEventListener('input', function() {
+                priceRange.value = this.value;
+            });
+            
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Product added to cart!');
+                    // In a real app, this would add the product to the cart
+                });
+            });
+        });
+    </script>
     <script src="/js/products.js"></script>
 </body>
 </html>
