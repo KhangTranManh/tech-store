@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptops - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .category-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .category-header {
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .category-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .filter-sort-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-btn {
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .view-btn.active {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .sort-options {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sort-options label {
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .sort-select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .products-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .filters-sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            align-self: start;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+        }
+        
+        .filter-group h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .price-range {
+            margin-top: 15px;
+        }
+        
+        .price-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .price-input {
+            width: 45%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .filter-btn {
+            padding: 10px 15px;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .clear-filters {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .clear-filters:hover {
+            color: #ff6b00;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .products-list {
+            display: none;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            height: 200px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-img img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-specs {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            color: #ff6b00;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .product-original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        
+        .product-discount {
+            background-color: #ff6b00;
+            color: white;
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stars {
+            color: #FFD700;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .rating-count {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .add-to-cart {
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #e05f00;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #ff6b00;
+            color: white;
+            border-color: #ff6b00;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #f2f2f2;
+        }
+        
+        /* List view styling */
+        .products-list .product-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            margin-bottom: 20px;
+            height: auto;
+        }
+        
+        .products-list .product-img {
+            height: 100%;
+            border-bottom: none;
+            border-right: 1px solid #eee;
+        }
+        
+        .products-list .product-title {
+            height: auto;
+            font-size: 18px;
+        }
+        
+        .products-list .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .products-list .product-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .products-list .add-to-cart {
+            width: auto;
+        }
+        
+        @media (max-width: 1024px) {
+            .products-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-sidebar {
+                margin-bottom: 20px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filter-sort-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-list .product-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-list .product-img {
+                height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html" class="active">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/peripherals.html">Peripherals</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/support.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="category-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; Laptops
+            </div>
+            
+            <div class="category-header">
+                <h1 class="category-title">Laptops</h1>
+                <p class="category-description">Discover our wide range of laptops for every need - from powerful gaming machines to sleek ultrabooks for business and everyday use. We offer the latest models from top brands with competitive prices and free shipping.</p>
+            </div>
+            
+            <div class="filter-sort-section">
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">Grid View</button>
+                    <button class="view-btn" data-view="list">List View</button>
+                </div>
+                
+                <div class="results-count">
+                    Showing 1-9 of 36 products
+                </div>
+                
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Customer Rating</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-layout">
+                <aside class="filters-sidebar">
+                    <div class="filter-group">
+                        <h3>Categories</h3>
+                        <label>
+                            <input type="checkbox" checked> All Laptops
+                        </label>
+                        <label>
+                            <input type="checkbox"> Gaming Laptops
+                        </label>
+                        <label>
+                            <input type="checkbox"> Business Laptops
+                        </label>
+                        <label>
+                            <input type="checkbox"> Ultrabooks
+                        </label>
+                        <label>
+                            <input type="checkbox"> 2-in-1 Laptops
+                        </label>
+                        <label>
+                            <input type="checkbox"> Chromebooks
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Brand</h3>
+                        <label>
+                            <input type="checkbox"> Acer
+                        </label>
+                        <label>
+                            <input type="checkbox"> ASUS
+                        </label>
+                        <label>
+                            <input type="checkbox"> Dell
+                        </label>
+                        <label>
+                            <input type="checkbox"> HP
+                        </label>
+                        <label>
+                            <input type="checkbox"> Lenovo
+                        </label>
+                        <label>
+                            <input type="checkbox"> MSI
+                        </label>
+                        <label>
+                            <input type="checkbox"> Apple
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Price Range</h3>
+                        <input type="range" min="0" max="3000" value="3000" class="price-range" id="price-range">
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Min" class="price-input" min="0" value="0">
+                            <input type="number" placeholder="Max" class="price-input" max="3000" value="3000">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Processor</h3>
+                        <label>
+                            <input type="checkbox"> Intel Core i3
+                        </label>
+                        <label>
+                            <input type="checkbox"> Intel Core i5
+                        </label>
+                        <label>
+                            <input type="checkbox"> Intel Core i7
+                        </label>
+                        <label>
+                            <input type="checkbox"> Intel Core i9
+                        </label>
+                        <label>
+                            <input type="checkbox"> AMD Ryzen 3
+                        </label>
+                        <label>
+                            <input type="checkbox"> AMD Ryzen 5
+                        </label>
+                        <label>
+                            <input type="checkbox"> AMD Ryzen 7
+                        </label>
+                        <label>
+                            <input type="checkbox"> AMD Ryzen 9
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Graphics</h3>
+                        <label>
+                            <input type="checkbox"> Integrated
+                        </label>
+                        <label>
+                            <input type="checkbox"> NVIDIA GeForce GTX
+                        </label>
+                        <label>
+                            <input type="checkbox"> NVIDIA GeForce RTX
+                        </label>
+                        <label>
+                            <input type="checkbox"> AMD Radeon
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>RAM</h3>
+                        <label>
+                            <input type="checkbox"> 4GB
+                        </label>
+                        <label>
+                            <input type="checkbox"> 8GB
+                        </label>
+                        <label>
+                            <input type="checkbox"> 16GB
+                        </label>
+                        <label>
+                            <input type="checkbox"> 32GB+
+                        </label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Storage</h3>
+                        <label>
+                            <input type="checkbox"> 128GB SSD
+                        </label>
+                        <label>
+                            <input type="checkbox"> 256GB SSD
+                        </label>
+                        <label>
+                            <input type="checkbox"> 512GB SSD
+                        </label>
+                        <label>
+                            <input type="checkbox"> 1TB SSD
+                        </label>
+                        <label>
+                            <input type="checkbox"> 1TB+ SSD
+                        </label>
+                        <label>
+                            <input type="checkbox"> HDD Storage
+                        </label>
+                    </div>
+                    
+                    <button class="filter-btn">Apply Filters</button>
+                    <a href="#" class="clear-filters">Clear All Filters</a>
+                </aside>
+                
+                <div class="products-container">
+                    <div class="products-grid active-view">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/product1.jpg" alt="Acer Predator Helios 300">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Acer Predator Helios 300 Gaming Laptop</h3>
+                                <div class="product-specs">Intel Core i7, 16GB RAM, 512GB SSD, RTX 3060</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(128)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,199 <span class="product-original-price">$1,499</span>
+                                    <span class="product-discount">-20%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop2.jpg" alt="Dell XPS 15">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Dell XPS 15 Laptop</h3>
+                                <div class="product-specs">Intel Core i7, 16GB RAM, 1TB SSD, GeForce GTX 1650 Ti</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(64)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,599 <span class="product-original-price">$1,799</span>
+                                    <span class="product-discount">-11%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop3.jpg" alt="HP Spectre x360">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">HP Spectre x360 2-in-1 Laptop</h3>
+                                <div class="product-specs">Intel Core i5, 8GB RAM, 512GB SSD, Touchscreen</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(95)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,099 <span class="product-original-price">$1,299</span>
+                                    <span class="product-discount">-15%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop4.jpg" alt="Lenovo ThinkPad X1 Carbon">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Lenovo ThinkPad X1 Carbon</h3>
+                                <div class="product-specs">Intel Core i7, 16GB RAM, 512GB SSD, 14" FHD</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(122)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,449 <span class="product-original-price">$1,649</span>
+                                    <span class="product-discount">-12%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop5.jpg" alt="ASUS ROG Zephyrus G14">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">ASUS ROG Zephyrus G14 Gaming Laptop</h3>
+                                <div class="product-specs">AMD Ryzen 9, 16GB RAM, 1TB SSD, RTX 3060</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(87)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,399 <span class="product-original-price">$1,649</span>
+                                    <span class="product-discount">-15%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop6.jpg" alt="Apple MacBook Air">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Apple MacBook Air M2</h3>
+                                <div class="product-specs">Apple M2 chip, 8GB RAM, 256GB SSD, 13.6" Liquid Retina</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★★</div>
+                                    <div class="rating-count">(156)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,199
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop7.jpg" alt="MSI GS66 Stealth">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">MSI GS66 Stealth Gaming Laptop</h3>
+                                <div class="product-specs">Intel Core i7, 32GB RAM, 1TB SSD, RTX 3070</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(73)</div>
+                                </div>
+                                <div class="product-price">
+                                    $1,799 <span class="product-original-price">$1,999</span>
+                                    <span class="product-discount">-10%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop8.jpg" alt="Lenovo IdeaPad 5">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Lenovo IdeaPad 5</h3>
+                                <div class="product-specs">AMD Ryzen 5, 8GB RAM, 512GB SSD, 15.6" FHD</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(105)</div>
+                                </div>
+                                <div class="product-price">
+                                    $649 <span class="product-original-price">$749</span>
+                                    <span class="product-discount">-13%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="images/laptop9.jpg" alt="Dell Inspiron 15">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">Dell Inspiron 15 3000</h3>
+                                <div class="product-specs">Intel Core i5, 8GB RAM, 256GB SSD, 15.6" FHD</div>
+                                <div class="product-rating">
+                                    <div class="stars">★★★★☆</div>
+                                    <div class="rating-count">(89)</div>
+                                </div>
+                                <div class="product-price">
+                                    $599 <span class="product-original-price">$699</span>
+                                    <span class="product-discount">-14%</span>
+                                </div>
+                                <button class="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="products-list">
+                        <!-- Same products in list view format -->
+                        <!-- This would be populated with similar content but in list format -->
+                    </div>
+                    
+                    <div class="pagination">
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">&raquo;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // View switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewButtons = document.querySelectorAll('.view-btn');
+            const productsGrid = document.querySelector('.products-grid');
+            const productsList = document.querySelector('.products-list');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the view type (grid or list)
+                    const viewType = this.getAttribute('data-view');
+                    
+                    // Toggle views
+                    if (viewType === 'grid') {
+                        productsGrid.classList.add('active-view');
+                        productsList.classList.remove('active-view');
+                    } else {
+                        productsGrid.classList.remove('active-view');
+                        productsList.classList.add('active-view');
+                    }
+                });
+            });
+            
+            // Price range functionality
+            const priceRange = document.getElementById('price-range');
+            const maxPriceInput = document.querySelector('.price-input[max="3000"]');
+            
+            priceRange.addEventListener('input', function() {
+                maxPriceInput.value = this.value;
+            });
+            
+            maxPriceInput.addEventListener('input', function() {
+                priceRange.value = this.value;
+            });
+            
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Product added to cart!');
+                    // In a real app, this would add the product to the cart
+                });
+            });
+        });
+    </script>
+  <script src="/js/products.js"></script>
+</body>
+</html>

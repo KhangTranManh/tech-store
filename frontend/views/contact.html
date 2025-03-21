@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .contact-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .contact-info {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 20px;
+        }
+        
+        .info-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #ff6b00;
+        }
+        
+        .info-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .social-links {
+            margin-top: 30px;
+        }
+        
+        .social-links h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f2f2f2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        
+        .social-icon:hover {
+            background-color: #ff6b00;
+            color: white;
+        }
+        
+        .business-hours {
+            margin-top: 30px;
+        }
+        
+        .business-hours h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .hours-list {
+            list-style-type: none;
+        }
+        
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+        
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .contact-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea.form-control {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .form-check input {
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .form-check label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .submit-btn {
+            padding: 12px 25px;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .submit-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .map-section {
+            margin-top: 60px;
+        }
+        
+        .map-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .map-container {
+            height: 400px;
+            background-color: #f2f2f2;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .faq-section {
+            margin-top: 60px;
+        }
+        
+        .faq-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .faq-list {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-question {
+            padding: 15px 20px;
+            font-weight: bold;
+            color: #333;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question:hover {
+            background-color: #f2f2f2;
+        }
+        
+        .faq-question::after {
+            content: "+";
+            font-size: 20px;
+            color: #666;
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+        
+        .faq-item.active .faq-question {
+            background-color: #f2f2f2;
+        }
+        
+        .faq-item.active .faq-question::after {
+            content: "-";
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 15px 20px;
+            max-height: 500px;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/peripherals.html">Peripherals</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/support.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="contact-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; Contact Us
+            </div>
+            
+            <h1 class="page-title">Contact Us</h1>
+            
+            <div class="contact-layout">
+                <div class="contact-info">
+                    <h2 class="info-title">Get in Touch</h2>
+                    
+                    <div class="info-item">
+                        <h3>Customer Support</h3>
+                        <p>If you have any questions about products, orders, or your account, our customer support team is ready to help.</p>
+                        <p>Email: <strong>support@techstore.com</strong></p>
+                        <p>Phone: <strong>(555) 123-4567</strong></p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3>Sales Inquiries</h3>
+                        <p>For bulk orders, business accounts, or special pricing requests, please contact our sales team.</p>
+                        <p>Email: <strong>sales@techstore.com</strong></p>
+                        <p>Phone: <strong>(555) 123-4568</strong></p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3>Main Office</h3>
+                        <p>123 Tech Avenue<br>
+                        San Francisco, CA 94107<br>
+                        United States</p>
+                    </div>
+                    
+                    <div class="business-hours">
+                        <h3>Business Hours</h3>
+                        <ul class="hours-list">
+                            <li><span>Monday - Friday</span> <span>9:00 AM - 8:00 PM</span></li>
+                            <li><span>Saturday</span> <span>10:00 AM - 6:00 PM</span></li>
+                            <li><span>Sunday</span> <span>11:00 AM - 5:00 PM</span></li>
+                            <li><span>Holidays</span> <span>Hours may vary</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="social-links">
+                        <h3>Connect With Us</h3>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon">F</a>
+                            <a href="#" class="social-icon">T</a>
+                            <a href="#" class="social-icon">I</a>
+                            <a href="#" class="social-icon">Y</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h2 class="form-title">Send Us a Message</h2>
+                    
+                    <form action="#" method="post">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number (Optional)</label>
+                            <input type="tel" id="phone" name="phone" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject" class="form-control">
+                                <option value="">Select a Subject</option>
+                                <option value="order">Order Inquiry</option>
+                                <option value="returns">Returns & Refunds</option>
+                                <option value="product">Product Information</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">Subscribe to our newsletter for product updates, tech news, and exclusive offers</label>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="map-section">
+                <h2 class="map-title">Our Location</h2>
+                <div class="map-container">
+                    <!-- In a real implementation, this would be a Google Maps or similar embed -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0880376576316!2d-122.4026!3d37.7858!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ3JzA5LjAiTiAxMjLCsDI0JzA5LjQiVw!5e0!3m2!1sen!2sus!4v1644378105555!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+            
+            <div class="faq-section">
+                <h2 class="faq-title">Frequently Asked Questions</h2>
+                
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">How long does shipping take?</div>
+                        <div class="faq-answer">
+                            <p>Standard shipping typically takes 3-5 business days. Express shipping is available for 1-2 business day delivery. International shipping may take 7-14 business days depending on the destination country. All shipping timeframes are estimates and may vary based on your location and product availability.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">What is your return policy?</div>
+                        <div class="faq-answer">
+                            <p>We offer a 30-day return policy for most products. Items must be in their original packaging and in unused condition. Certain products, such as opened software or custom-built systems, may have different return policies. Please check the product page for specific return information or contact our customer support team.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Do you offer price matching?</div>
+                        <div class="faq-answer">
+                            <p>Yes, we offer price matching for identical items sold by major retailers. The item must be in stock and available for immediate purchase from the competitor. To request a price match, please contact our customer support team with a link to the competitor's listing.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Can I cancel my order after it's been placed?</div>
+                        <div class="faq-answer">
+                            <p>Orders can be canceled if they haven't entered the shipping process. To cancel an order, log into your account and go to your order history, or contact our customer support team as soon as possible. Once an order has shipped, it cannot be canceled, but you can return it according to our return policy.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Do you offer technical support for products purchased?</div>
+                        <div class="faq-answer">
+                            <p>Yes, we provide basic technical support for products purchased from TechStore. For complex issues, we may refer you to the manufacturer's technical support. Most products also come with manufacturer warranties that cover technical issues. For technical assistance, please contact our support team via phone or email.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // FAQ toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', function() {
+                    // Toggle active class on the clicked FAQ item
+                    item.classList.toggle('active');
+                    
+                    // Optional: Close other open FAQs
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

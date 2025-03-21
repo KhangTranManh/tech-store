@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Your Premium Tech Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo"><a href="/index.html">TechStore</a></div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/peripherals.html">Peripherals</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/contact.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Next Gen Technology at Your Fingertips</h1>
+            <p>Discover the latest in computer hardware, gaming gear, and tech accessories with unbeatable prices and exceptional service.</p>
+            <a href="/laptops.html">Shop Now</a>
+        </div>
+    </section>
+
+    <section class="featured-categories">
+        <h2 class="section-title">Shop By Category</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <a href="/laptops.html">
+                    <div class="category-img">
+                        <img src="images/laptop.jpg" alt="Gaming Laptops">
+                    </div>
+                    <div class="category-title">Gaming Laptops</div>
+                </a>
+            </div>
+            <div class="category-card">
+                <a href="/gaming-pcs.html">
+                    <div class="category-img">
+                        <img src="images/pc.jpg" alt="Custom PCs">
+                    </div>
+                    <div class="category-title">Custom PCs</div>
+                </a>
+            </div>
+            <div class="category-card">
+                <a href="/components.html">
+                    <div class="category-img">
+                        <img src="images/gpu.jpg" alt="Graphics Cards">
+                    </div>
+                    <div class="category-title">Graphics Cards</div>
+                </a>
+            </div>
+            <div class="category-card">
+                <a href="/monitors.html">
+                    <div class="category-img">
+                        <img src="images/monitor.jpg" alt="Monitors">
+                    </div>
+                    <div class="category-title">Monitors</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <a href="/product-detail.html">
+                    <div class="product-img">
+                        <img src="images/product1.jpg" alt="Gaming Laptop">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Acer Predator Helios 300 Gaming Laptop</h3>
+                        <div class="product-price">
+                            $1,199 <span class="product-original-price">$1,499</span>
+                            <span class="product-discount">-20%</span>
+                        </div>
+                    </div>
+                </a>
+                <button class="add-to-cart" data-product-id="1">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <a href="/product-detail.html">
+                    <div class="product-img">
+                        <img src="images/product2.jpg" alt="Graphics Card">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">NVIDIA GeForce RTX 4070 Graphics Card</h3>
+                        <div class="product-price">
+                            $599 <span class="product-original-price">$649</span>
+                            <span class="product-discount">-8%</span>
+                        </div>
+                    </div>
+                </a>
+                <button class="add-to-cart" data-product-id="2">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <a href="/product-detail.html">
+                    <div class="product-img">
+                        <img src="images/product3.jpg" alt="Gaming Monitor">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">LG UltraGear 27" 1ms 144Hz Gaming Monitor</h3>
+                        <div class="product-price">
+                            $329 <span class="product-original-price">$399</span>
+                            <span class="product-discount">-18%</span>
+                        </div>
+                    </div>
+                </a>
+                <button class="add-to-cart" data-product-id="3">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <a href="/product-detail.html">
+                    <div class="product-img">
+                        <img src="images/product4.jpg" alt="Gaming Keyboard">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Logitech G Pro X Mechanical Gaming Keyboard</h3>
+                        <div class="product-price">
+                            $129 <span class="product-original-price">$149</span>
+                            <span class="product-discount">-13%</span>
+                        </div>
+                    </div>
+                </a>
+                <button class="add-to-cart" data-product-id="4">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="special-offers">
+        <h2 class="section-title">Special Offers</h2>
+        <div class="offer-grid">
+            <div class="offer-card">
+                <img src="images/offer1.jpg" alt="Gaming Bundle" class="offer-img">
+                <div class="offer-content">
+                    <h3 class="offer-title">Ultimate Gaming Bundle</h3>
+                    <p class="offer-desc">Get a gaming PC, monitor, keyboard, and mouse at a special bundle price!</p>
+                    <a href="/gaming-pcs.html" class="offer-btn">View Deal</a>
+                </div>
+            </div>
+            <div class="offer-card">
+                <img src="images/offer2.jpg" alt="Student Discount" class="offer-img">
+                <div class="offer-content">
+                    <h3 class="offer-title">Student Discount</h3>
+                    <p class="offer-desc">Students get an extra 10% off on all laptops and accessories!</p>
+                    <a href="/laptops.html" class="offer-btn">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
+                    <li><a href="https://twitter.com" target="_blank">Twitter</a></li>
+                    <li><a href="https://instagram.com" target="_blank">Instagram</a></li>
+                    <li><a href="https://youtube.com" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="/js/products.js"></script>
+</body>
+</html>

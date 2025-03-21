@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acer Predator Helios 300 Gaming Laptop - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .product-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .product-gallery {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .main-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            margin-bottom: 20px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        
+        .main-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f8f8;
+        }
+        
+        .thumbnail img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .thumbnail.active {
+            border-color: #ff6b00;
+        }
+        
+        .product-info {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stars {
+            color: #FFD700;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+        .reviews-count {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .product-pricing {
+            margin-bottom: 25px;
+        }
+        
+        .current-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b00;
+            margin-right: 10px;
+        }
+        
+        .original-price {
+            font-size: 18px;
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .discount-badge {
+            display: inline-block;
+            background-color: #ff6b00;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .product-availability {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .product-description {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .product-specs {
+            margin-bottom: 25px;
+        }
+        
+        .spec-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .spec-list {
+            list-style-type: none;
+        }
+        
+        .spec-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+        }
+        
+        .spec-list li span:first-child {
+            font-weight: bold;
+            width: 150px;
+            color: #666;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .quantity-selector label {
+            margin-right: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            height: 30px;
+            border: 1px solid #ddd;
+            text-align: center;
+            margin: 0 5px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .add-to-cart-btn {
+            flex: 1;
+            padding: 12px 15px;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-to-cart-btn:hover {
+            background-color: #e05f00;
+        }
+        
+        .wishlist-btn {
+            padding: 12px 15px;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .wishlist-btn:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .product-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .product-meta div {
+            margin-bottom: 5px;
+        }
+        
+        .product-meta span {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .shipping-info {
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .shipping-info i {
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .share-product {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .share-product span {
+            font-weight: bold;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .social-icons a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .social-icons a:hover {
+            color: #ff6b00;
+        }
+        
+        .product-tabs {
+            margin-bottom: 60px;
+        }
+        
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .tab-btn.active {
+            color: #ff6b00;
+            border-bottom-color: #ff6b00;
+        }
+        
+        .tab-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .related-products {
+            margin-bottom: 60px;
+        }
+        
+        .related-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff6b00;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+            }
+            
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+                <a href="/cart.html">Cart (0)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/peripherals.html">Peripherals</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/support.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="product-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; 
+                <a href="/laptops.html">Laptops</a> &gt; 
+                <a href="/gaming-laptops.html">Gaming Laptops</a> &gt; 
+                Acer Predator Helios 300
+            </div>
+            
+            <div class="product-detail">
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="images/product1.jpg" alt="Acer Predator Helios 300 Gaming Laptop">
+                    </div>
+                    <div class="thumbnail-container">
+                        <div class="thumbnail active">
+                            <img src="images/product1.jpg" alt="Front view">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="images/product1-side.jpg" alt="Side view">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="images/product1-back.jpg" alt="Back view">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="images/product1-keyboard.jpg" alt="Keyboard view">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h1 class="product-title">Acer Predator Helios 300 Gaming Laptop</h1>
+                    
+                    <div class="product-rating">
+                        <div class="stars">★★★★☆</div>
+                        <div class="reviews-count">4.7/5 (128 Reviews)</div>
+                    </div>
+                    
+                    <div class="product-pricing">
+                        <span class="current-price">$1,199</span>
+                        <span class="original-price">$1,499</span>
+                        <span class="discount-badge">-20%</span>
+                    </div>
+                    
+                    <div class="product-availability">
+                        In Stock (8 units)
+                    </div>
+                    
+                    <div class="product-description">
+                        <p>The Acer Predator Helios 300 is a powerful gaming laptop featuring a 15.6" Full HD IPS display, 10th Gen Intel Core i7 processor, NVIDIA GeForce RTX 3060 graphics, 16GB DDR4 RAM, and a fast 512GB NVMe SSD. Perfect for gaming, content creation, and demanding applications.</p>
+                    </div>
+                    
+                    <div class="product-specs">
+                        <div class="spec-title">Key Specifications</div>
+                        <ul class="spec-list">
+                            <li><span>Processor:</span> Intel Core i7-10750H (6-core, 12-thread)</li>
+                            <li><span>Graphics:</span> NVIDIA GeForce RTX 3060 6GB GDDR6</li>
+                            <li><span>Memory:</span> 16GB DDR4 3200MHz (Upgradable to 32GB)</li>
+                            <li><span>Storage:</span> 512GB NVMe SSD</li>
+                            <li><span>Display:</span> 15.6" Full HD IPS, 144Hz, 3ms response time</li>
+                            <li><span>Operating System:</span> Windows 11 Home</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="quantity-selector">
+                        <label for="quantity">Quantity:</label>
+                        <div class="quantity-control">
+                            <button class="quantity-btn">-</button>
+                            <input type="number" id="quantity" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="wishlist-btn">Add to Wishlist</button>
+                    </div>
+                    
+                    <div class="shipping-info">
+                        <i>📦</i> Free shipping on orders over $50. Free returns.
+                    </div>
+                    
+                    <div class="product-meta">
+                        <div>Brand: <span>Acer</span></div>
+                        <div>Model: <span>PH315-53-71HN</span></div>
+                        <div>SKU: <span>ACR10750H3060</span></div>
+                        <div>Category: <span>Gaming Laptops</span></div>
+                        <div>Tags: <span>Gaming, Laptop, Acer, RTX 3060</span></div>
+                    </div>
+                    
+                    <div class="share-product">
+                        <span>Share:</span>
+                        <div class="social-icons">
+                            <a href="#">Facebook</a>
+                            <a href="#">Twitter</a>
+                            <a href="#">Pinterest</a>
+                            <a href="#">Email</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active">Description</button>
+                    <button class="tab-btn">Specifications</button>
+                    <button class="tab-btn">Reviews (128)</button>
+                    <button class="tab-btn">FAQs</button>
+                </div>
+                
+                <div class="tab-content">
+                    <div class="tab-pane active" id="description">
+                        <h3>Product Description</h3>
+                        <p>The Acer Predator Helios 300 gaming laptop combines powerful components, advanced cooling, and immersive features to deliver an exceptional gaming experience. Whether you're playing the latest AAA titles, streaming content, or tackling creative projects, this laptop provides the performance you need.</p>
+                        
+                        <h4>Powerful Performance</h4>
+                        <p>Equipped with a 10th Gen Intel Core i7-10750H processor featuring 6 cores and 12 threads, this laptop delivers impressive processing power for gaming and multitasking. The NVIDIA GeForce RTX 3060 graphics card with 6GB GDDR6 memory enables realistic ray-traced graphics and cutting-edge AI features in games.</p>
+                        
+                        <h4>Immersive Display</h4>
+                        <p>Experience smooth, responsive gameplay on the 15.6" Full HD IPS display with a 144Hz refresh rate and 3ms response time. The display features a 72% NTSC color gamut for vibrant, accurate colors whether you're gaming or creating content.</p>
+                        
+                        <h4>Advanced Cooling</h4>
+                        <p>Acer's 4th Gen AeroBlade 3D Fan technology keeps the system cool even during extended gaming sessions. The custom-engineered fan design, strategically placed intake and exhaust vents, and heat pipes ensure optimal thermal performance.</p>
+                        
+                        <h4>Customizable RGB Keyboard</h4>
+                        <p>The 4-zone RGB backlit keyboard allows for customizable lighting effects. The WASD and arrow keys are highlighted for quick identification during intense gaming sessions.</p>
+                        
+                        <h4>Fast Storage and Memory</h4>
+                        <p>With 16GB of DDR4 3200MHz memory and a 512GB PCIe NVMe SSD, this laptop offers fast boot times, quick application launches, and smooth multitasking. The memory can be upgraded to 32GB, and there's room for additional storage drives.</p>
+                        
+                        <h4>Connectivity Options</h4>
+                        <p>Stay connected with a full range of ports including USB 3.2 Type-C, USB 3.2 Type-A, USB 2.0, HDMI 2.0, Mini DisplayPort 1.4, and an RJ-45 Ethernet port. Wireless connectivity includes Killer Wi-Fi 6 AX1650i and Bluetooth 5.1.</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="specifications">
+                        <h3>Technical Specifications</h3>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Processor</h4>
+                            <ul>
+                                <li>Intel Core i7-10750H</li>
+                                <li>6 cores, 12 threads</li>
+                                <li>2.6GHz base frequency, up to 5.0GHz with Turbo Boost</li>
+                                <li>12MB Intel Smart Cache</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Graphics</h4>
+                            <ul>
+                                <li>NVIDIA GeForce RTX 3060 Laptop GPU</li>
+                                <li>6GB GDDR6 VRAM</li>
+                                <li>Ray Tracing Cores, Tensor Cores, DLSS support</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Memory</h4>
+                            <ul>
+                                <li>16GB DDR4 3200MHz (2x8GB)</li>
+                                <li>Upgradable to 32GB (2x16GB)</li>
+                                <li>Dual-channel support</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Storage</h4>
+                            <ul>
+                                <li>512GB PCIe NVMe SSD</li>
+                                <li>Additional empty 2.5" drive bay for storage expansion</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Display</h4>
+                            <ul>
+                                <li>15.6" Full HD (1920 x 1080) IPS</li>
+                                <li>144Hz refresh rate</li>
+                                <li>3ms response time</li>
+                                <li>72% NTSC color gamut</li>
+                                <li>ComfyView LED-backlit</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Audio</h4>
+                            <ul>
+                                <li>DTS:X Ultra Audio</li>
+                                <li>Dual speakers</li>
+                                <li>Acer TrueHarmony technology</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Keyboard</h4>
+                            <ul>
+                                <li>4-zone RGB backlit keyboard</li>
+                                <li>WASD and arrow keys highlighted</li>
+                                <li>Dedicated Turbo button</li>
+                                <li>NumPad</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Connectivity</h4>
+                            <ul>
+                                <li>Killer Wi-Fi 6 AX1650i (802.11ax)</li>
+                                <li>Bluetooth 5.1</li>
+                                <li>1x USB 3.2 Gen 2 Type-C</li>
+                                <li>3x USB 3.2 Gen 1 Type-A (one with power-off charging)</li>
+                                <li>1x HDMI 2.0 with HDCP support</li>
+                                <li>1x Mini DisplayPort 1.4</li>
+                                <li>1x RJ-45 Ethernet port</li>
+                                <li>1x 3.5mm headphone/microphone combo jack</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Battery</h4>
+                            <ul>
+                                <li>4-cell Li-ion, 59Wh</li>
+                                <li>Up to 6 hours of battery life</li>
+                                <li>230W power adapter</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Operating System</h4>
+                            <ul>
+                                <li>Windows 11 Home</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Dimensions</h4>
+                            <ul>
+                                <li>363.4 x 255 x 22.9 mm (14.31 x 10.04 x 0.90 inches)</li>
+                                <li>Weight: 2.2 kg (4.85 lbs)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="reviews">
+                        <h3>Customer Reviews</h3>
+                        <p>This section would contain customer reviews with ratings, comments, and dates.</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="faqs">
+                        <h3>Frequently Asked Questions</h3>
+                        <div style="margin-bottom: 20px;">
+                            <h4>Q: Can the RAM be upgraded?</h4>
+                            <p>A: Yes, the laptop has two RAM slots. It comes with 16GB (2x8GB) and can be upgraded to a maximum of 32GB (2x16GB) DDR4 memory.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Q: Does this laptop have an additional storage bay?</h4>
+                            <p>A: Yes, in addition to the 512GB NVMe SSD, there is an empty 2.5" drive bay for additional storage expansion.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Q: What is the battery life like?</h4>
+                            <p>A: Battery life varies depending on usage, but typically lasts up to 6 hours for regular tasks. For gaming, it's recommended to use the power adapter for optimal performance.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4>Q: Does this laptop support external displays?</h4>
+                            <p>A: Yes, you can connect external displays using the HDMI 2.0 port or Mini DisplayPort 1.4. The USB Type-C port also supports DisplayPort over USB-C.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="related-products">
+                <h2 class="related-title">Related Products</h2>
+                
+                <div class="related-grid">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="images/related1.jpg" alt="Related Product 1">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">MSI GS66 Stealth Gaming Laptop</h3>
+                            <div class="product-price">
+                                $1,399 <span class="product-original-price">$1,599</span>
+                                <span class="product-discount">-13%</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="images/related2.jpg" alt="Related Product 2">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">ASUS ROG Strix G15 Gaming Laptop</h3>
+                            <div class="product-price">
+                                $1,299 <span class="product-original-price">$1,499</span>
+                                <span class="product-discount">-13%</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="images/related3.jpg" alt="Related Product 3">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Lenovo Legion 5 Pro Gaming Laptop</h3>
+                            <div class="product-price">
+                                $1,349 <span class="product-original-price">$1,499</span>
+                                <span class="product-discount">-10%</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="images/related4.jpg" alt="Related Product 4">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">HP Omen 15 Gaming Laptop</h3>
+                            <div class="product-price">
+                                $1,249 <span class="product-original-price">$1,399</span>
+                                <span class="product-discount">-11%</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Simple Tab Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the id of the corresponding pane
+                    const tabId = this.textContent.trim().toLowerCase().split(' ')[0];
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Thumbnail functionality
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const mainImage = document.querySelector('.main-image img');
+            
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    // Remove active class from all thumbnails
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked thumbnail
+                    this.classList.add('active');
+                    
+                    // Update main image source
+                    mainImage.src = this.querySelector('img').src;
+                });
+            });
+            
+            // Quantity selector functionality
+            const minusBtn = document.querySelector('.quantity-btn:first-child');
+            const plusBtn = document.querySelector('.quantity-btn:last-child');
+            const quantityInput = document.querySelector('.quantity-input');
+            
+            minusBtn.addEventListener('click', function() {
+                let value = parseInt(quantityInput.value);
+                if (value > 1) {
+                    quantityInput.value = value - 1;
+                }
+            });
+            
+            plusBtn.addEventListener('click', function() {
+                let value = parseInt(quantityInput.value);
+                quantityInput.value = value + 1;
+            });
+            
+            // Add to cart button functionality
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
+            addToCartBtn.addEventListener('click', function() {
+                alert('Product added to cart!');
+                // In a real app, this would add the product to the cart
+            });
+            
+            // Wishlist button functionality
+            const wishlistBtn = document.querySelector('.wishlist-btn');
+            wishlistBtn.addEventListener('click', function() {
+                alert('Product added to wishlist!');
+                // In a real app, this would add the product to the wishlist
+            });
+        });
+    </script>
+  <script src="/js/products.js"></script>
+</body>
+</html>
