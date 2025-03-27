@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - TechStore</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/authUtils.js"></script>
+    <script src="/js/main.js"></script>
     <style>
         .register-container {
             max-width: 600px;
@@ -218,11 +220,11 @@
             <div class="or-divider">OR</div>
             
             <div class="social-register">
-                <button class="social-btn">
+                <button class="social-btn" data-provider="google">
                     <img src="images/google-icon.png" alt="Google">
                     Google
                 </button>
-                <button class="social-btn">
+                <button class="social-btn" data-provider="facebook">
                     <img src="images/facebook-icon.png" alt="Facebook">
                     Facebook
                 </button>
@@ -272,6 +274,7 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-  <script src="/js/register.js"></script>
+    <script src="/js/register.js"></script>
+    <script src="/js/cart.js"></script>
 </body>
 </html>

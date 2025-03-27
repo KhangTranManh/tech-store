@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - TechStore</title>
     <link rel="stylesheet" href="/css/style.css">
+
     <style>
         .cart-container {
             max-width: 1200px;
@@ -284,117 +285,11 @@
         <div class="cart-container">
             <h1 class="cart-title">Your Shopping Cart</h1>
             
-            <!-- If cart has items, show this section -->
-            <div class="cart-with-items">
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="product-info">
-                                    <img src="images/product1.jpg" alt="Gaming Laptop" class="product-img">
-                                    <div>
-                                        <div class="product-name">Acer Predator Helios 300 Gaming Laptop</div>
-                                        <div class="product-specs">Intel Core i7, 16GB RAM, 512GB SSD</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="product-price">$1,199</td>
-                            <td>
-                                <div class="quantity-control">
-                                    <button class="quantity-btn">-</button>
-                                    <input type="number" class="quantity-input" value="1" min="1">
-                                    <button class="quantity-btn">+</button>
-                                </div>
-                            </td>
-                            <td class="product-price">$1,199</td>
-                            <td>
-                                <button class="remove-btn">Remove</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-info">
-                                    <img src="images/product3.jpg" alt="Gaming Monitor" class="product-img">
-                                    <div>
-                                        <div class="product-name">LG UltraGear 27" 1ms 144Hz Gaming Monitor</div>
-                                        <div class="product-specs">27" IPS, 2560x1440, HDR10</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="product-price">$329</td>
-                            <td>
-                                <div class="quantity-control">
-                                    <button class="quantity-btn">-</button>
-                                    <input type="number" class="quantity-input" value="1" min="1">
-                                    <button class="quantity-btn">+</button>
-                                </div>
-                            </td>
-                            <td class="product-price">$329</td>
-                            <td>
-                                <button class="remove-btn">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="cart-actions">
-                    <div class="cart-coupons">
-                        <div class="promo-code">
-                            <h4>Apply Promo Code</h4>
-                            <form class="promo-form">
-                                <input type="text" class="promo-input" placeholder="Enter promo code">
-                                <button type="submit" class="apply-btn">Apply</button>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <div class="cart-summary">
-                        <h3 class="summary-title">Order Summary</h3>
-                        
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>$1,528.00</span>
-                        </div>
-                        
-                        <div class="summary-row">
-                            <span>Shipping</span>
-                            <span>$0.00</span>
-                        </div>
-                        
-                        <div class="summary-row">
-                            <span>Tax</span>
-                            <span>$152.80</span>
-                        </div>
-                        
-                        <div class="summary-row total">
-                            <span>Total</span>
-                            <span>$1,680.80</span>
-                        </div>
-                        
-                        <button class="checkout-btn">Proceed to Checkout</button>
-                        
-                        <a href="/" class="continue-shopping">Continue Shopping</a>
-                    </div>
-                </div>
+            <!-- Cart content will be dynamically inserted here -->
+            <div id="cart-content">
+                <!-- Loading spinner -->
+                <div class="loading-spinner">Loading cart...</div>
             </div>
-            
-            <!-- If cart is empty, show this section (normally this would be controlled by JavaScript) -->
-            <!--
-            <div class="cart-empty">
-                <h3>Your Shopping Cart is Empty</h3>
-                <p>Looks like you haven't added any items to your cart yet.</p>
-                <a href="/" class="shop-now-btn">Shop Now</a>
-            </div>
-            -->
         </div>
     </main>
 
@@ -436,6 +331,39 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-  <script src="/js/cart.js"></script>
+
+    <!-- Scripts at the bottom of the body -->
+    <script src="js/authUtils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart-js.js"></script>
+    <script>
+        // Initialize cart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load cart data if on cart page
+            if (window.location.pathname.includes('/cart.html')) {
+                fetch('/cart', {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Use the function from cart-js.js
+                        updateCartUI(data.cart);
+                    } else {
+                        throw new Error(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading cart:', error);
+                    document.querySelector('#cart-content').innerHTML = `
+                        <div class="error-message">
+                            Failed to load cart. Please try again later.
+                        </div>
+                    `;
+                });
+            }
+        });
+    </script>
 </body>
 </html>

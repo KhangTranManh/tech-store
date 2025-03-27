@@ -50,6 +50,25 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // Social login fields
+  googleId: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
+  facebookId: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
+  avatar: {
+    type: String
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  // Original fields
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   createdAt: {
@@ -79,6 +98,11 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
 // Virtual for full name
 UserSchema.virtual('fullName').get(function() {
   return `${this.firstName} ${this.lastName}`;
+});
+
+// Helper method to check if user was created via social login
+UserSchema.virtual('isSocialUser').get(function() {
+  return !!(this.googleId || this.facebookId);
 });
 
 module.exports = mongoose.model('User', UserSchema);

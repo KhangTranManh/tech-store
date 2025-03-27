@@ -392,4 +392,117 @@ footer {
     nav ul li {
         margin-bottom: 5px;
     }
+    /* Add to your existing CSS */
+.user-actions a[href="/account.html"] {
+    font-weight: bold;
+    color: #ff6b00; /* Your brand orange color */
+  }
+  
+  /* Add hover effect */
+  .user-actions a[href="/account.html"]:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Add these styles to your existing CSS */
+.cart-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.cart-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.cart-items table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.cart-items th,
+.cart-items td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantity-btn {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    padding: 5px;
+}
+
+.remove-btn {
+    padding: 5px 10px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cart-summary {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 40px;
+}
+
+.continue-shopping {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
 }

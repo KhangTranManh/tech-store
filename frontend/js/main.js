@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize product interaction
     initializeProductInteractions();
+    
+    // Check authentication status and update UI
+    if (window.authUtils) {
+        window.authUtils.checkAuthStatus();
+    }
 });
 
 /**
@@ -133,6 +138,7 @@ function updateCart(productId, productName) {
 
 /**
  * Show notification
+ * Make this function globally available for use in other scripts
  */
 function showNotification(message, type = 'success') {
     // Create notification element
@@ -237,3 +243,6 @@ function initializeProductInteractions() {
         });
     });
 }
+
+// Make showNotification available globally
+window.showNotification = showNotification;

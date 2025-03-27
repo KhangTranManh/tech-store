@@ -5,9 +5,14 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
+const passport = require('passport');
+
 
 // Database Connection
 const connectDB = require('./db/connection');
+
+// Auth service for passport configuration
+const { initializePassport } = require('./services/authService');
 
 // Routes (use optional chaining and error handling)
 const safeRequire = (modulePath) => {
@@ -54,21 +59,29 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
-    collectionName: 'sessions',
-    autoRemove: 'interval',
-    autoRemoveInterval: 10 // in minutes
+    collectionName: 'sessions'
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 24 hours
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    httpOnly: true
+    secure: process.env.NODE_ENV === 'production'
   }
 }));
 
-// Conditionally add routes if modules exist
+// Initialize Passport and restore authentication state from session
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Initialize Passport JS for authentication
+initializePassport(app);
+
+// Move this line after session and passport initialization
+if (cartRoutes) {
+    app.use('/cart', require('./routes/cart'));
+}
+
+// Mount routes after all middleware
 if (authRoutes) app.use('/auth', authRoutes);
 if (productRoutes) app.use('/products', productRoutes);
-if (cartRoutes) app.use('/cart', cartRoutes);
 if (orderRoutes) app.use('/orders', orderRoutes);
 
 // Serve static HTML pages
@@ -110,6 +123,12 @@ staticPages.forEach(page => {
   } else {
     serveStaticPage(page, page.substring(1));
   }
+});
+
+// Authentication status middleware (makes user data available to templates)
+app.use((req, res, next) => {
+  res.locals.user = req.isAuthenticated() ? req.user : null;
+  next();
 });
 
 // 404 handler

@@ -78,57 +78,61 @@ const products = [
 
 // Enhanced MongoDB connection with more detailed logging
 async function connectToDatabase() {
-  try {
-    console.log('Attempting to connect to MongoDB...');
-    console.log('Connection URI:', process.env.MONGODB_URI);
+    try {
+        console.log('Attempting to connect to MongoDB...');
+        console.log('Connection URI:', process.env.MONGODB_URI);
 
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: false,
-      useUnifiedTopology: true,
-    });
+        await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: false,
+            useUnifiedTopology: true,
+        });
 
-    console.log('✅ Successfully connected to MongoDB');
-    return true;
-  } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error);
-    return false;
-  }
+        console.log('✅ Successfully connected to MongoDB');
+        return true;
+    } catch (error) {
+        console.error('❌ MongoDB Connection Error:', error);
+        return false;
+    }
 }
 
 // Main seeding function
 async function seedDatabase() {
-  try {
-    // Connect to database
-    const isConnected = await connectToDatabase();
-    if (!isConnected) {
-      console.error('Failed to connect to database. Exiting.');
-      process.exit(1);
+    try {
+        // Connect to database
+        const isConnected = await connectToDatabase();
+        if (!isConnected) {
+            console.error('Failed to connect to database. Exiting.');
+            process.exit(1);
+        }
+
+        // Clear existing products
+        const deleteResult = await Product.deleteMany({});
+        console.log(`🗑️ Deleted ${deleteResult.deletedCount} existing products`);
+
+        // Insert new products
+        const insertedProducts = await Product.insertMany(products);
+        console.log(`✨ Inserted ${insertedProducts.length} new products`);
+
+        // Add this after seeding products
+        console.log('Seeded products with IDs:', insertedProducts.map(p => ({
+            name: p.name,
+            id: p._id.toString()
+        })));
+
+    } catch (error) {
+        console.error('❌ Seeding Error:', error);
+        console.error(error.errors);
+    } finally {
+        await mongoose.connection.close();
+        console.log('📴 MongoDB connection closed');
     }
-
-    // Clear existing products
-    const deleteResult = await Product.deleteMany({});
-    console.log(`🗑️ Deleted ${deleteResult.deletedCount} existing products`);
-
-    // Insert new products
-    const insertedProducts = await Product.insertMany(products);
-    console.log(`✨ Inserted ${insertedProducts.length} new products`);
-
-  } catch (error) {
-    console.error('❌ Seeding Error:', error);
-    // Log the full error details
-    console.error(error.errors);
-  } finally {
-    // Close database connection
-    await mongoose.connection.close();
-    console.log('📴 MongoDB connection closed');
-  }
 }
 
 // Run the seeding process
 seedDatabase().then(() => {
-  console.log('Seeding process completed');
-  process.exit(0);
+    console.log('Product seeding process completed');
+    process.exit(0);
 }).catch((error) => {
-  console.error('Seeding failed:', error);
-  process.exit(1);
+    console.error('Product seeding failed:', error);
+    process.exit(1);
 });

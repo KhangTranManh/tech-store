@@ -1,46 +1,60 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const CartItemSchema = new mongoose.Schema({
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
-    required: [true, 'Product is required']
+// Schema for individual cart items
+const CartItemSchema = new Schema({
+  productId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Product',  // Reference to the Product model
+    required: true
   },
   quantity: {
     type: Number,
-    required: [true, 'Quantity is required'],
-    min: [1, 'Quantity must be at least 1']
+    required: true,
+    min: [1, 'Quantity cannot be less than 1'],
+    default: 1
   },
-  price: {
-    type: Number,
-    required: [true, 'Price is required'],
-    min: [0, 'Price cannot be negative']
+  name: String,      // Add these fields for easier access
+  price: Number,     // without needing to populate every time
+  image: String,
+  specs: String,
+  dateAdded: {
+    type: Date,
+    default: Date.now
   }
 });
 
-const CartSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'User is required']
+// Main Cart schema - each user has one cart
+const CartSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',     // Reference to the User model
+    required: true,
+    unique: true     // One cart per user/guest
+  },
+  isGuest: {
+    type: Boolean,
+    default: false
   },
   items: [CartItemSchema],
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
-}, {
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
 });
 
-// Virtual for total cart value
-CartSchema.virtual('totalValue').get(function() {
-  return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+// Pre-save middleware to update the updatedAt field
+CartSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
-// Virtual for total items
-CartSchema.virtual('totalItems').get(function() {
+// Virtual for calculating total item count
+CartSchema.virtual('itemCount').get(function() {
   return this.items.reduce((total, item) => total + item.quantity, 0);
 });
 

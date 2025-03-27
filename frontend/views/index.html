@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechStore - Your Premium Tech Store</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/authUtils.js"></script>
+    <script src="/js/main.js"></script>
 </head>
 <body>
     <header>
@@ -95,7 +97,7 @@
                         </div>
                     </div>
                 </a>
-                <button class="add-to-cart" data-product-id="1">Add to Cart</button>
+                <button class="add-to-cart" data-product-id="65f2b89d3cd9e23e8c6a1234">Add to Cart</button>
             </div>
             <div class="product-card">
                 <a href="/product-detail.html">
@@ -110,7 +112,7 @@
                         </div>
                     </div>
                 </a>
-                <button class="add-to-cart" data-product-id="2">Add to Cart</button>
+                <button class="add-to-cart" data-product-id="65f2b89d3cd9e23e8c6a5678">Add to Cart</button>
             </div>
             <div class="product-card">
                 <a href="/product-detail.html">
@@ -125,7 +127,7 @@
                         </div>
                     </div>
                 </a>
-                <button class="add-to-cart" data-product-id="3">Add to Cart</button>
+                <button class="add-to-cart" data-product-id="65f2b89d3cd9e23e8c6a9012">Add to Cart</button>
             </div>
             <div class="product-card">
                 <a href="/product-detail.html">
@@ -140,7 +142,7 @@
                         </div>
                     </div>
                 </a>
-                <button class="add-to-cart" data-product-id="4">Add to Cart</button>
+                <button class="add-to-cart" data-product-id="65f2b89d3cd9e23e8c6a3456">Add to Cart</button>
             </div>
         </div>
     </section>
@@ -207,5 +209,14 @@
     </footer>
 
     <script src="/js/products.js"></script>
+    <script src="/js/cart-js.js"></script>
+    <script>
+        // Initialize cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.cartUtils) {
+                window.cartUtils.initializeCart();
+            }
+        });
+    </script>
 </body>
 </html>
