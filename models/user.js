@@ -68,16 +68,22 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  // Original fields
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
+// Add these fields for password reset functionality
+resetPasswordToken: {
+  type: String
+},
+resetPasswordExpires: {
+  type: Date
+},
   createdAt: {
     type: Date,
     default: Date.now
   }
+  
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
+  
 });
 
 // Password hashing middleware

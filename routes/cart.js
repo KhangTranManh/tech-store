@@ -309,5 +309,78 @@ router.delete('/clear', isAuthenticated, async (req, res) => {
         });
     }
 });
+// Transfer guest cart to user cart after login
+router.post('/transfer', async (req, res) => {
+    try {
+        // Check if user is logged in and has a guestId
+        if (!req.user || !req.session.guestId) {
+            return res.status(400).json({
+                success: false,
+                message: 'No guest cart or user not authenticated'
+            });
+        }
+
+        // Find guest cart
+        const guestCart = await Cart.findOne({ userId: req.session.guestId });
+        
+        if (!guestCart || guestCart.items.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: 'No guest cart to transfer',
+                cart: { items: [], itemCount: 0 }
+            });
+        }
+
+        // Find or create user cart
+        let userCart = await Cart.findOne({ userId: req.user._id });
+        if (!userCart) {
+            userCart = new Cart({
+                userId: req.user._id,
+                items: []
+            });
+        }
+
+        // Transfer items from guest cart to user cart
+        guestCart.items.forEach(item => {
+            const existingItemIndex = userCart.items.findIndex(
+                userItem => userItem.productId.toString() === item.productId.toString()
+            );
+            
+            if (existingItemIndex > -1) {
+                // If item exists in user cart, update quantity
+                userCart.items[existingItemIndex].quantity += item.quantity;
+            } else {
+                // If not, add the item
+                userCart.items.push(item);
+            }
+        });
+
+        // Save user cart
+        await userCart.save();
+        
+        // Delete guest cart
+        await Cart.findByIdAndDelete(guestCart._id);
+        
+        // Clear guest ID from session
+        delete req.session.guestId;
+
+        // Return updated cart
+        res.status(200).json({
+            success: true,
+            message: 'Guest cart transferred to user account',
+            cart: {
+                items: userCart.items,
+                itemCount: userCart.itemCount
+            }
+        });
+
+    } catch (error) {
+        console.error('Error transferring cart:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error transferring cart'
+        });
+    }
+});
 
 module.exports = router;
