@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/products-js.js"></script>
+    <script src="/js/cart-js.js"></script>
 </head>
 <body>
     <header>
@@ -207,16 +209,5 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
-    <script src="/js/products.js"></script>
-    <script src="/js/cart-js.js"></script>
-    <script>
-        // Initialize cart functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.cartUtils) {
-                window.cartUtils.initializeCart();
-            }
-        });
-    </script>
 </body>
 </html>

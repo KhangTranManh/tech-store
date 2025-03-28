@@ -1,90 +1,159 @@
+// models/order.js
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const OrderItemSchema = new mongoose.Schema({
+// Order Item Schema
+const OrderItemSchema = new Schema({
   product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
-    required: [true, 'Product is required']
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
   },
-  quantity: {
-    type: Number,
-    required: [true, 'Quantity is required'],
-    min: [1, 'Quantity must be at least 1']
+  name: {
+    type: String,
+    required: true
   },
   price: {
     type: Number,
-    required: [true, 'Price is required'],
-    min: [0, 'Price cannot be negative']
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: [1, 'Quantity cannot be less than 1']
   }
 });
 
-const OrderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'User is required']
+// Address Schema
+const AddressSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true
   },
-  items: [OrderItemSchema],
-  totalValue: {
-    type: Number,
-    required: [true, 'Total value is required'],
-    min: [0, 'Total value cannot be negative']
+  lastName: {
+    type: String,
+    required: true
+  },
+  street: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  state: {
+    type: String,
+    required: true
+  },
+  postalCode: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true,
+    default: 'United States'
+  },
+  phone: {
+    type: String
+  }
+});
+
+// Payment Info Schema
+const PaymentInfoSchema = new Schema({
+  method: {
+    type: String,
+    required: true,
+    enum: ['credit_card', 'paypal', 'stripe']
+  },
+  transactionId: {
+    type: String
   },
   status: {
     type: String,
-    enum: [
-      'pending', 
-      'processing', 
-      'shipped', 
-      'delivered', 
-      'cancelled'
-    ],
+    enum: ['pending', 'completed', 'failed', 'refunded'],
     default: 'pending'
   },
-  shippingAddress: {
-    street: {
-      type: String,
-      required: [true, 'Street address is required']
-    },
-    city: {
-      type: String,
-      required: [true, 'City is required']
-    },
-    state: {
-      type: String,
-      required: [true, 'State is required']
-    },
-    zipCode: {
-      type: String,
-      required: [true, 'Zip code is required']
-    },
-    country: {
-      type: String,
-      required: [true, 'Country is required']
-    }
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  last4: {
+    type: String
   }
-}, {
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
 });
 
-// Middleware to update updatedAt
-OrderSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
+// Order Schema
+const OrderSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  orderNumber: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  items: [OrderItemSchema],
+  shippingAddress: AddressSchema,
+  billingAddress: AddressSchema,
+  paymentInfo: PaymentInfoSchema,
+  subtotal: {
+    type: Number,
+    required: true
+  },
+  tax: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  shippingCost: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  discount: {
+    type: Number,
+    default: 0
+  },
+  total: {
+    type: Number,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['processing', 'shipped', 'delivered', 'cancelled'],
+    default: 'processing'
+  },
+  notes: {
+    type: String
+  },
+  trackingNumber: {
+    type: String
+  },
+  estimatedDelivery: {
+    type: Date
+  }
+}, {
+  timestamps: true
+});
+
+// Generate a unique order number before saving
+OrderSchema.pre('save', async function(next) {
+  if (!this.orderNumber) {
+    // Generate order number format: TS + last 8 chars of ObjectId + random 4 digits
+    const randomDigits = Math.floor(1000 + Math.random() * 9000); // 4 random digits
+    this.orderNumber = `TS${this._id.toString().substr(-8)}${randomDigits}`;
+  }
   next();
 });
 
-// Virtual for total items
-OrderSchema.virtual('totalItems').get(function() {
-  return this.items.reduce((total, item) => total + item.quantity, 0);
+// Virtual for checking if order is returnable (within 30 days and delivered)
+OrderSchema.virtual('isReturnable').get(function() {
+  if (this.status !== 'delivered') return false;
+  
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  return this.updatedAt >= thirtyDaysAgo;
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

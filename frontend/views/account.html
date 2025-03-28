@@ -9,6 +9,9 @@
     <script src="/js/main.js"></script>
     <script src="/js/account.js"></script>
     <script src="/js/cart-js.js"></script>
+    <script src ="/js/account-settings.js.js"></script>
+
+    
 
     <style>
         .account-container {
@@ -767,44 +770,5 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Logout button functionality
-            const logoutButton = document.querySelector('.logout-btn');
-            
-            logoutButton.addEventListener('click', function() {
-                alert('This would log you out and redirect to the homepage.');
-            });
-            
-            // Add to cart functionality
-            const addToCartButtons = document.querySelectorAll('.cart-btn');
-            
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const itemName = this.closest('.saved-item-info').querySelector('.saved-item-name').textContent;
-                    alert('Added "' + itemName + '" to your cart.');
-                });
-            });
-            
-            // Remove from wishlist functionality
-            const removeButtons = document.querySelectorAll('.saved-item-actions button:not(.cart-btn)');
-            
-            removeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const item = this.closest('.saved-item');
-                    const itemName = item.querySelector('.saved-item-name').textContent;
-                    
-                    if (confirm('Remove "' + itemName + '" from your wishlist?')) {
-                        item.remove();
-                        
-                        if (document.querySelectorAll('.saved-item').length === 0) {
-                            document.querySelector('.saved-items').innerHTML = '<p>No items in your wishlist.</p>';
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

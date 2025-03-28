@@ -7,7 +7,6 @@ const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-
 // Database Connection
 const connectDB = require('./db/connection');
 
@@ -25,13 +24,38 @@ const safeRequire = (modulePath) => {
 };
 
 const pagesRoutes = require('./routes/pages');
-const authRoutes = safeRequire('./routes/auth');
 const productRoutes = safeRequire('./routes/products');
 const cartRoutes = safeRequire('./routes/cart');
 const orderRoutes = safeRequire('./routes/orders');
+const imageRoutes = require('./routes/images');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Load auth routes with enhanced debugging
+let authRoutes;
+try {
+  authRoutes = require('./routes/auth');
+  console.log('Auth routes loaded successfully');
+  
+  // Debug available routes
+  if (authRoutes.stack) {
+    console.log('Auth router routes:');
+    authRoutes.stack.forEach((layer) => {
+      if (layer.route) {
+        const methods = Object.keys(layer.route.methods)
+          .filter(method => layer.route.methods[method])
+          .join(', ').toUpperCase();
+        console.log(`${methods} ${layer.route.path}`);
+      }
+    });
+  } else {
+    console.log('Auth router does not have a stack property');
+  }
+} catch (error) {
+  console.error('Error loading auth routes:', error.message, error.stack);
+  authRoutes = null;
+}
 
 // Connect to Database
 connectDB().catch(err => {
@@ -39,7 +63,8 @@ connectDB().catch(err => {
   process.exit(1);
 });
 
-// Middleware
+// IMPORTANT: Move middleware order - bodyParser should be before route mounting
+// Middleware for request body parsing
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -74,15 +99,33 @@ app.use(passport.session());
 // Initialize Passport JS for authentication
 initializePassport(app);
 
-// Move this line after session and passport initialization
+// Mount API routes with debugging
+app.use('/images', imageRoutes);
+
+// Mount cart routes after session initialization
 if (cartRoutes) {
-    app.use('/cart', require('./routes/cart'));
+  console.log('Mounting cart routes at /cart');
+  app.use('/cart', cartRoutes);
 }
 
-// Mount routes after all middleware
-if (authRoutes) app.use('/auth', authRoutes);
-if (productRoutes) app.use('/products', productRoutes);
-if (orderRoutes) app.use('/orders', orderRoutes);
+// Mount auth routes with more debugging
+if (authRoutes) {
+  console.log('Mounting auth routes at /auth path');
+  app.use('/auth', authRoutes);
+} else {
+  console.error('Auth routes not available to mount!');
+}
+
+// Mount other API routes
+if (productRoutes) {
+  console.log('Mounting product routes at /products');
+  app.use('/products', productRoutes);
+}
+// In server.js
+if (orderRoutes) {
+  console.log('Mounting order routes at /api/orders');
+  app.use('/api/orders', orderRoutes); // Changed from '/orders' to '/api/orders'
+}
 
 // Serve static HTML pages
 const serveStaticPage = (route, filename) => {
@@ -115,8 +158,9 @@ const staticPages = [
   '/orders.html',
   '/track.html',
   '/account.html',
-  '/forgot-password.html', // Add this line
-  '/reset-password.html'   // Add this line too for completeness
+  '/forgot-password.html',
+  '/reset-password.html',
+  '/account-settings.html',
 ];
 
 staticPages.forEach(page => {
@@ -133,11 +177,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add a test route to check if basic routing is working
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Server is running correctly' });
+});
+
 // 404 handler
 app.use((req, res, next) => {
+  console.log('404 Not Found:', req.method, req.path);
   res.status(404).json({
     message: 'Not Found',
-    path: req.path
+    path: req.path,
+    method: req.method
   });
 });
 
@@ -154,6 +205,8 @@ app.use((err, req, res, next) => {
 // Start the server
 const server = app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`- Static files served from: ${path.join(__dirname, 'frontend')}`);
+  console.log(`- Test the server: http://localhost:${PORT}/api/test`);
 });
 
 // Graceful shutdown
@@ -175,11 +228,6 @@ const gracefulShutdown = () => {
     console.error('Could not close connections in time, forcefully shutting down');
     process.exit(1);
   }, 10000);
-};
-// Modify the route mounting section
-if (authRoutes) {
-  console.log('Registering auth routes at /auth');
-  app.use('/auth', authRoutes);
 };
 
 // Listen for termination signals

@@ -1,7 +1,3 @@
-/**
- * TechStore Cart Functionality
- * Handles cart interactions, adds products, and syncs with backend
- */
 
 // Use a flag to prevent double initialization
 let cartInitialized = false;

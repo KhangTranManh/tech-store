@@ -1,0 +1,30 @@
+<!-- upload-icons.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Icons</title>
+</head>
+<body>
+  <h1>Upload Icons</h1>
+  
+  <form action="/images/upload" method="post" enctype="multipart/form-data">
+    <div>
+      <label for="name">Icon Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+      <label for="type">Type:</label>
+      <select id="type" name="type">
+        <option value="icon">Icon</option>
+        <option value="logo">Logo</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div>
+      <label for="image">Select Image:</label>
+      <input type="file" id="image" name="image" required>
+    </div>
+    <button type="submit">Upload</button>
+  </form>
+</body>
+</html>

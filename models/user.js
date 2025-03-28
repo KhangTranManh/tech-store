@@ -68,22 +68,55 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-// Add these fields for password reset functionality
-resetPasswordToken: {
-  type: String
-},
-resetPasswordExpires: {
-  type: Date
-},
+  // Add these fields for password reset functionality
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
+  },
+  // Preferences fields
+  preferences: {
+    type: Object,
+    default: {
+      orderUpdates: true,
+      promotions: false,
+      newsletter: false,
+      productAlerts: false,
+      currency: 'usd'
+    }
+  },
+  // Security settings
+  security: {
+    twoFactorEnabled: {
+      type: Boolean,
+      default: false
+    },
+    twoFactorPhone: {
+      type: String
+    },
+    loginAlerts: {
+      type: Boolean,
+      default: false
+    },
+    sessionTimeout: {
+      type: Number,
+      default: 60 // 1 hour in minutes
+    },
+    sessionToken: {
+      type: String
+    },
+    lastLogin: {
+      type: Date
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
-  
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
-  
 });
 
 // Password hashing middleware

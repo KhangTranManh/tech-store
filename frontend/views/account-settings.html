@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - TechStore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/authUtils.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/account-settings.js"></script>
+    <script src ="/js/cart-js.js"></script>
+    <style>
+        .account-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b00;
+        }
+        
+        .account-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .account-sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            align-self: start;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+            margin-right: 15px;
+        }
+        
+        .user-details {
+            flex-grow: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .user-email {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .nav-menu {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .nav-menu a.active {
+            background-color: #ff6b00;
+            color: white;
+        }
+        
+        .nav-menu i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .account-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .settings-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+        }
+        
+        .settings-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .settings-tab.active {
+            color: #ff6b00;
+            border-bottom-color: #ff6b00;
+        }
+        
+        .settings-tab:hover:not(.active) {
+            color: #333;
+            border-bottom-color: #ddd;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group input[type="tel"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ff6b00;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.2);
+        }
+        
+        .form-group .hint {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #ff6b00;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e05f00;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .danger-zone {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        
+        .danger-zone h3 {
+            color: #f44336;
+            margin-bottom: 15px;
+        }
+        
+        .danger-zone p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .status-error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s, background-color 0.3s;
+        }
+        
+        .strength-weak {
+            background-color: #f44336;
+            width: 25%;
+        }
+        
+        .strength-medium {
+            background-color: #ff9800;
+            width: 50%;
+        }
+        
+        .strength-strong {
+            background-color: #4caf50;
+            width: 100%;
+        }
+        
+        .password-tips {
+            background-color: #f8f8f8;
+            border-left: 3px solid #ddd;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .password-tips ul {
+            padding-left: 20px;
+            margin: 10px 0 0;
+        }
+        
+        .password-tips li {
+            margin-bottom: 5px;
+        }
+        
+        .password-match-status {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .match-success {
+            color: #2e7d32;
+        }
+        
+        .match-error {
+            color: #c62828;
+        }
+        
+        .notification-option {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .notification-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .notification-desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .account-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .settings-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .settings-tab {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <a href="/">TechStore</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button>Search</button>
+            </div>
+            <div class="user-actions">
+                <a href="/login.html" class="guest-only">Login</a>
+                <a href="/register.html" class="guest-only">Register</a>
+                <a href="/account.html" class="user-only">My Account</a>
+                <a href="/cart.html">Cart (<span class="cart-count">0</span>)</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/laptops.html">Laptops</a></li>
+                <li><a href="/gaming-pcs.html">Gaming PCs</a></li>
+                <li><a href="/components.html">Components</a></li>
+                <li><a href="/monitors.html">Monitors</a></li>
+                <li><a href="/accessories.html">Accessories</a></li>
+                <li><a href="/deals.html">Deals</a></li>
+                <li><a href="/contact.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="account-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &gt; <a href="/account.html">My Account</a> &gt; Account Settings
+            </div>
+            
+            <h1 class="page-title">Account Settings</h1>
+            
+            <div class="account-layout">
+                <aside class="account-sidebar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">J</div>
+                        <div class="user-details">
+                            <div class="user-name" id="userName">John Smith</div>
+                            <div class="user-email" id="userEmail">john.smith@example.com</div>
+                        </div>
+                    </div>
+                    
+                    <ul class="nav-menu">
+                        <li><a href="/account.html"><i>📋</i> Dashboard</a></li>
+                        <li><a href="/orders.html"><i>📦</i> Orders</a></li>
+                        <li><a href="/track.html"><i>🔍</i> Track Order</a></li>
+                        <li><a href="/addresses.html"><i>📍</i> Addresses</a></li>
+                        <li><a href="/payment-methods.html"><i>💳</i> Payment Methods</a></li>
+                        <li><a href="/wishlist.html"><i>❤️</i> Wishlist</a></li>
+                        <li><a href="/returns.html"><i>↩️</i> Returns</a></li>
+                        <li><a href="/account-settings.html" class="active"><i>⚙️</i> Account Settings</a></li>
+                    </ul>
+                    
+                    <button class="logout-btn" id="logoutButton">Logout</button>
+                </aside>
+                
+                <div class="account-content">
+                    <h2 class="settings-title">Manage Your Account</h2>
+                    
+                    <div class="settings-tabs">
+                        <div class="settings-tab active" data-tab="profile">Profile Information</div>
+                        <div class="settings-tab" data-tab="password">Change Password</div>
+                        <div class="settings-tab" data-tab="preferences">Preferences</div>
+                        <div class="settings-tab" data-tab="security">Security</div>
+                    </div>
+                    
+                    <div id="statusMessage" class="status-message"></div>
+                    
+                    <!-- Profile Information Tab -->
+                    <div class="tab-content active" data-tab-content="profile">
+                        <form id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required>
+                                <div class="hint">This will be used for communications and account login.</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number (optional)</label>
+                                <input type="tel" id="phone" name="phone">
+                                <div class="hint">For order updates and delivery notifications.</div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary" id="cancelProfileBtn">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Change Password Tab -->
+                    <div class="tab-content" data-tab-content="password">
+                        <form id="passwordForm">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" required>
+                                <div class="password-strength">
+                                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                                </div>
+                                <div class="hint" id="passwordStrengthText">Password strength: Not set</div>
+                                
+                                <div class="password-tips">
+                                    <div>Password requirements:</div>
+                                    <ul>
+                                        <li>At least 8 characters</li>
+                                        <li>Include at least one lowercase letter</li>
+                                        <li>Include at least one uppercase letter</li>
+                                        <li>Include at least one number</li>
+                                        <li>Include at least one special character</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                <div class="password-match-status" id="passwordMatchStatus"></div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary" id="cancelPasswordBtn">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="savePasswordBtn">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Preferences Tab -->
+                    <div class="tab-content" data-tab-content="preferences">
+                        <form id="preferencesForm">
+                            <h3>Email Notifications</h3>
+                            
+                            <div class="notification-option">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="orderUpdates" name="notifications" value="orderUpdates" checked>
+                                    <div>
+                                        <div class="notification-title">Order Updates</div>
+                                        <div class="notification-desc">Receive emails about your order status, shipping, and delivery.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-option">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="promotions" name="notifications" value="promotions">
+                                    <div>
+                                        <div class="notification-title">Promotions and Deals</div>
+                                        <div class="notification-desc">Stay updated with the latest offers, deals, and promotions.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-option">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="newsletter" name="notifications" value="newsletter">
+                                    <div>
+                                        <div class="notification-title">Newsletter</div>
+                                        <div class="notification-desc">Receive our weekly newsletter with tech news and product updates.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-option">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="productAlerts" name="notifications" value="productAlerts">
+                                    <div>
+                                        <div class="notification-title">Product Alerts</div>
+                                        <div class="notification-desc">Get notified when products in your wishlist go on sale or come back in stock.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3>Display Preferences</h3>
+                            
+                            <div class="form-group">
+                                <label for="currency">Preferred Currency</label>
+                                <select id="currency" name="currency">
+                                    <option value="usd">USD - US Dollar</option>
+                                    <option value="eur">EUR - Euro</option>
+                                    <option value="gbp">GBP - British Pound</option>
+                                    <option value="cad">CAD - Canadian Dollar</option>
+                                    <option value="aud">AUD - Australian Dollar</option>
+                                </select>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary" id="cancelPreferencesBtn">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="savePreferencesBtn">Save Preferences</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Security Tab -->
+                    <div class="tab-content" data-tab-content="security">
+                        <form id="securityForm">
+                            <h3>Login Security</h3>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="twoFactorAuth" name="twoFactorAuth">
+                                <div>
+                                    <label for="twoFactorAuth">Enable Two-Factor Authentication</label>
+                                    <div class="hint">Add an extra layer of security to your account by requiring a verification code when logging in.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" id="phoneAuthGroup" style="display: none;">
+                                <label for="phoneAuth">Phone Number for Authentication</label>
+                                <input type="tel" id="phoneAuth" name="phoneAuth">
+                                <div class="hint">We'll send verification codes to this number when you log in.</div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="loginAlerts" name="loginAlerts">
+                                <div>
+                                    <label for="loginAlerts">Email Alerts for New Logins</label>
+                                    <div class="hint">Receive an email notification when your account is accessed from a new device or location.</div>
+                                </div>
+                            </div>
+                            
+                            <h3>Session Management</h3>
+                            
+                            <div class="form-group">
+                                <label for="sessionTimeout">Session Timeout</label>
+                                <select id="sessionTimeout" name="sessionTimeout">
+                                    <option value="30">30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="120">2 hours</option>
+                                    <option value="240">4 hours</option>
+                                    <option value="480">8 hours</option>
+                                    <option value="720">12 hours</option>
+                                    <option value="1440">24 hours</option>
+                                </select>
+                                <div class="hint">How long to keep you logged in when inactive.</div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary" id="cancelSecurityBtn">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="saveSecurityBtn">Save Security Settings</button>
+                            </div>
+                        </form>
+                        
+                        <div class="danger-zone">
+                            <h3>Danger Zone</h3>
+                            <p>These actions are irreversible. Please proceed with caution.</p>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary" id="logoutAllDevicesBtn">Logout from All Devices</button>
+                                <button type="button" class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About TechStore</h3>
+                <p>TechStore is your trusted destination for cutting-edge technology products and gaming gear. We provide the latest hardware at competitive prices with exceptional customer service.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/shipping.html">Shipping Information</a></li>
+                    <li><a href="/returns.html">Returns & Refunds</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>My Account</h3>
+                <ul>
+                    <li><a href="/login.html">Sign In</a></li>
+                    <li><a href="/cart.html">View Cart</a></li>
+                    <li><a href="/orders.html">Order History</a></li>
+                    <li><a href="/track.html">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TechStore. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>

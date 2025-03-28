@@ -1,4 +1,3 @@
-// frontend/js/login.js
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.querySelector('form');
   const googleLoginBtn = document.querySelector('.social-btn[data-provider="google"]');
@@ -8,13 +7,17 @@ document.addEventListener('DOMContentLoaded', function() {
   if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
+
+      // Clear any previous error messages
+      clearErrors();
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       
       // Form validation
       if (!email || !password) {
-        showNotification('Please enter both email and password', 'error');
+        if (!email) showError('email', 'Email is required');
+        if (!password) showError('password', 'Password is required');
         return;
       }
       
@@ -60,17 +63,115 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           }, 1000);
         } else {
+          // Show error notification
           showNotification('Login failed: ' + data.message, 'error');
+          
+          // Also show error under password field
+          showError('password', data.message || 'Invalid email or password');
+          
+          // Clear password field and focus on it
+          document.getElementById('password').value = '';
+          document.getElementById('password').focus();
+          
           toggleFormState(loginForm, false);
         }
       })
       .catch(error => {
         console.error('Error during login:', error);
         showNotification('An error occurred during login. Please try again.', 'error');
+        showError('password', 'An error occurred. Please try again.');
         toggleFormState(loginForm, false);
       });
     });
   }
+  
+  // Google login button handler
+  if (googleLoginBtn) {
+    googleLoginBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = '/auth/google';
+    });
+  }
+  
+  // Facebook login button handler
+  if (facebookLoginBtn) {
+    facebookLoginBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = '/auth/facebook';
+    });
+  }
+  
+  /**
+   * Show error message for a field
+   * @param {string} fieldId - ID of the field
+   * @param {string} message - Error message to display
+   */
+  function showError(fieldId, message) {
+    const errorElement = document.getElementById(`${fieldId}-error`);
+    if (errorElement) {
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+    }
+    
+    // Add error class to input
+    const inputElement = document.getElementById(fieldId);
+    if (inputElement) {
+      inputElement.classList.add('input-error');
+    }
+  }
+  
+  /**
+   * Clear all error messages
+   */
+  function clearErrors() {
+    // Clear all error messages
+    const errorElements = document.querySelectorAll('.error-message');
+    errorElements.forEach(element => {
+      element.textContent = '';
+      element.style.display = 'none';
+    });
+    
+    // Remove error class from inputs
+    const inputElements = document.querySelectorAll('.input-error');
+    inputElements.forEach(element => {
+      element.classList.remove('input-error');
+    });
+  }
+  
+  /**
+   * Toggle form state (enable/disable fields)
+   * @param {HTMLFormElement} form - Form to toggle
+   * @param {boolean} disabled - Whether to disable the form
+   */
+  function toggleFormState(form, disabled) {
+    Array.from(form.elements).forEach(element => {
+      element.disabled = disabled;
+    });
+    
+    // Also disable social login buttons if they exist
+    if (googleLoginBtn) googleLoginBtn.disabled = disabled;
+    if (facebookLoginBtn) facebookLoginBtn.disabled = disabled;
+  }
+  
+  /**
+   * Helper function to show notifications
+   * This assumes you have a showNotification function defined elsewhere
+   * If not, you can implement it or use an alternative approach
+   */
+  function showNotification(message, type = 'info') {
+    // Check if we have a notification function from main.js
+    if (typeof window.showNotification === 'function') {
+      window.showNotification(message, type);
+    } else {
+      // Fallback alert if the main.js function isn't available
+      if (type === 'error') {
+        alert('Error: ' + message);
+      } else {
+        alert(message);
+      }
+    }
+  }
+
   
   // Google login button handler
   if (googleLoginBtn) {
