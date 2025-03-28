@@ -114,7 +114,9 @@ const staticPages = [
   '/faq.html',
   '/orders.html',
   '/track.html',
-  '/account.html'
+  '/account.html',
+  '/forgot-password.html', // Add this line
+  '/reset-password.html'   // Add this line too for completeness
 ];
 
 staticPages.forEach(page => {
@@ -173,6 +175,11 @@ const gracefulShutdown = () => {
     console.error('Could not close connections in time, forcefully shutting down');
     process.exit(1);
   }, 10000);
+};
+// Modify the route mounting section
+if (authRoutes) {
+  console.log('Registering auth routes at /auth');
+  app.use('/auth', authRoutes);
 };
 
 // Listen for termination signals

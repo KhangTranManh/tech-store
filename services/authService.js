@@ -1,13 +1,30 @@
-// services/authService.js
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
 
-// Initialize passport
-const initializePassport = (app) => {
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465, // Use 465 for SSL
+  secure: true, // Use SSL
+  auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+  }
+});
+// Verify transporter connection
+transporter.verify((error, success) => {
+  if (error) {
+      console.error('Nodemailer configuration error:', error);
+  } else {
+      console.log('Nodemailer is ready to send emails');
+  }
+});
+// Initialize passport configuration
+function initializePassport(app) {
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -144,6 +161,10 @@ const initializePassport = (app) => {
       return done(error);
     }
   }));
-};
+}
 
-module.exports = { initializePassport };
+// Export both the initialization function and the transporter
+module.exports = { 
+  initializePassport,
+  transporter 
+};
