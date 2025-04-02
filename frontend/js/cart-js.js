@@ -1,4 +1,3 @@
-
 // Use a flag to prevent double initialization
 let cartInitialized = false;
 
@@ -171,15 +170,6 @@ function setupCartPage() {
   
   // Update cart display
   updateCartDisplay(cart);
-  
-  // Handle checkout button
-  const checkoutBtn = document.querySelector('.checkout-btn');
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      alert('Checkout functionality will be implemented soon!');
-    });
-  }
 }
 
 /**
@@ -203,6 +193,7 @@ function updateCartDisplay(cart) {
 
   let subtotal = 0;
   const cartHTML = `
+    <h1 class="cart-title">Your Shopping Cart</h1>
     <div class="cart-with-items">
       <table class="cart-table">
         <thead>
@@ -281,7 +272,7 @@ function updateCartDisplay(cart) {
             <span class="total-amount">$${(subtotal + (subtotal > 50 ? 0 : 5.99) + (subtotal * 0.08)).toFixed(2)}</span>
           </div>
           
-          <button class="checkout-btn">Proceed to Checkout</button>
+          <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
           
           <a href="/" class="continue-shopping">Continue Shopping</a>
         </div>
@@ -296,6 +287,22 @@ function updateCartDisplay(cart) {
   
   // Set up remove buttons
   setupRemoveButtons();
+  
+  // Set up checkout button - NEW ADDITION
+  setupCheckoutButton();
+}
+
+/**
+ * Set up checkout button functionality - NEW FUNCTION
+ */
+function setupCheckoutButton() {
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', function() {
+      // Redirect to checkout page
+      window.location.href = '/checkout.html';
+    });
+  }
 }
 
 /**
@@ -440,11 +447,57 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+// Sync local cart with server when available - NEW FUNCTION
+function syncCartWithServer() {
+  // Check if user is logged in
+  const isLoggedIn = document.body.classList.contains('user-logged-in');
+  
+  if (isLoggedIn) {
+    console.log('User is logged in, syncing cart with server...');
+    
+    // Get local cart
+    const localCart = getCartFromLocalStorage();
+    
+    // If local cart is empty, no need to sync
+    if (!localCart.items || localCart.items.length === 0) {
+      return;
+    }
+    
+    // For each item in local cart, add to server cart
+    localCart.items.forEach(item => {
+      fetch('/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          productId: item.productId,
+          quantity: item.quantity
+        }),
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Item synced with server:', item.productId);
+        }
+      })
+      .catch(error => {
+        console.error('Error syncing item with server:', error);
+      });
+    });
+    
+    // Clear local cart after sync
+    sessionStorage.removeItem('cart');
+  }
+}
+
 // Make functions available globally
 window.cartFunctions = {
   addToCartLocal,
   updateCartCountFromLocalStorage,
-  removeCartItemLocal
+  removeCartItemLocal,
+  syncCartWithServer
 };
 
 // Add CSS for notifications

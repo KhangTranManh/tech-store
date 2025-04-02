@@ -17,13 +17,15 @@ const isAuthenticated = (req, res, next) => {
     }
     next();
 };
-
 // Get current user's cart
 router.get('/', isAuthenticated, async (req, res) => {
     try {
         const userId = req.user ? req.user._id : req.guestId;
         const cart = await Cart.findOne({ userId: userId })
-            .populate('items.productId');
+            .populate({
+                path: 'items.productId',
+                select: 'name price images thumbnailUrl specs'
+            });
 
         if (!cart) {
             return res.status(200).json({
@@ -32,22 +34,12 @@ router.get('/', isAuthenticated, async (req, res) => {
             });
         }
 
-        const cartItems = cart.items.map(item => ({
-            id: item._id,
-            productId: item.productId._id,
-            name: item.name || item.productId.name,
-            price: item.price || item.productId.price,
-            image: item.image || (item.productId.images && item.productId.images[0]),
-            specs: item.specs || item.productId.specs,
-            quantity: item.quantity
-        }));
+        // Use the formatCartForResponse function to properly format cart data
+        const formattedCart = formatCartForResponse(cart);
 
         res.status(200).json({
             success: true,
-            cart: {
-                items: cartItems,
-                itemCount: cart.itemCount
-            }
+            cart: formattedCart
         });
     } catch (error) {
         console.error('Error fetching cart:', error);
@@ -57,7 +49,6 @@ router.get('/', isAuthenticated, async (req, res) => {
         });
     }
 });
-
 // Add item to cart
 router.post('/add', isAuthenticated, async (req, res) => {
     try {
@@ -121,6 +112,65 @@ router.post('/add', isAuthenticated, async (req, res) => {
         });
     }
 });
+// In your cart.js routes file
+// Add this POST endpoint for clearing the cart
+
+// Clear cart
+router.post('/clear', isAuthenticated, async (req, res) => {
+    try {
+        // Find and update the cart
+        await Cart.findOneAndUpdate(
+            { userId: req.user._id },
+            { $set: { items: [] } },
+            { new: true }
+        );
+        
+        res.status(200).json({
+            success: true,
+            message: 'Cart cleared',
+            cart: {
+                items: [],
+                itemCount: 0
+            }
+        });
+        
+    } catch (error) {
+        debug('Error details:', error);
+        console.error('Cart operation failed:', {
+            error: error.message,
+            stack: error.stack,
+            userId: req?.user?._id
+        });
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error while clearing cart' 
+        });
+    }
+});
+// Ensure items have all necessary properties when returning cart data
+function formatCartForResponse(cart) {
+    if (!cart || !cart.items || !cart.items.length) {
+      return { items: [], itemCount: 0 };
+    }
+  
+    return {
+      items: cart.items.map(item => {
+        // Make sure each item has all necessary fields
+        return {
+          id: item._id || item.id,
+          productId: item.productId._id || item.productId,
+          name: item.name || (item.productId.name || "Product"),
+          price: parseFloat(item.price || (item.productId.price || 0)),
+          image: item.image || (item.productId.thumbnailUrl || 
+                  (item.productId.images && item.productId.images.length > 0 ? 
+                   item.productId.images[0] : '/images/placeholder.jpg')),
+          quantity: parseInt(item.quantity || 1),
+          specs: item.specs || (item.productId.specs || '')
+        };
+      }),
+      itemCount: cart.items.reduce((total, item) => total + (parseInt(item.quantity) || 1), 0)
+    };
+  }
 
 // Update item quantity
 router.put('/update', isAuthenticated, async (req, res) => {

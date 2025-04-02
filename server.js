@@ -28,9 +28,11 @@ const productRoutes = safeRequire('./routes/products');
 const cartRoutes = safeRequire('./routes/cart');
 const orderRoutes = safeRequire('./routes/orders');
 const imageRoutes = require('./routes/images');
-
+const addressRoutes = safeRequire('./routes/addresses');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const paymentMethodRoutes = safeRequire('./routes/payment-methods');
+
 
 // Load auth routes with enhanced debugging
 let authRoutes;
@@ -107,7 +109,10 @@ if (cartRoutes) {
   console.log('Mounting cart routes at /cart');
   app.use('/cart', cartRoutes);
 }
-
+if (addressRoutes) {
+  console.log('Mounting address routes at /api/addresses');
+  app.use('/api/addresses', addressRoutes);
+}
 // Mount auth routes with more debugging
 if (authRoutes) {
   console.log('Mounting auth routes at /auth path');
@@ -115,7 +120,10 @@ if (authRoutes) {
 } else {
   console.error('Auth routes not available to mount!');
 }
-
+if (paymentMethodRoutes) {
+  console.log('Mounting payment method routes at /api/payment-methods');
+  app.use('/api/payment-methods', paymentMethodRoutes);
+}
 // Mount other API routes
 if (productRoutes) {
   console.log('Mounting product routes at /products');
@@ -161,6 +169,9 @@ const staticPages = [
   '/forgot-password.html',
   '/reset-password.html',
   '/account-settings.html',
+  '/addresses.html',
+  '/payment-methods.html',
+  '/checkout.html',
 ];
 
 staticPages.forEach(page => {
