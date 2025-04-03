@@ -491,6 +491,76 @@
             border-radius: 8px;
             margin-bottom: 30px;
         }
+        .order-summary-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .order-summary-items-wrapper {
+            max-height: 300px; /* Set maximum height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .order-summary-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .summary-item {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-right: 15px;
+        }
+        
+        .summary-item-details {
+            flex: 1;
+        }
+        
+        .summary-item-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .summary-item-quantity, .summary-item-price {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Custom scrollbar styling for better appearance */
+        .order-summary-items-wrapper::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .order-summary-items-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .order-summary-items-wrapper::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        
+        .order-summary-items-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
         
         @media (max-width: 768px) {
             .checkout-layout {
@@ -593,35 +663,40 @@
                 
                 <div class="checkout-sidebar">
                     <!-- Order Summary Section -->
-                    <div class="checkout-section">
-                        <h2 class="section-title">Order Summary</h2>
-                        
-                        <div class="order-summary-items" id="order-summary-items">
-                            <!-- Order items will be loaded here dynamically -->
-                            <div class="loading-info">Loading cart items...</div>
-                        </div>
-                        
-                        <div id="order-summary-details">
-                            <div class="summary-row">
-                                <span>Subtotal</span>
-                                <span id="subtotal">$0.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Shipping</span>
-                                <span id="shipping-cost">$0.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Tax</span>
-                                <span id="tax-amount">$0.00</span>
-                            </div>
-                            <div class="summary-total">
-                                <span>Total</span>
-                                <span id="total-amount">$0.00</span>
-                            </div>
-                        </div>
-                        
-                        <button class="place-order-btn" id="place-order-btn" disabled>Place Order</button>
-                    </div>
+               <!-- Order Summary Section -->
+<div class="checkout-section">
+    <h2 class="section-title">Order Summary</h2>
+    
+    <div class="order-summary-container">
+        <div class="order-summary-items-wrapper">
+            <div class="order-summary-items" id="order-summary-items">
+                <!-- Order items will be loaded here dynamically -->
+                <div class="loading-info">Loading cart items...</div>
+            </div>
+        </div>
+    
+        <div id="order-summary-details">
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span id="shipping-cost">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Tax</span>
+                <span id="tax-amount">$0.00</span>
+            </div>
+            <div class="summary-total">
+                <span>Total</span>
+                <span id="total-amount">$0.00</span>
+            </div>
+        </div>
+    </div>
+    
+    <button class="place-order-btn" id="place-order-btn" disabled>Place Order</button>
+</div>
                 </div>
             </div>
         </div>

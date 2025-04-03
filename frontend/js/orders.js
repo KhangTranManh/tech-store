@@ -116,6 +116,9 @@ function createOrderCard(order) {
     // Get status class
     const statusClass = getStatusClass(order.status);
     
+    // Format order number as TS + last 8 digits of ID
+    const formattedOrderNumber = formatOrderNumber(order._id);
+    
     // Create order card element
     const orderCard = document.createElement('div');
     orderCard.className = 'order-card';
@@ -130,9 +133,10 @@ function createOrderCard(order) {
             <span class="date-year">${year}</span>
         </div>
         <div class="order-info">
-            <div class="order-number">Order #${order.orderNumber} <span class="order-status ${statusClass}">${capitalizeFirstLetter(order.status)}</span></div>
+            <div class="order-number">Order #${formattedOrderNumber} <span class="order-status ${statusClass}">${capitalizeFirstLetter(order.status)}</span></div>
         </div>
     `;
+    
     
     // Create order items section
     const orderItems = document.createElement('div');
@@ -183,7 +187,22 @@ function createOrderCard(order) {
     
     return orderCard;
 }
-
+/**
+ * Format order number with TS prefix and last 8 digits
+ * @param {string} orderId - Order ID
+ * @returns {string} Formatted order number
+ */
+function formatOrderNumber(orderId) {
+    if (!orderId) return 'TS00000000';
+    
+    // Convert ID to string and get last 8 characters
+    const idString = orderId.toString();
+    const lastEight = idString.length > 8 
+        ? idString.slice(-8) 
+        : idString.padStart(8, '0');
+    
+    return 'TS' + lastEight;
+}
 /**
  * Initialize filter buttons
  */

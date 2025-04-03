@@ -291,16 +291,21 @@ function updateCartDisplay(cart) {
   // Set up checkout button - NEW ADDITION
   setupCheckoutButton();
 }
-
-/**
- * Set up checkout button functionality - NEW FUNCTION
- */
+// In your cart.js, add this to the checkout button handler
 function setupCheckoutButton() {
   const checkoutBtn = document.getElementById('checkout-btn');
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', function() {
-      // Redirect to checkout page
-      window.location.href = '/checkout.html';
+      // First sync cart with server
+      window.cartFunctions.syncCartWithServer()
+        .then(() => {
+          // Then redirect to checkout page
+          window.location.href = '/checkout.html';
+        })
+        .catch(error => {
+          console.error('Error syncing cart:', error);
+          showNotification('Error preparing checkout. Please try again.', 'error');
+        });
     });
   }
 }
@@ -446,50 +451,49 @@ function showNotification(message, type = 'info') {
         isShowingNotification = false;
     }, 3000);
 }
-
-// Sync local cart with server when available - NEW FUNCTION
 function syncCartWithServer() {
-  // Check if user is logged in
-  const isLoggedIn = document.body.classList.contains('user-logged-in');
-  
-  if (isLoggedIn) {
-    console.log('User is logged in, syncing cart with server...');
+  return new Promise((resolve, reject) => {
+    // Check if user is logged in
+    const isLoggedIn = document.body.classList.contains('user-logged-in');
+    
+    if (!isLoggedIn) {
+      // If not logged in, resolve anyway
+      resolve();
+      return;
+    }
     
     // Get local cart
     const localCart = getCartFromLocalStorage();
     
     // If local cart is empty, no need to sync
     if (!localCart.items || localCart.items.length === 0) {
+      resolve();
       return;
     }
     
-    // For each item in local cart, add to server cart
-    localCart.items.forEach(item => {
-      fetch('/cart/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          productId: item.productId,
-          quantity: item.quantity
-        }),
-        credentials: 'include'
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('Item synced with server:', item.productId);
-        }
-      })
-      .catch(error => {
-        console.error('Error syncing item with server:', error);
-      });
+    // Send the entire cart to server in one request
+    fetch('/cart/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(localCart),
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('Cart synced with server');
+        resolve();
+      } else {
+        reject(new Error(data.message || 'Failed to sync cart'));
+      }
+    })
+    .catch(error => {
+      console.error('Error syncing cart with server:', error);
+      reject(error);
     });
-    
-    // Clear local cart after sync
-    sessionStorage.removeItem('cart');
-  }
+  });
 }
 
 // Make functions available globally

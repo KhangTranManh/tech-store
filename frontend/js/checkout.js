@@ -304,49 +304,61 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update order button state
         updateOrderButtonState();
     }
+    // In checkout.js, modify loadCartData()
+function loadCartData() {
+    const orderSummaryItems = document.getElementById('order-summary-items');
     
-    // Load cart data from database
-    function loadCartData() {
-        const orderSummaryItems = document.getElementById('order-summary-items');
-        
-        if (!orderSummaryItems) return;
-        
-        orderSummaryItems.innerHTML = '<div class="loading-info">Loading cart items...</div>';
-        
-        // Fetch cart data from server
-        fetch('/cart', {  // Use your server endpoint
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch cart data');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                cartData = data.cart;
-                displayOrderSummary(data.cart);
-            } else {
-                showStatusMessage('Failed to load cart data: ' + data.message, 'error');
-                displayEmptyCart();
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching cart data:', error);
-            orderSummaryItems.innerHTML = `
-                <div class="error-message">
-                    <p>Unable to load your cart. Please try again later.</p>
-                </div>
-            `;
-            displayEmptyCart();
-        });
-    }
+    if (!orderSummaryItems) return;
     
+    orderSummaryItems.innerHTML = '<div class="loading-info">Loading cart items...</div>';
+    
+    // Fetch cart data from server
+    fetch('/cart', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart data');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success && data.cart && data.cart.items && data.cart.items.length > 0) {
+        cartData = data.cart;
+        displayOrderSummary(data.cart);
+      } else {
+        // Try getting cart from sessionStorage as fallback
+        const localCart = JSON.parse(sessionStorage.getItem('cart') || '{"items":[], "itemCount":0}');
+        if (localCart.items && localCart.items.length > 0) {
+          cartData = localCart;
+          displayOrderSummary(localCart);
+        } else {
+          showStatusMessage('Failed to load cart data', 'error');
+          displayEmptyCart();
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching cart data:', error);
+      // Try getting cart from sessionStorage as fallback
+      const localCart = JSON.parse(sessionStorage.getItem('cart') || '{"items":[], "itemCount":0}');
+      if (localCart.items && localCart.items.length > 0) {
+        cartData = localCart;
+        displayOrderSummary(localCart);
+      } else {
+        orderSummaryItems.innerHTML = `
+          <div class="error-message">
+            <p>Unable to load your cart. Please try again later.</p>
+          </div>
+        `;
+        displayEmptyCart();
+      }
+    });
+  }
     // Display empty cart message
     function displayEmptyCart() {
         const orderSummaryItems = document.getElementById('order-summary-items');
@@ -633,63 +645,71 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Show order success modal
-    function showOrderSuccessModal(order) {
-        const orderSuccessModal = document.getElementById('order-success-modal');
-        const orderNumber = document.getElementById('order-number');
-        const orderDetails = document.getElementById('success-order-details');
+    // Modify the showOrderSuccessModal function
+function showOrderSuccessModal(order) {
+    const orderSuccessModal = document.getElementById('order-success-modal');
+    const orderNumber = document.getElementById('order-number');
+    const orderDetails = document.getElementById('success-order-details');
+    
+    if (orderSuccessModal && orderNumber && orderDetails) {
+        // Set order number
+        orderNumber.textContent = order.orderNumber || order._id;
         
-        if (orderSuccessModal && orderNumber && orderDetails) {
-            // Set order number
-            orderNumber.textContent = order.orderNumber || order._id;
-            
-            // Calculate totals
-            const subtotal = order.subtotal || cartData.items.reduce((total, item) => {
-                return total + (item.price * item.quantity);
-            }, 0);
-            
-            const shipping = order.shippingCost || (subtotal > 100 ? 0 : 10);
-            const tax = order.tax || (subtotal * 0.08);
-            const total = order.total || (subtotal + shipping + tax);
-            
-            // Format order date
-            const orderDate = new Date(order.createdAt || Date.now());
-            const formattedDate = orderDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+        // Calculate totals
+        const subtotal = order.subtotal;
+        const shipping = order.shippingCost || 0;
+        const tax = order.tax;
+        const total = order.total;
+        
+        // Format order date
+        const orderDate = new Date(order.createdAt || Date.now());
+        const formattedDate = orderDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // Set order details
+        orderDetails.innerHTML = `
+            <div class="order-summary-row">
+                <span>Order Date:</span>
+                <span>${formattedDate}</span>
+            </div>
+            <div class="order-summary-row">
+                <span>Payment Method:</span>
+                <span>Credit Card ending in ${order.paymentLast4 || '****'}</span>
+            </div>
+            <div class="order-summary-row">
+                <span>Subtotal:</span>
+                <span>$${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="order-summary-row">
+                <span>Shipping:</span>
+                <span>${shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+            </div>
+            <div class="order-summary-row">
+                <span>Tax:</span>
+                <span>$${tax.toFixed(2)}</span>
+            </div>
+            <div class="order-summary-row total">
+                <span>Total:</span>
+                <span>$${total.toFixed(2)}</span>
+            </div>
+        `;
+        
+        // Setup view orders button to navigate to specific order
+        const viewOrdersBtn = document.getElementById('view-orders-btn');
+        if (viewOrdersBtn) {
+            viewOrdersBtn.addEventListener('click', function() {
+                // Navigate to the specific order details page
+                window.location.href = `/order-details.html?id=${order._id}`;
             });
-            
-            // Set order details
-            orderDetails.innerHTML = `
-                <h4 style="margin-bottom: 10px;">Order Summary</h4>
-                <div style="margin-bottom: 15px;">
-                    <div><strong>Order Date:</strong> ${formattedDate}</div>
-                    <div><strong>Payment Method:</strong> Credit Card ending in ${order.paymentLast4 || '****'}</div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span><strong>Subtotal:</strong></span>
-                    <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span><strong>Shipping:</strong></span>
-                    <span>${shipping === 0 ? 'Free' : `${shipping.toFixed(2)}`}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span><strong>Tax:</strong></span>
-                    <span>${tax.toFixed(2)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
-                    <span>Total:</span>
-                    <span>${total.toFixed(2)}</span>
-                </div>
-            `;
-            
-            // Show modal
-            orderSuccessModal.classList.add('active');
         }
+        
+        // Show modal
+        orderSuccessModal.classList.add('active');
     }
+}
     
     // Clear cart after successful order
     function clearCart() {
@@ -923,65 +943,95 @@ function showStatusMessage(message, type = 'success') {
             }
         }
     }
-    
- // Place order
-function placeOrder() {
-    // Validate selections
-    if (!selectedAddressId) {
-        showStatusMessage('Please select a shipping address', 'error');
-        return;
-    }
-    
-    if (!selectedPaymentMethodId) {
-        showStatusMessage('Please select a payment method', 'error');
-        return;
-    }
-    
-    if (!cartData || !cartData.items || cartData.items.length === 0) {
-        showStatusMessage('Your cart is empty', 'error');
-        return;
-    }
-    
-    // Create order data
-    const orderData = {
-        addressId: selectedAddressId,
-        paymentMethodId: selectedPaymentMethodId
-    };
-    
-    // Show processing message
-    showStatusMessage('Processing your order...', 'info');
-    
-    // Send order to server
-    fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData),
-        credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show success message
-            showStatusMessage('Order placed successfully!', 'success');
-            
-            // Show order success modal
-            showOrderSuccessModal(data.order);
-            
-            // Clear cart
-            clearCart();
-        } else {
-            // Show error message
-            showStatusMessage('Error: ' + data.message, 'error');
+    function placeOrder() {
+        // Validate selections
+        if (!selectedAddressId) {
+            showStatusMessage('Please select a shipping address', 'error');
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Error placing order:', error);
-        showStatusMessage('An error occurred while placing your order. Please try again.', 'error');
-    });
-};
-setupEventListeners();
+        
+        if (!selectedPaymentMethodId) {
+            showStatusMessage('Please select a payment method', 'error');
+            return;
+        }
+        
+        if (!cartData || !cartData.items || cartData.items.length === 0) {
+            showStatusMessage('Your cart is empty', 'error');
+            return;
+        }
+        
+        // Show processing message
+        showStatusMessage('Processing your order...', 'info');
+        
+        // Prepare order data directly from cartData
+        const orderData = {
+            items: cartData.items.map(item => ({
+                productId: item.productId,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image
+            })),
+            addressId: selectedAddressId,
+            paymentMethodId: selectedPaymentMethodId,
+            subtotal: calculateSubtotal(cartData.items),
+            shipping: calculateShipping(calculateSubtotal(cartData.items)),
+            tax: calculateTax(calculateSubtotal(cartData.items))
+        };
+        
+        // Place order directly
+        fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData),
+            credentials: 'include'
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || 'Failed to place order');
+                });
+            }
+            return response.json();
+        })
+        
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showStatusMessage('Order placed successfully!', 'success');
+                
+                // Show order success modal instead of redirecting
+                showOrderSuccessModal(data.order);
+                
+                // Clear cart
+                clearCart();
+            } else {
+                // Show error message
+                showStatusMessage('Error: ' + data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error placing order:', error);
+            showStatusMessage('An error occurred while placing your order: ' + error.message, 'error');
+        });
+    }
+    
+    // Helper functions to calculate order totals
+    function calculateSubtotal(items) {
+        return items.reduce((total, item) => {
+            return total + (parseFloat(item.price) * parseInt(item.quantity));
+        }, 0);
+    }
+    
+    function calculateShipping(subtotal) {
+        return subtotal > 100 ? 0 : 10; // Free shipping for orders over $100
+    }
+    
+    function calculateTax(subtotal) {
+        return subtotal * 0.08; // Assuming 8% tax
+    }
 });
 
                 

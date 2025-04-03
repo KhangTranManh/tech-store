@@ -15,84 +15,82 @@ router.use(isAuthenticated);
  * @desc    Create a new order
  * @access  Private
  */
+// routes/orders.js
 router.post('/', async (req, res) => {
     try {
-        const { addressId, paymentMethodId } = req.body;
+        // Get user from authenticated session
+        const user = req.user;
+        
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'User not authenticated' 
+            });
+        }
+        
+        // Validate request body
+        const { 
+            items, 
+            addressId, 
+            paymentMethodId, 
+            subtotal, 
+            shipping, 
+            tax 
+        } = req.body;
         
         // Validate required fields
-        if (!addressId || !paymentMethodId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Shipping address and payment method are required'
+        if (!items || !addressId || !paymentMethodId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required order information' 
             });
         }
         
-        // Check if address exists and belongs to user
-        const address = await Address.findById(addressId);
+        // Verify address belongs to user
+        const address = await Address.findOne({ 
+            _id: addressId, 
+            user: user._id  // Note: changed from userId to match your existing model
+        });
+        
         if (!address) {
-            return res.status(404).json({
-                success: false,
-                message: 'Shipping address not found'
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid shipping address' 
             });
         }
         
-        if (address.user.toString() !== req.user._id.toString()) {
-            return res.status(403).json({
-                success: false,
-                message: 'You do not have permission to use this address'
-            });
-        }
+        // Verify payment method belongs to user
+        const paymentMethod = await PaymentMethod.findOne({ 
+            _id: paymentMethodId, 
+            user: user._id  // Note: changed from userId to match your existing model
+        });
         
-        // Check if payment method exists and belongs to user
-        const paymentMethod = await PaymentMethod.findById(paymentMethodId);
         if (!paymentMethod) {
-            return res.status(404).json({
-                success: false,
-                message: 'Payment method not found'
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid payment method' 
             });
         }
         
-        if (paymentMethod.user.toString() !== req.user._id.toString()) {
-            return res.status(403).json({
-                success: false,
-                message: 'You do not have permission to use this payment method'
-            });
-        }
-        
-        // Get user's cart
-        const cart = await Cart.findOne({ userId: req.user._id }).populate('items.productId');
-        if (!cart || !cart.items || cart.items.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Your cart is empty'
-            });
-        }
-        
-        // Calculate order totals
-        const subtotal = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-        const shippingCost = subtotal > 100 ? 0 : 10; // Free shipping for orders over $100
-        const tax = subtotal * 0.08; // Assuming 8% tax rate
-        const total = subtotal + shippingCost + tax;
-        
-        // Create order items from cart items
-        const orderItems = cart.items.map(item => ({
-            productId: item.productId._id,
-            name: item.name || item.productId.name,
-            price: item.price,
-            quantity: item.quantity,
-            image: item.image
-        }));
+        // Calculate total
+        const total = subtotal + shipping + tax;
         
         // Create new order
         const newOrder = new Order({
-            user: req.user._id,
-            items: orderItems,
+            user: user._id,  // Note: changed from userId to match your existing model
+            items: items.map(item => ({
+                productId: item.productId,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image
+            })),
             shippingAddress: addressId,
             paymentMethod: paymentMethodId,
             paymentLast4: paymentMethod.last4,
             subtotal,
+            shippingCost: shipping,
             tax,
-            shippingCost,
             total,
             status: 'pending',
             statusHistory: [{
@@ -104,22 +102,29 @@ router.post('/', async (req, res) => {
         // Save order
         await newOrder.save();
         
-        // Clear user's cart
-        cart.items = [];
-        await cart.save();
+        // Generate order number
+        newOrder.orderNumber = `TS${newOrder._id.toString().slice(-8)}`;
+        await newOrder.save();
         
-        // Return success response
-        res.status(201).json({
-            success: true,
-            message: 'Order created successfully',
-            order: newOrder
+        // Clear user's cart
+        const cart = await Cart.findOne({ userId: user._id });
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+        
+        // Respond with success and order details
+        res.status(201).json({ 
+            success: true, 
+            order: newOrder,
+            message: 'Order placed successfully' 
         });
     } catch (error) {
-        console.error('Error creating order:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error creating order',
-            error: error.message
+        console.error('Order placement error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to place order. Please try again.',
+            error: error.message 
         });
     }
 });

@@ -172,6 +172,7 @@ const staticPages = [
   '/addresses.html',
   '/payment-methods.html',
   '/checkout.html',
+  '/order-details.html'
 ];
 
 staticPages.forEach(page => {
