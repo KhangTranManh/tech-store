@@ -15,7 +15,6 @@ router.use(isAuthenticated);
  * @desc    Create a new order
  * @access  Private
  */
-// routes/orders.js
 router.post('/', async (req, res) => {
     try {
         // Get user from authenticated session
@@ -152,6 +151,35 @@ router.get('/', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error fetching orders',
+            error: error.message
+        });
+    }
+});
+
+/**
+ * @route   GET /api/orders/recent
+ * @desc    Get recent orders and order count
+ * @access  Private
+ */
+router.get('/recent', async (req, res) => {
+    try {
+        // Find recent orders for current user
+        const orders = await Order.find({ user: req.user._id })
+            .sort({ createdAt: -1 })
+            .limit(3)
+            .populate('shippingAddress')
+            .populate('paymentMethod', '-paymentToken');
+        
+        res.status(200).json({
+            success: true,
+            count: orders.length,
+            orders
+        });
+    } catch (error) {
+        console.error('Error fetching recent orders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching recent orders',
             error: error.message
         });
     }

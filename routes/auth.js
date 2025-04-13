@@ -88,6 +88,54 @@ router.post('/forgot-password', async (req, res) => {
       });
   }
 });
+
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    
+    if (!token || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token and password are required'
+      });
+    }
+    
+    // Find user with this reset token
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+    
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password reset token is invalid or has expired'
+      });
+    }
+    
+    // Set the new password (it will be hashed by the pre-save hook)
+    user.password = password;
+    
+    // Clear the reset token fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    
+    await user.save();
+    
+    // Return success response
+    return res.status(200).json({
+      success: true,
+      message: 'Password has been reset successfully'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while resetting your password',
+      error: error.message
+    });
+  }
+});
 router.get('/check', (req, res) => {
     if (req.isAuthenticated()) {
       return res.status(200).json({ 

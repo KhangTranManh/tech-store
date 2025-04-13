@@ -29,10 +29,10 @@ const cartRoutes = safeRequire('./routes/cart');
 const orderRoutes = safeRequire('./routes/orders');
 const imageRoutes = require('./routes/images');
 const addressRoutes = safeRequire('./routes/addresses');
+const paymentMethodRoutes = safeRequire('./routes/payment-methods');
+const wishlistRoutes = safeRequire('./routes/wishlist');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const paymentMethodRoutes = safeRequire('./routes/payment-methods');
-
 
 // Load auth routes with enhanced debugging
 let authRoutes;
@@ -104,15 +104,6 @@ initializePassport(app);
 // Mount API routes with debugging
 app.use('/images', imageRoutes);
 
-// Mount cart routes after session initialization
-if (cartRoutes) {
-  console.log('Mounting cart routes at /cart');
-  app.use('/cart', cartRoutes);
-}
-if (addressRoutes) {
-  console.log('Mounting address routes at /api/addresses');
-  app.use('/api/addresses', addressRoutes);
-}
 // Mount auth routes with more debugging
 if (authRoutes) {
   console.log('Mounting auth routes at /auth path');
@@ -120,19 +111,39 @@ if (authRoutes) {
 } else {
   console.error('Auth routes not available to mount!');
 }
+
+// Mount cart routes after session initialization
+if (cartRoutes) {
+  console.log('Mounting cart routes at /cart');
+  app.use('/cart', cartRoutes);
+}
+
+// Mount other API routes
+if (addressRoutes) {
+  console.log('Mounting address routes at /api/addresses');
+  app.use('/api/addresses', addressRoutes);
+}
+
 if (paymentMethodRoutes) {
   console.log('Mounting payment method routes at /api/payment-methods');
   app.use('/api/payment-methods', paymentMethodRoutes);
 }
-// Mount other API routes
+
 if (productRoutes) {
   console.log('Mounting product routes at /products');
   app.use('/products', productRoutes);
 }
-// In server.js
+
 if (orderRoutes) {
   console.log('Mounting order routes at /api/orders');
-  app.use('/api/orders', orderRoutes); // Changed from '/orders' to '/api/orders'
+  app.use('/api/orders', orderRoutes);
+}
+
+if (wishlistRoutes) {
+  console.log('Mounting wishlist routes at /api/wishlist');
+  app.use('/api/wishlist', wishlistRoutes);
+} else {
+  console.warn('Wishlist routes not available to mount');
 }
 
 // Serve static HTML pages
@@ -172,7 +183,8 @@ const staticPages = [
   '/addresses.html',
   '/payment-methods.html',
   '/checkout.html',
-  '/order-details.html'
+  '/order-details.html',
+  '/wishlist.html',
 ];
 
 staticPages.forEach(page => {

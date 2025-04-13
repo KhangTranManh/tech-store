@@ -27,6 +27,7 @@ exports.isAuthenticated = (req, res, next) => {
     });
   };
   
+  
   /**
    * Middleware to check if a user owns a resource or is an admin
    * Usage: ownerOrAdmin('userId') where 'userId' is the path to the user ID in the request
