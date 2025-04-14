@@ -2,7 +2,6 @@
  * TechStore Products JavaScript File
  * Handles product-related functionality
  */
-
 document.addEventListener('DOMContentLoaded', function() {
   // Load products on category pages
   loadProducts();
@@ -18,7 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize price range sliders
   initializePriceRanges();
-});
+  
+  // Initialize add to cart buttons (in case they're in the HTML)
+  initializeAddToCartButtons();
+  
+  // Initialize wishlist buttons
+  initializeWishlistButtons();
+
 
 /**
 * Load products based on the current page
@@ -578,3 +583,221 @@ function renderStars(rating) {
   
   return stars;
 }
+function addToWishlist(productId, name, price, image, buttonElement) {
+  // Validate inputs
+  if (!productId) {
+    console.error('Product ID is required');
+    showNotification('Unable to add to wishlist. Missing product details.', 'error');
+    return;
+  }
+
+  // Check if user is logged in
+  if (!window.authUtils || !window.authUtils.isUserLoggedIn()) {
+    // Redirect to login page
+    window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+
+  // Clean and validate data
+  const cleanProductId = String(productId).trim();
+  const cleanName = (name || 'Unnamed Product').trim();
+  const cleanPrice = parseFloat(
+    String(price)
+      .replace('$', '')
+      .replace(',', '')
+  ) || 0;
+  const cleanImage = image || 'images/product1.jpg';
+
+  // Log the data being sent (for debugging)
+  console.log('Wishlist Add Data:', {
+    productId: cleanProductId,
+    name: cleanName,
+    price: cleanPrice,
+    image: cleanImage
+  });
+
+  // Convert non-ObjectId product IDs to valid MongoDB ObjectId format
+  // If the product ID isn't a valid 24-character hex string, generate a deterministic ID
+  let formattedProductId = cleanProductId;
+  
+  // Check if the ID is already a valid MongoDB ObjectId (24 hex chars)
+  const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(cleanProductId);
+  
+  if (!isValidObjectId) {
+    // For demo/development: Use a hash of the product ID to create a consistent valid ObjectId
+    // In production, you would likely want to fetch the correct ID from your database
+    formattedProductId = hashStringTo24HexChars(cleanProductId);
+  }
+
+  // Send request
+  fetch('/api/wishlist/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 
+      productId: formattedProductId, 
+      name: cleanName, 
+      price: cleanPrice,
+      image: cleanImage
+    }),
+    credentials: 'include'
+  })
+  .then(response => {
+    // Log the raw response for debugging
+    console.log('Response status:', response.status);
+    
+    // Check if response is ok
+    if (!response.ok) {
+      return response.json().then(errorData => {
+        throw new Error(errorData.message || 'Failed to add to wishlist');
+      });
+    }
+    
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      // Show success notification
+      showNotification('Added to wishlist!', 'success');
+      
+      // Update wishlist count
+      updateWishlistCount();
+      
+      // Update button to show item is in wishlist
+      if (buttonElement) {
+        buttonElement.textContent = 'In Wishlist';
+        buttonElement.classList.add('in-wishlist');
+        buttonElement.disabled = true;
+      }
+    } else {
+      // Show error from backend
+      showNotification(data.message || 'Failed to add to wishlist', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error adding to wishlist:', error);
+    showNotification(error.message || 'Failed to add to wishlist', 'error');
+  });
+}
+
+/**
+* Hash a string to create a valid 24-character hex string (compatible with MongoDB ObjectId)
+* @param {string} str - The string to hash
+* @returns {string} A 24-character hex string
+*/
+function hashStringTo24HexChars(str) {
+// Simple hash function to generate a number from a string
+let hash = 0;
+for (let i = 0; i < str.length; i++) {
+  const char = str.charCodeAt(i);
+  hash = ((hash << 5) - hash) + char;
+  hash = hash & hash; // Convert to 32bit integer
+}
+
+// Convert to a hex string and ensure it's 24 characters
+let hexHash = Math.abs(hash).toString(16);
+
+// Pad to ensure we have 24 characters
+while (hexHash.length < 24) {
+  hexHash = hexHash + Math.abs(hash).toString(16);
+}
+
+// Trim if too long
+return hexHash.slice(0, 24);
+}
+  
+function initializeWishlistButtons() {
+  const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+  
+  wishlistButtons.forEach(button => {
+    // Ensure product ID is set
+    if (!button.getAttribute('data-product-id')) {
+      // Try to get from parent or set a default
+      const productCard = button.closest('.product-card, .product-detail');
+      const productId = productCard?.getAttribute('data-product-id') || 'ACR10750H3060';
+      button.setAttribute('data-product-id', productId);
+    }
+    
+    // Check if product is already in wishlist (for logged in users)
+    const productId = button.getAttribute('data-product-id');
+    if (window.authUtils && window.authUtils.isUserLoggedIn()) {
+      fetch(`/api/wishlist/check/${productId}`, {
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.inWishlist) {
+          button.textContent = 'In Wishlist';
+          button.classList.add('in-wishlist');
+          button.disabled = true;
+        }
+      })
+      .catch(error => {
+        console.error('Error checking wishlist status:', error);
+      });
+    }
+    
+    button.addEventListener('click', function() {
+      // Skip if already in wishlist
+      if (this.classList.contains('in-wishlist')) {
+        return;
+      }
+      
+      // Get product details
+      const productId = this.getAttribute('data-product-id');
+      const productContainer = this.closest('.product-card, .product-detail, .product-info');
+      
+      // Safely extract product details
+      const productName = productContainer?.querySelector('.product-title, .deal-title')?.textContent;
+      const priceElement = productContainer?.querySelector('.current-price, .product-price');
+      const productPrice = priceElement?.textContent;
+      const imageElement = productContainer?.querySelector('img');
+      const productImage = imageElement?.src;
+      
+      // Call API to add to wishlist
+      addToWishlist(productId, productName, productPrice, productImage, this);
+    });
+  });
+}
+  
+  // Utility function to show notifications
+  function showNotification(message, type = 'info') {
+    console.log(`${type.toUpperCase()}: ${message}`);
+    
+    // If a custom notification function exists, use it
+    if (typeof window.showNotification === 'function') {
+      window.showNotification(message, type);
+    } else {
+      // Fallback to browser alert
+      alert(message);
+    }
+  }
+  
+  // Update wishlist count
+  function updateWishlistCount() {
+    fetch('/api/wishlist/count', {
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+      const wishlistCountEl = document.getElementById('wishlist-count');
+      if (wishlistCountEl) {
+        wishlistCountEl.textContent = data.count || 0;
+      }
+    })
+    .catch(error => {
+      console.error('Error updating wishlist count:', error);
+    });
+  }
+  
+  /**
+   * Get product ID from URL
+   * @returns {string|null} Product ID from URL or null if not found
+   */
+  function getProductIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('id');
+  }
+
+});

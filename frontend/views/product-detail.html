@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/products-js.js"></script>
+    <script src="/js/cart.js"></script>
     <style>
         .product-container {
             max-width: 1200px;
@@ -391,6 +393,16 @@
             .related-grid {
                 grid-template-columns: 1fr;
             }
+            .wishlist-btn.in-wishlist {
+                background-color: #e6e6e6;
+                color: #666;
+                border-color: #ccc;
+                cursor: default;
+            }
+            
+            .wishlist-btn.in-wishlist:hover {
+                background-color: #e6e6e6;
+            }
         }
     </style>
 </head>
@@ -498,7 +510,7 @@
                     
                     <div class="action-buttons">
                         <button class="add-to-cart-btn">Add to Cart</button>
-                        <button class="wishlist-btn">Add to Wishlist</button>
+                        <button class="wishlist-btn" data-product-id="ACR10750H3060">Add to Wishlist</button>                    
                     </div>
                     
                     <div class="shipping-info">
@@ -797,78 +809,5 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
-    <script>
-        // Simple Tab Functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabPanes = document.querySelectorAll('.tab-pane');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons and panes
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabPanes.forEach(pane => pane.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Get the id of the corresponding pane
-                    const tabId = this.textContent.trim().toLowerCase().split(' ')[0];
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-            
-            // Thumbnail functionality
-            const thumbnails = document.querySelectorAll('.thumbnail');
-            const mainImage = document.querySelector('.main-image img');
-            
-            thumbnails.forEach(thumb => {
-                thumb.addEventListener('click', function() {
-                    // Remove active class from all thumbnails
-                    thumbnails.forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked thumbnail
-                    this.classList.add('active');
-                    
-                    // Update main image source
-                    mainImage.src = this.querySelector('img').src;
-                });
-            });
-            
-            // Quantity selector functionality
-            const minusBtn = document.querySelector('.quantity-btn:first-child');
-            const plusBtn = document.querySelector('.quantity-btn:last-child');
-            const quantityInput = document.querySelector('.quantity-input');
-            
-            minusBtn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                if (value > 1) {
-                    quantityInput.value = value - 1;
-                }
-            });
-            
-            plusBtn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                quantityInput.value = value + 1;
-            });
-            
-            // Add to cart button functionality
-            const addToCartBtn = document.querySelector('.add-to-cart-btn');
-            addToCartBtn.addEventListener('click', function() {
-                alert('Product added to cart!');
-                // In a real app, this would add the product to the cart
-            });
-            
-            // Wishlist button functionality
-            const wishlistBtn = document.querySelector('.wishlist-btn');
-            wishlistBtn.addEventListener('click', function() {
-                alert('Product added to wishlist!');
-                // In a real app, this would add the product to the wishlist
-            });
-        });
-    </script>
-    <script src="/js/products.js"></script>
-    <script src="/js/cart.js"></script>
 </body>
 </html>

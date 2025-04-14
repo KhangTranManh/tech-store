@@ -1,5 +1,77 @@
 // Use a flag to prevent double initialization
+// Sync cart with server before checkout
+function syncCartWithServer() {
+  return new Promise((resolve, reject) => {
+    const cart = getCartFromLocalStorage();
+    
+    if (!cart.items || cart.items.length === 0) {
+      resolve();
+      return;
+    }
+
+    fetch('/cart/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        items: cart.items.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          name: item.name,
+          price: item.price
+        }))
+      }),
+      credentials: 'include'
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to sync cart');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        // Clear local storage after successful sync
+        sessionStorage.removeItem('cart');
+        resolve(data);
+      } else {
+        throw new Error(data.message || 'Cart sync failed');
+      }
+    })
+    .catch(error => {
+      console.error('Cart sync error:', error);
+      reject(error);
+    });
+  });
+}
+
+// Add a route to handle cart sync from frontend
+function setupCartSyncRoute() {
+  if (window.location.pathname === '/checkout.html') {
+    // Attempt to sync cart before checkout
+    syncCartWithServer()
+      .then(() => {
+        // Cart synced successfully, proceed with checkout
+        console.log('Cart synced for checkout');
+      })
+      .catch(error => {
+        console.error('Checkout cart sync failed:', error);
+        showNotification('Unable to prepare cart for checkout', 'error');
+      });
+  }
+}
+// Add event listener for cart sync
+document.addEventListener('DOMContentLoaded', setupCartSyncRoute);
+
+// Extend global cart functions
+window.cartFunctions = {
+  ...window.cartFunctions, // Spread existing functions
+  syncCartWithServer
+};
 let cartInitialized = false;
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
   // Prevent duplicate initialization
@@ -97,39 +169,47 @@ function initializeCart() {
   updateCartCountFromLocalStorage();
 }
 
-/**
- * Add product to local storage cart
- * This is a temporary solution until the backend is working
- */
+// In cart-js.js, enhance error handling
 function addToCartLocal(productId, productName, productPrice) {
-  // Get current cart from sessionStorage
-  let cart = JSON.parse(sessionStorage.getItem('cart') || '{"items":[], "itemCount":0}');
-  
-  // Check if item already exists in cart
-  const existingItemIndex = cart.items.findIndex(item => item.productId === productId);
-  
-  if (existingItemIndex >= 0) {
-    // If item exists, increment quantity
-    cart.items[existingItemIndex].quantity += 1;
-  } else {
-    // If item doesn't exist, add it
-    cart.items.push({
-      productId: productId,
-      name: productName,
-      price: productPrice,
-      quantity: 1
-    });
+  try {
+    let cart = JSON.parse(sessionStorage.getItem('cart') || '{"items":[], "itemCount":0}');
+    
+    // More robust item addition
+    const existingItemIndex = cart.items.findIndex(item => item.productId === productId);
+    
+    if (existingItemIndex >= 0) {
+      // Prevent excessive quantity
+      cart.items[existingItemIndex].quantity = Math.min(
+        (cart.items[existingItemIndex].quantity || 0) + 1, 
+        10 // Max quantity limit
+      );
+    } else {
+      // Validate inputs
+      cart.items.push({
+        productId: productId,
+        name: productName || 'Unnamed Product',
+        price: parseFloat(productPrice) || 0,
+        quantity: 1,
+        image: '' // You might want to add image logic here
+      });
+    }
+    
+    // Update item count with safety check
+    cart.itemCount = cart.items.reduce((total, item) => total + (item.quantity || 1), 0);
+    
+    // Limit total cart items
+    if (cart.itemCount > 20) {
+      showNotification('Cart is full. Remove some items before adding more.', 'error');
+      return cart;
+    }
+    
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    return cart;
+  } catch (error) {
+    console.error('Error in addToCartLocal:', error);
+    showNotification('Failed to add item to cart', 'error');
+    return { items: [], itemCount: 0 };
   }
-  
-  // Update item count
-  cart.itemCount = cart.items.reduce((total, item) => total + item.quantity, 0);
-  
-  // Save cart back to sessionStorage
-  sessionStorage.setItem('cart', JSON.stringify(cart));
-  
-  console.log('Cart updated in sessionStorage:', cart);
-  
-  return cart;
 }
 
 /**

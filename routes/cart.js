@@ -49,71 +49,89 @@ router.get('/', isAuthenticated, async (req, res) => {
         });
     }
 });
-// Add item to cart
+// routes/cart.js
 router.post('/add', isAuthenticated, async (req, res) => {
     try {
-        const { productId, quantity = 1 } = req.body;
-        const userId = req.user ? req.user._id : req.guestId;
-        
-        // Validate product exists and get its details
-        const product = await Product.findById(productId);
-        if (!product) {
-            return res.status(404).json({
-                success: false,
-                message: 'Product not found'
-            });
-        }
-        
-        // Find or create cart
-        let cart = await Cart.findOne({ userId: userId });
-        if (!cart) {
-            cart = new Cart({
-                userId: userId,
-                items: []
-            });
-        }
-        
-        // Check if product already in cart
-        const itemIndex = cart.items.findIndex(item => 
-            item.productId.toString() === productId
-        );
-        
-        if (itemIndex > -1) {
-            // Update existing item
-            cart.items[itemIndex].quantity += parseInt(quantity);
-        } else {
-            // Add new item with product details
-            cart.items.push({
-                productId: productId,
-                quantity: parseInt(quantity),
-                name: product.name,
-                price: product.price,
-                image: product.images[0],
-                specs: product.specs
-            });
-        }
-        
-        await cart.save();
-        
-        res.status(200).json({
-            success: true,
-            message: 'Item added to cart',
-            cart: {
-                items: cart.items,
-                itemCount: cart.itemCount
-            }
+      const { productId, quantity = 1, name, price, image } = req.body;
+      
+      // Validate inputs
+      if (!productId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Product ID is required'
         });
-        
+      }
+  
+      // Determine user ID (for both logged-in and guest users)
+      const userId = req.user ? req.user._id : req.session.guestId;
+      
+      if (!userId) {
+        // Create a guest ID if none exists
+        req.session.guestId = new mongoose.Types.ObjectId();
+      }
+  
+      // Find or create a cart
+      let cart = await Cart.findOne({ userId });
+      
+      if (!cart) {
+        cart = new Cart({ 
+          userId, 
+          items: [],
+          isGuest: !req.user
+        });
+      }
+  
+      // Find the product
+      const product = await Product.findById(productId);
+      
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: 'Product not found'
+        });
+      }
+  
+      // Check if product already in cart
+      const existingItemIndex = cart.items.findIndex(
+        item => item.productId.toString() === productId
+      );
+  
+      if (existingItemIndex > -1) {
+        // Update quantity if product exists
+        cart.items[existingItemIndex].quantity += quantity;
+      } else {
+        // Add new item
+        cart.items.push({
+          productId,
+          quantity,
+          name: name || product.name,
+          price: price || product.price,
+          image: image || product.thumbnailUrl || '/images/placeholder.jpg',
+          specs: product.specs
+        });
+      }
+  
+      // Save the cart
+      await cart.save();
+  
+      res.status(200).json({
+        success: true,
+        message: 'Product added to cart',
+        cart: {
+          items: cart.items,
+          itemCount: cart.items.reduce((total, item) => total + item.quantity, 0)
+        }
+      });
+  
     } catch (error) {
-        console.error('Error adding to cart:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error adding item to cart'
-        });
+      console.error('Error adding to cart:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error adding product to cart',
+        error: error.message
+      });
     }
-});
-// In your cart.js routes file
-// Add this POST endpoint for clearing the cart
+  });
 
 // Clear cart
 router.post('/clear', isAuthenticated, async (req, res) => {

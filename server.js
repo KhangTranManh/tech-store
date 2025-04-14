@@ -25,14 +25,16 @@ const safeRequire = (modulePath) => {
 
 const pagesRoutes = require('./routes/pages');
 const productRoutes = safeRequire('./routes/products');
-const cartRoutes = safeRequire('./routes/cart');
+const cartRoutes = require('./routes/cart');
 const orderRoutes = safeRequire('./routes/orders');
 const imageRoutes = require('./routes/images');
 const addressRoutes = safeRequire('./routes/addresses');
 const paymentMethodRoutes = safeRequire('./routes/payment-methods');
-const wishlistRoutes = safeRequire('./routes/wishlist');
+const wishlistRoutes = require('./routes/wishlist');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const categoryRoutes = require('./routes/categories');
+
 
 // Load auth routes with enhanced debugging
 let authRoutes;
@@ -112,11 +114,7 @@ if (authRoutes) {
   console.error('Auth routes not available to mount!');
 }
 
-// Mount cart routes after session initialization
-if (cartRoutes) {
-  console.log('Mounting cart routes at /cart');
-  app.use('/cart', cartRoutes);
-}
+
 
 // Mount other API routes
 if (addressRoutes) {
@@ -138,6 +136,8 @@ if (orderRoutes) {
   console.log('Mounting order routes at /api/orders');
   app.use('/api/orders', orderRoutes);
 }
+app.use('/api/wishlist', wishlistRoutes);
+
 
 if (wishlistRoutes) {
   console.log('Mounting wishlist routes at /api/wishlist');
@@ -145,6 +145,7 @@ if (wishlistRoutes) {
 } else {
   console.warn('Wishlist routes not available to mount');
 }
+app.use('/api/categories', categoryRoutes);
 
 // Serve static HTML pages
 const serveStaticPage = (route, filename) => {
@@ -253,6 +254,7 @@ const gracefulShutdown = () => {
     process.exit(1);
   }, 10000);
 };
+app.use('/api/cart', cartRoutes);
 
 // Listen for termination signals
 process.on('SIGTERM', gracefulShutdown);

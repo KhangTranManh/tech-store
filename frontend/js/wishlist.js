@@ -1,351 +1,409 @@
-// frontend/js/wishlist.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is logged in
-    if (window.authUtils && !window.authUtils.isUserLoggedIn()) {
-        // If not logged in, redirect to login page
-        window.location.href = '/login.html?redirect=wishlist.html';
-        return;
-    }
-    
-    // Update header to show account link
-    updateHeaderLinks();
-    
-    // Load wishlist items
-    loadWishlist();
-    
-    // Setup clear wishlist button
-    const clearWishlistBtn = document.getElementById('clear-wishlist');
-    if (clearWishlistBtn) {
-        clearWishlistBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to clear your entire wishlist?')) {
-                clearWishlist();
-            }
-        });
-    }
+  // Check authentication and redirect if not logged in
+  if (!window.authUtils || !window.authUtils.isUserLoggedIn()) {
+      window.location.href = '/login.html?redirect=wishlist.html';
+      return;
+  }
+  
+  // Update header links
+  updateHeaderLinks();
+  
+  // Load wishlist items
+  loadWishlist();
+  
+  // Setup clear wishlist button
+  const clearWishlistBtn = document.getElementById('clear-wishlist');
+  clearWishlistBtn?.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear your entire wishlist?')) {
+          clearWishlist();
+      }
+  });
 });
 
-/**
- * Update header links based on authentication status
- */
 function updateHeaderLinks() {
-    const loginLink = document.getElementById('login-link');
-    const registerLink = document.getElementById('register-link');
-    const accountLink = document.getElementById('account-link');
-    
-    if (window.authUtils && window.authUtils.isUserLoggedIn()) {
-        if (loginLink) loginLink.style.display = 'none';
-        if (registerLink) registerLink.style.display = 'none';
-        if (accountLink) accountLink.style.display = 'inline-block';
-    } else {
-        if (loginLink) loginLink.style.display = 'inline-block';
-        if (registerLink) registerLink.style.display = 'inline-block';
-        if (accountLink) accountLink.style.display = 'none';
-    }
+  const loginLink = document.getElementById('login-link');
+  const registerLink = document.getElementById('register-link');
+  const accountLink = document.getElementById('account-link');
+  
+  const isLoggedIn = window.authUtils && window.authUtils.isUserLoggedIn();
+  
+  if (loginLink) loginLink.style.display = isLoggedIn ? 'none' : 'inline-block';
+  if (registerLink) registerLink.style.display = isLoggedIn ? 'none' : 'inline-block';
+  if (accountLink) accountLink.style.display = isLoggedIn ? 'inline-block' : 'none';
 }
 
-/**
- * Load wishlist items from API
- */
 function loadWishlist() {
-    // Show loading state
-    const wishlistContent = document.getElementById('wishlist-content');
-    if (wishlistContent) {
-        wishlistContent.innerHTML = '<div class="loading">Loading your wishlist...</div>';
+  const wishlistContent = document.getElementById('wishlist-content');
+  wishlistContent.innerHTML = '<div class="loading">Loading your wishlist...</div>';
+  
+  fetch('/api/wishlist', {
+    credentials: 'include' // Important for sending cookies/session
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Handle non-200 responses
+      throw new Error('Failed to fetch wishlist');
     }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Wishlist data (raw):', JSON.stringify(data)); // Log the full raw data
     
-    // Fetch wishlist items
-    fetch('/api/wishlist', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
+    if (data.success) {
+      // Check if wishlist exists and has items
+      const wishlistItems = data.wishlist && data.wishlist.items ? data.wishlist.items : [];
+      
+      console.log('Wishlist items:', wishlistItems.map(item => ({
+        name: item.name,
+        product: item.product,
+        _id: item._id
+      })));
+      
+      if (wishlistItems.length > 0) {
+        renderWishlistItems(wishlistItems);
+      } else {
+        renderEmptyWishlist();
+      }
+    } else {
+      // Handle unsuccessful response
+      throw new Error(data.message || 'Unable to load wishlist');
+    }
+  })
+  .catch(error => {
+    console.error('Error loading wishlist:', error);
+    
+    // Display error message
+    const wishlistContent = document.getElementById('wishlist-content');
+    wishlistContent.innerHTML = `
+      <div class="error-message">
+        <p>Failed to load wishlist: ${error.message}</p>
+        <button onclick="loadWishlist()">Try Again</button>
+      </div>
+    `;
+  });
+}
+function renderWishlistItems(items) {
+  const wishlistContent = document.getElementById('wishlist-content');
+  const wishlistGrid = document.createElement('div');
+  wishlistGrid.className = 'wishlist-grid';
+  
+  items.forEach(item => {
+      // Determine the best ID to use
+      // Check all possible ID locations and formats
+      console.log('Item being rendered:', item);
+      
+      let productId;
+      
+      // If item has an _id, use that
+      if (item._id) {
+        productId = item._id;
+      }
+      // Otherwise if item.product is an object with _id, use that
+      else if (item.product && typeof item.product === 'object' && item.product._id) {
+        productId = item.product._id;
+      }
+      // Otherwise use item.product directly if it's not null
+      else if (item.product) {
+        productId = item.product;
+      }
+      // Last resort - use a temporary ID if nothing else works
+      else {
+        productId = 'temp-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        console.warn('Using temporary ID for wishlist item:', item.name);
+      }
+      
+      console.log(`Item ${item.name} using productId: ${productId}`);
+      
+      const wishlistItem = document.createElement('div');
+      wishlistItem.className = 'wishlist-item';
+      wishlistItem.innerHTML = `
+          <div class="item-image">
+              <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+          </div>
+          <div class="item-info">
+              <h3 class="item-name">${item.name}</h3>
+              <div class="item-price">${formatCurrency(item.price)}</div>
+              <div class="item-actions">
+                  <button class="add-to-cart" data-product-id="${productId}" data-item-id="${item._id || ''}">Add to Cart</button>
+                  <button class="remove-item" data-product-id="${productId}" data-item-id="${item._id || ''}">Remove</button>
+              </div>
+          </div>
+      `;
+      
+      wishlistGrid.appendChild(wishlistItem);
+  });
+  
+  wishlistContent.innerHTML = '';
+  wishlistContent.appendChild(wishlistGrid);
+  
+  setupWishlistItemActions();
+}
+
+function renderEmptyWishlist() {
+  const wishlistContent = document.getElementById('wishlist-content');
+  wishlistContent.innerHTML = `
+      <div class="empty-wishlist">
+          <h3>Your Wishlist is Empty</h3>
+          <p>Looks like you haven't added any items to your wishlist yet.</p>
+          <a href="/" class="shop-now-btn">Shop Now</a>
+      </div>
+  `;
+}
+function setupWishlistItemActions() {
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.getAttribute('data-product-id');
+      
+      // Find the wishlist item container
+      const itemContainer = this.closest('.wishlist-item');
+      
+      // Get product details
+      const productName = itemContainer.querySelector('.item-name').textContent;
+      const productPriceText = itemContainer.querySelector('.item-price').textContent;
+      const productPrice = parseFloat(productPriceText.replace(/[^0-9.-]+/g,''));
+      const productImage = itemContainer.querySelector('img').src;
+      
+      console.log('Adding to cart from wishlist:', {
+        productId, 
+        name: productName, 
+        price: productPrice,
+        image: productImage
+      });
+      
+      // Use the addToCartLocal function from cart-js.js
+      if (window.cartFunctions && window.cartFunctions.addToCartLocal) {
+        try {
+          window.cartFunctions.addToCartLocal(productId, productName, productPrice);
+          showNotification(productName + ' added to cart!', 'success');
+          
+          // Update cart count
+          if (window.cartFunctions.updateCartCountFromLocalStorage) {
+            window.cartFunctions.updateCartCountFromLocalStorage();
+          }
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+          showNotification('Error adding product to cart', 'error');
+        }
+      } else {
+        // Fallback if cart functions aren't available
+        showNotification('Cart functionality not available', 'error');
+      }
+    });
+  });
+  
+  document.querySelectorAll('.remove-item').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.getAttribute('data-product-id');
+      removeFromWishlist(productId);
+    });
+  });
+}
+function removeFromWishlist(id) {
+  if (!id || id === 'null') {
+    console.error('Cannot remove: Invalid ID:', id);
+    showNotification('Error removing product: Invalid ID', 'error');
+    return;
+  }
+
+  console.log('Removing product from wishlist with ID:', id);
+  
+  fetch(`/api/wishlist/remove/${id}`, {
+      method: 'DELETE',
+      credentials: 'include'
+  })
+  .then(response => {
+      console.log('Remove response status:', response.status);
+      return response.json().catch(e => {
+        // If can't parse JSON, create a simple object
+        if (response.ok) {
+          return { success: true };
+        } else {
+          throw new Error(`Server returned ${response.status}`);
+        }
+      });
+  })
+  .then(data => {
+      console.log('Remove response data:', data);
+      if (data.success) {
+          showNotification('Product removed from wishlist!', 'success');
+          loadWishlist(); // Reload the wishlist
+      } else {
+          showNotification(data.message || 'Failed to remove product', 'error');
+      }
+  })
+  .catch(error => {
+      console.error('Error removing from wishlist:', error);
+      showNotification('Error removing product: ' + error.message, 'error');
+  });
+}
+function clearWishlist() {
+  fetch('/api/wishlist/clear', {
+      method: 'DELETE',
+      credentials: 'include'
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          showNotification('Wishlist cleared!', 'success');
+          loadWishlist();
+      } else {
+          showNotification('Failed to clear wishlist', 'error');
+      }
+  })
+  .catch(error => {
+      console.error('Error clearing wishlist:', error);
+      showNotification('Error clearing wishlist', 'error');
+  });
+}
+function addToCart(productId, buttonElement, productName, productPrice, productImage) {
+  try {
+    // Validate inputs
+    if (!productId) {
+      console.error('No product ID provided');
+      return;
+    }
+
+    // Disable button and show loading state
+    if (buttonElement) {
+      buttonElement.disabled = true;
+      buttonElement.textContent = 'Adding...';
+    }
+
+    // Use provided data instead of trying to extract it
+    const name = productName || 'Unnamed Product';
+    const price = productPrice ? parseFloat(productPrice) : 0;
+    const image = productImage || '/images/placeholder.jpg';
+
+    // Prepare request data
+    const requestData = {
+      productId: productId.toString(),
+      name: name,
+      price: price,
+      image: image,
+      quantity: 1
+    };
+
+    console.log('Adding to cart:', requestData);
+
+    // Send request to add to cart
+    fetch('/api/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData),
+      credentials: 'include'
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch wishlist');
-        }
-        return response.json();
+      if (!response.ok) {
+        return response.json().then(errorData => {
+          throw new Error(errorData.message || 'Failed to add to cart');
+        });
+      }
+      return response.json();
     })
     .then(data => {
-        if (data.success) {
-            // Display wishlist
-            displayWishlist(data.wishlist);
-        } else {
-            showError('Failed to load wishlist: ' + data.message);
-        }
+      if (data.success) {
+        // Show success notification
+        showNotification(`${name} added to cart!`, 'success');
+        
+        // Update cart count
+        updateCartCount(data.cart.itemCount);
+      } else {
+        throw new Error(data.message || 'Failed to add to cart');
+      }
     })
     .catch(error => {
-        console.error('Error fetching wishlist:', error);
-        showError('An error occurred while fetching your wishlist. Please try again.');
+      console.error('Error adding to cart:', error);
+      showNotification(error.message || 'Failed to add to cart', 'error');
+    })
+    .finally(() => {
+      // Re-enable button
+      if (buttonElement) {
+        buttonElement.disabled = false;
+        buttonElement.textContent = 'Add to Cart';
+      }
     });
-}
 
-/**
- * Display wishlist items
- * @param {Object} wishlist - Wishlist object from API
- */
-function displayWishlist(wishlist) {
-    const wishlistContent = document.getElementById('wishlist-content');
+  } catch (error) {
+    console.error('Unexpected error in addToCart:', error);
+    showNotification('An unexpected error occurred', 'error');
     
-    if (!wishlistContent) return;
-    
-    // Clear previous content
-    wishlistContent.innerHTML = '';
-    
-    if (!wishlist.items || wishlist.items.length === 0) {
-        // Display empty state
-        wishlistContent.innerHTML = `
-            <div class="empty-wishlist">
-                <h3>Your wishlist is empty</h3>
-                <p>You haven't added any products to your wishlist yet.</p>
-                <a href="/" class="shop-now-btn">Shop Now</a>
-            </div>
-        `;
-        return;
+    // Re-enable button in case of synchronous error
+    if (buttonElement) {
+      buttonElement.disabled = false;
+      buttonElement.textContent = 'Add to Cart';
     }
-    
-    // Create wishlist grid
-    const wishlistGrid = document.createElement('div');
-    wishlistGrid.className = 'wishlist-grid';
-    
-    // Add items to grid
-    wishlist.items.forEach(item => {
-        const wishlistItem = document.createElement('div');
-        wishlistItem.className = 'wishlist-item';
-        
-        // Format price
-        const formattedPrice = formatCurrency(item.price);
-        
-        wishlistItem.innerHTML = `
-            <div class="item-image">
-                <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
-            </div>
-            <div class="item-info">
-                <h3 class="item-name">${item.name}</h3>
-                <div class="item-price">${formattedPrice}</div>
-                <div class="item-actions">
-                    <button class="add-to-cart" data-product-id="${item.product}">Add to Cart</button>
-                    <button class="remove-item" data-product-id="${item.product}">Remove</button>
-                </div>
-            </div>
-        `;
-        
-        wishlistGrid.appendChild(wishlistItem);
-    });
-    
-    wishlistContent.appendChild(wishlistGrid);
-    
-    // Add event listeners for buttons
-    setupButtonListeners();
+  }
 }
 
-/**
- * Setup event listeners for wishlist item buttons
- */
-function setupButtonListeners() {
-    // Add to cart buttons
-    const addToCartButtons = document.querySelectorAll('.add-to-cart');
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            addToCart(productId, this);
-        });
-    });
+function updateCartCount(count) {
+  const cartCountEl = document.querySelector('.user-actions a[href="/cart.html"]');
+  if (cartCountEl) {
+    cartCountEl.textContent = `Cart (${count || 0})`;
+  }
+}
+
+// Update the button initialization
+function initializeAddToCartButtons() {
+  const addToCartButtons = document.querySelectorAll('.add-to-cart');
+  
+  addToCartButtons.forEach(button => {
+    // Remove any existing event listeners first
+    button.removeEventListener('click', handleAddToCart);
     
-    // Remove from wishlist buttons
-    const removeButtons = document.querySelectorAll('.remove-item');
-    removeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            removeFromWishlist(productId);
-        });
-    });
+    // Add new event listener
+    button.addEventListener('click', handleAddToCart);
+  });
 }
 
-/**
- * Add product to cart
- * @param {string} productId - Product ID
- * @param {HTMLElement} button - Button element
- */
-function addToCart(productId, button) {
-    // Disable button while processing
-    button.disabled = true;
-    button.textContent = 'Adding...';
-    
-    // Add to cart logic using existing cart utility if available
-    if (window.cartUtils && window.cartUtils.addToCart) {
-        window.cartUtils.addToCart(productId, 1)
-            .then(success => {
-                if (success) {
-                    button.textContent = 'Added!';
-                    setTimeout(() => {
-                        button.textContent = 'Add to Cart';
-                        button.disabled = false;
-                    }, 2000);
-                } else {
-                    button.textContent = 'Failed';
-                    setTimeout(() => {
-                        button.textContent = 'Add to Cart';
-                        button.disabled = false;
-                    }, 2000);
-                }
-            })
-            .catch(error => {
-                console.error('Error adding to cart:', error);
-                button.textContent = 'Error';
-                setTimeout(() => {
-                    button.textContent = 'Add to Cart';
-                    button.disabled = false;
-                }, 2000);
-            });
-    } else {
-        // Fallback if cart utility is not available
-        fetch('/api/cart/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                productId: productId,
-                quantity: 1
-            }),
-            credentials: 'include'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                button.textContent = 'Added!';
-                // Show notification if available
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification('Product added to cart!', 'success');
-                }
-            } else {
-                button.textContent = 'Failed';
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification('Failed to add product to cart: ' + data.message, 'error');
-                }
-            }
-            
-            setTimeout(() => {
-                button.textContent = 'Add to Cart';
-                button.disabled = false;
-            }, 2000);
-        })
-        .catch(error => {
-            console.error('Error adding to cart:', error);
-            button.textContent = 'Error';
-            
-            if (typeof window.showNotification === 'function') {
-                window.showNotification('Error adding product to cart. Please try again.', 'error');
-            }
-            
-            setTimeout(() => {
-                button.textContent = 'Add to Cart';
-                button.disabled = false;
-            }, 2000);
-        });
-    }
+// Separate handler function
+function handleAddToCart(event) {
+  event.preventDefault();
+  const productId = this.getAttribute('data-product-id');
+  
+  if (!productId) {
+    console.error('No product ID found on button');
+    return;
+  }
+  
+  addToCart(productId, this);
 }
 
-/**
- * Remove product from wishlist
- * @param {string} productId - Product ID
- */
-function removeFromWishlist(productId) {
-    fetch(`/api/wishlist/remove/${productId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show notification if available
-            if (typeof window.showNotification === 'function') {
-                window.showNotification('Product removed from wishlist!', 'success');
-            }
-            
-            // Reload wishlist
-            loadWishlist();
-        } else {
-            if (typeof window.showNotification === 'function') {
-                window.showNotification('Failed to remove product: ' + data.message, 'error');
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error removing from wishlist:', error);
-        
-        if (typeof window.showNotification === 'function') {
-            window.showNotification('Error removing product. Please try again.', 'error');
-        }
-    });
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeAddToCartButtons);
+
+function defaultAddToCart(productId, quantity) {
+  return fetch('/api/cart/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId, quantity }),
+      credentials: 'include'
+  })
+  .then(response => response.json())
+  .then(data => data.success);
 }
 
-/**
- * Clear entire wishlist
- */
-function clearWishlist() {
-    fetch('/api/wishlist/clear', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show notification if available
-            if (typeof window.showNotification === 'function') {
-                window.showNotification('Wishlist cleared!', 'success');
-            }
-            
-            // Reload wishlist
-            loadWishlist();
-        } else {
-            if (typeof window.showNotification === 'function') {
-                window.showNotification('Failed to clear wishlist: ' + data.message, 'error');
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error clearing wishlist:', error);
-        
-        if (typeof window.showNotification === 'function') {
-            window.showNotification('Error clearing wishlist. Please try again.', 'error');
-        }
-    });
+// Utility functions (ensure these are defined)
+function showNotification(message, type = 'info') {
+  console.log(`${type.toUpperCase()}: ${message}`);
+  // Implement your notification display logic here
+  alert(message);
 }
 
-/**
- * Show error message
- * @param {string} message - Error message
- */
-function showError(message) {
-    const wishlistContent = document.getElementById('wishlist-content');
-    
-    if (wishlistContent) {
-        wishlistContent.innerHTML = `
-            <div class="error-message" style="padding: 20px; text-align: center; color: #d32f2f; background-color: #ffebee; border-radius: 4px; margin-top: 20px;">
-                <p>${message}</p>
-                <button onclick="loadWishlist()" style="margin-top: 10px; padding: 8px 15px; background-color: #ff6b00; color: white; border: none; border-radius: 4px; cursor: pointer;">Try Again</button>
-            </div>
-        `;
-    }
-}
-
-/**
- * Format currency
- * @param {number} amount - Amount to format
- * @returns {string} Formatted currency string
- */
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(amount);
+  return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+  }).format(amount);
+}
+
+function displayErrorMessage(message) {
+  const wishlistContent = document.getElementById('wishlist-content');
+  wishlistContent.innerHTML = `
+      <div class="error-message">
+          <p>${message}</p>
+          <button onclick="loadWishlist()">Try Again</button>
+      </div>
+  `;
 }

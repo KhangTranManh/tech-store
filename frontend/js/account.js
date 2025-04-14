@@ -1,3 +1,5 @@
+
+
 // frontend/js/account.js
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in
@@ -13,9 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load order stats for the dashboard
     loadOrderStats();
     
-    // Load orders data if we're on the account page
-    if (document.querySelector('.recent-orders')) {
+     // Load orders data if we're on the account page
+     if (document.querySelector('.recent-orders')) {
         loadRecentOrders();
+    }
+    
+    // Load wishlist items for the Saved Items section
+    if (document.querySelector('.saved-items')) {
+        loadWishlistItems();
     }
     
     // Logout button functionality
@@ -353,4 +360,243 @@ function updateOrdersDisplay(orders) {
         
         ordersContainer.appendChild(orderRow);
     });
+// Add this function to your account.js file
+function loadWishlistItems() {
+    const savedItemsContainer = document.querySelector('.saved-items');
+    
+    if (!savedItemsContainer) return;
+    
+    // Show loading state
+    savedItemsContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Loading your wishlist items...</div>';
+    
+    // Fetch wishlist items
+    fetch('/api/wishlist', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch wishlist');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success && data.wishlist && data.wishlist.items && data.wishlist.items.length > 0) {
+        // Display wishlist items only if there are items
+        displayWishlistItems(data.wishlist, savedItemsContainer);
+      } else {
+        // Show empty state
+        displayEmptyWishlist(savedItemsContainer);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching wishlist:', error);
+      // Show empty state on error
+      displayEmptyWishlist(savedItemsContainer);
+    });
+  }
+  
+  // Function to display empty wishlist message
+  function displayEmptyWishlist(container) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px; background-color: #f9f9f9; border-radius: 8px; margin: 20px 0;">
+        <h3 style="margin-bottom: 10px; color: #333;">Your wishlist is empty</h3>
+        <p style="margin-bottom: 20px; color: #666;">You haven't added any products to your wishlist yet.</p>
+        <a href="/" style="display: inline-block; padding: 10px 20px; background-color: #ff6b00; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Shop Now</a>
+      </div>
+    `;
+  }
+  
+  // Function to display wishlist items
+  function displayWishlistItems(wishlist, container) {
+    // Clear container
+    container.innerHTML = '';
+    
+    // Double-check if wishlist has items
+    if (!wishlist.items || wishlist.items.length === 0) {
+      displayEmptyWishlist(container);
+      return;
+    }
+    
+    // Sort items by price (most expensive first)
+    const sortedItems = [...wishlist.items].sort((a, b) => b.price - a.price);
+    
+    // Get the 4 most expensive items (or fewer if less than 4 are available)
+    const items = sortedItems.slice(0, 4);
+    
+    // Create item elements
+    items.forEach(item => {
+      const itemElement = document.createElement('div');
+      itemElement.className = 'saved-item';
+      
+      // Format price
+      const formattedPrice = formatCurrency(item.price);
+      
+      itemElement.innerHTML = `
+        <div class="saved-item-img">
+          <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+        </div>
+        <div class="saved-item-info">
+          <div class="saved-item-name">${item.name}</div>
+          <div class="saved-item-price">${formattedPrice}</div>
+          <div class="saved-item-actions">
+            <button class="cart-btn" data-product-id="${item.product}">Add to Cart</button>
+            <button class="remove-btn" data-product-id="${item.product}">Remove</button>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(itemElement);
+    });
+    
+    // Add event listeners for buttons
+    setupWishlistButtons();
+  }
+  
+  // Setup event listeners for wishlist buttons
+  function setupWishlistButtons() {
+    // Add to cart buttons
+    const addToCartButtons = document.querySelectorAll('.saved-items .cart-btn');
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        addToCart(productId, this);
+      });
+    });
+    
+    // Remove from wishlist buttons
+    const removeButtons = document.querySelectorAll('.saved-items .remove-btn');
+    removeButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        removeFromWishlist(productId);
+      });
+    });
+  }
+  
+  // Function to add to cart
+  function addToCart(productId, button) {
+    // Disable button while processing
+    button.disabled = true;
+    button.textContent = 'Adding...';
+    
+    // Add to cart logic using existing cart utility if available
+    if (window.cartUtils && window.cartUtils.addToCart) {
+      window.cartUtils.addToCart(productId, 1)
+        .then(success => {
+          if (success) {
+            button.textContent = 'Added!';
+            setTimeout(() => {
+              button.textContent = 'Add to Cart';
+              button.disabled = false;
+            }, 2000);
+          } else {
+            button.textContent = 'Failed';
+            setTimeout(() => {
+              button.textContent = 'Add to Cart';
+              button.disabled = false;
+            }, 2000);
+          }
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+          button.textContent = 'Error';
+          setTimeout(() => {
+            button.textContent = 'Add to Cart';
+            button.disabled = false;
+          }, 2000);
+        });
+    } else {
+      // Fallback if cart utility is not available
+      fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          productId: productId,
+          quantity: 1
+        }),
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          button.textContent = 'Added!';
+          // Show notification if available
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('Product added to cart!', 'success');
+          }
+        } else {
+          button.textContent = 'Failed';
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('Failed to add product to cart: ' + data.message, 'error');
+          }
+        }
+        
+        setTimeout(() => {
+          button.textContent = 'Add to Cart';
+          button.disabled = false;
+        }, 2000);
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        button.textContent = 'Error';
+        
+        if (typeof window.showNotification === 'function') {
+          window.showNotification('Error adding product to cart. Please try again.', 'error');
+        }
+        
+        setTimeout(() => {
+          button.textContent = 'Add to Cart';
+          button.disabled = false;
+        }, 2000);
+      });
+    }
+  }
+  
+  // Function to remove from wishlist
+  function removeFromWishlist(productId) {
+    fetch(`/api/wishlist/remove/${productId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Show notification if available
+        if (typeof window.showNotification === 'function') {
+          window.showNotification('Product removed from wishlist!', 'success');
+        }
+        
+        // Reload wishlist items
+        loadWishlistItems();
+      } else {
+        if (typeof window.showNotification === 'function') {
+          window.showNotification('Failed to remove product: ' + data.message, 'error');
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error removing from wishlist:', error);
+      
+      if (typeof window.showNotification === 'function') {
+        window.showNotification('Error removing product. Please try again.', 'error');
+      }
+    });
+  }
+  
+  // Format currency helper
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  }
 }
