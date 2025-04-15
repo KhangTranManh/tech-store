@@ -7,6 +7,8 @@ const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const socialAuthRoutes = require('./routes/socialAuth');
+const User = require('./models/user'); 
+
 
 
 // Database Connection

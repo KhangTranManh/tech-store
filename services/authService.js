@@ -2,29 +2,37 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
+const crypto = require('crypto');
 const User = require('../models/user');
-const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465, // Use 465 for SSL
-  secure: true, // Use SSL
-  auth: {
+// Create email transporter
+const createEmailTransporter = () => {
+  return nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD
-  }
-});
-// Verify transporter connection
-transporter.verify((error, success) => {
-  if (error) {
+    }
+  });
+};
+
+// Verify email transporter connection
+const verifyEmailTransporter = (transporter) => {
+  transporter.verify((error, success) => {
+    if (error) {
       console.error('Nodemailer configuration error:', error);
-  } else {
+    } else {
       console.log('Nodemailer is ready to send emails');
-  }
-});
+    }
+  });
+};
+
 // Initialize passport configuration
 function initializePassport(app) {
+  // Passport middleware
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -43,7 +51,7 @@ function initializePassport(app) {
     }
   });
 
-  // Configure Local Strategy for email/password login
+  // Local Strategy for email/password login
   passport.use(new LocalStrategy(
     { usernameField: 'email' },
     async (email, password, done) => {
@@ -69,15 +77,15 @@ function initializePassport(app) {
     }
   ));
 
-  // Configure Google Strategy
+  // Google OAuth Strategy
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback",
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "/auth/google/callback",
     scope: ['profile', 'email']
   }, async (accessToken, refreshToken, profile, done) => {
     try {
-      // Check if user already exists in our database
+      // Check if user already exists
       let user = await User.findOne({ 
         $or: [
           { googleId: profile.id },
@@ -86,7 +94,7 @@ function initializePassport(app) {
       });
 
       if (user) {
-        // If user exists but doesn't have googleId, update it
+        // Update googleId if not present
         if (!user.googleId) {
           user.googleId = profile.id;
           await user.save();
@@ -100,9 +108,9 @@ function initializePassport(app) {
         firstName: profile.name.givenName || profile.displayName.split(' ')[0],
         lastName: profile.name.familyName || profile.displayName.split(' ').slice(1).join(' '),
         email: profile.emails[0].value,
-        // Generate random password for social login users
-        password: mongoose.Types.ObjectId().toString(),
-        avatar: profile.photos[0].value,
+        // Generate secure random password
+        password: crypto.randomBytes(20).toString('hex'),
+        avatar: profile.photos[0]?.value,
         isEmailVerified: true
       });
 
@@ -113,15 +121,15 @@ function initializePassport(app) {
     }
   }));
 
-  // Configure Facebook Strategy
+  // Facebook OAuth Strategy
   passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "/auth/facebook/callback",
+    callbackURL: process.env.FACEBOOK_CALLBACK_URL || "/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email', 'first_name', 'last_name']
   }, async (accessToken, refreshToken, profile, done) => {
     try {
-      // Check if user already exists in our database
+      // Check if user already exists
       let user = await User.findOne({ 
         $or: [
           { facebookId: profile.id },
@@ -130,7 +138,7 @@ function initializePassport(app) {
       });
 
       if (user) {
-        // If user exists but doesn't have facebookId, update it
+        // Update facebookId if not present
         if (!user.facebookId) {
           user.facebookId = profile.id;
           await user.save();
@@ -138,9 +146,11 @@ function initializePassport(app) {
         return done(null, user);
       }
 
-      // Handle case where Facebook doesn't provide email
+      // Ensure email is available
       if (!profile.emails || !profile.emails[0]) {
-        return done(null, false, { message: 'Email is required. Please check your Facebook privacy settings.' });
+        return done(null, false, { 
+          message: 'Email is required. Please check your Facebook privacy settings.' 
+        });
       }
 
       // Create new user if doesn't exist
@@ -149,9 +159,9 @@ function initializePassport(app) {
         firstName: profile.name.givenName || profile.displayName.split(' ')[0],
         lastName: profile.name.familyName || profile.displayName.split(' ').slice(1).join(' '),
         email: profile.emails[0].value,
-        // Generate random password for social login users
-        password: mongoose.Types.ObjectId().toString(),
-        avatar: profile.photos[0].value,
+        // Generate secure random password
+        password: crypto.randomBytes(20).toString('hex'),
+        avatar: profile.photos[0]?.value,
         isEmailVerified: true
       });
 
@@ -161,10 +171,16 @@ function initializePassport(app) {
       return done(error);
     }
   }));
+
+  // Create and verify email transporter
+  const emailTransporter = createEmailTransporter();
+  verifyEmailTransporter(emailTransporter);
+
+  return emailTransporter;
 }
 
-// Export both the initialization function and the transporter
+// Export initialization function and email transporter creator
 module.exports = { 
   initializePassport,
-  transporter 
+  createEmailTransporter
 };
