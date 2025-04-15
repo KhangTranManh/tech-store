@@ -1,18 +1,18 @@
 // middleware/auth.js
 const passport = require('passport');
+const mongoose = require('mongoose');
+// Authentication middleware
 
-/**
- * Middleware to check if the user is authenticated
- */
-// middleware/auth.js
 const isAuthenticated = (req, res, next) => {
-  // Allow guest cart operations
-  if (!req.user) {
-    // Create a guest user ID if none exists
+  if (!req.isAuthenticated()) {
+    // If guest user, assign a guest ID
     if (!req.session.guestId) {
       req.session.guestId = new mongoose.Types.ObjectId();
     }
-    req.guestId = req.session.guestId;
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Authentication required' 
+    });
   }
   next();
 };
