@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   });
 });
+//saskjkdfaskmakad
 
 function updateHeaderLinks() {
   const loginLink = document.getElementById('login-link');
