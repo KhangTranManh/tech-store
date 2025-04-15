@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const Schema = mongoose.Schema;
 
 const UserSchema = new mongoose.Schema({
   firstName: {
@@ -28,7 +29,10 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
+    required: function() {
+      // Password is only required for regular users, not social login users
+      return !this.googleId && !this.facebookId;
+    },
     minlength: [6, 'Password must be at least 6 characters'],
     select: false // Prevents password from being returned in queries
   },
@@ -36,7 +40,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function(v) {
-        return v === '' || validator.isMobilePhone(v);
+        return !v || validator.isMobilePhone(v);
       },
       message: 'Invalid phone number'
     }
@@ -121,8 +125,8 @@ const UserSchema = new mongoose.Schema({
 
 // Password hashing middleware
 UserSchema.pre('save', async function(next) {
-  // Only hash the password if it has been modified
-  if (!this.isModified('password')) return next();
+  // Only hash the password if it has been modified and exists
+  if (!this.isModified('password') || !this.password) return next();
 
   // Hash the password
   this.password = await bcrypt.hash(this.password, 10);
@@ -131,6 +135,8 @@ UserSchema.pre('save', async function(next) {
 
 // Method to check password
 UserSchema.methods.comparePassword = async function(candidatePassword) {
+  // If no password (social login), return false
+  if (!this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
@@ -143,5 +149,59 @@ UserSchema.virtual('fullName').get(function() {
 UserSchema.virtual('isSocialUser').get(function() {
   return !!(this.googleId || this.facebookId);
 });
+
+// Method to handle social login data
+UserSchema.statics.findOrCreateSocialUser = async function(profile, provider) {
+  const User = this;
+  
+  // Determine which ID field to use based on provider
+  const idField = provider === 'google' ? 'googleId' : 'facebookId';
+  const query = {};
+  query[idField] = profile.id;
+  
+  try {
+    // First try to find user by social ID
+    let user = await User.findOne(query);
+    
+    // If user exists, return it
+    if (user) {
+      // Update last login time
+      if (user.security) {
+        user.security.lastLogin = new Date();
+        await user.save();
+      }
+      return user;
+    }
+    
+    // If not found, try to find by email
+    user = await User.findOne({ email: profile.emails[0].value });
+    
+    if (user) {
+      // User exists but hasn't connected this social account yet
+      user[idField] = profile.id;
+      // Update avatar if not already set
+      if (!user.avatar && profile.photos && profile.photos[0]) {
+        user.avatar = profile.photos[0].value;
+      }
+      await user.save();
+      return user;
+    }
+    
+    // Create new user if not exists
+    const newUser = new User({
+      [idField]: profile.id,
+      email: profile.emails[0].value,
+      firstName: profile.name.givenName || profile.displayName.split(' ')[0],
+      lastName: profile.name.familyName || profile.displayName.split(' ').slice(1).join(' '),
+      avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : undefined,
+      isEmailVerified: true // Social logins are considered verified
+    });
+    
+    return await newUser.save();
+  } catch (err) {
+    console.error('Error in findOrCreateSocialUser:', err);
+    throw err;
+  }
+};
 
 module.exports = mongoose.model('User', UserSchema);

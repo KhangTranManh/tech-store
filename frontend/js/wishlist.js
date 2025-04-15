@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-
 function updateHeaderLinks() {
   const loginLink = document.getElementById('login-link');
   const registerLink = document.getElementById('register-link');
@@ -76,78 +75,117 @@ function loadWishlist() {
     // Display error message
     const wishlistContent = document.getElementById('wishlist-content');
     wishlistContent.innerHTML = `
-      <div class="error-message">
+      <div class="error-message" style="text-align: center; padding: 20px; background-color: #ffebee; border-radius: 8px; margin: 20px 0; color: #c62828;">
         <p>Failed to load wishlist: ${error.message}</p>
-        <button onclick="loadWishlist()">Try Again</button>
+        <button onclick="loadWishlist()" style="padding: 8px 16px; background-color: #ff6b00; color: white; border: none; border-radius: 4px; margin-top: 10px; cursor: pointer;">Try Again</button>
       </div>
     `;
   });
 }
+
 function renderWishlistItems(items) {
   const wishlistContent = document.getElementById('wishlist-content');
+  
+  // Create a modern styled container
+  const container = document.createElement('div');
+  container.style.cssText = 'width: 100%;';
+  
+  // Create a card grid
   const wishlistGrid = document.createElement('div');
   wishlistGrid.className = 'wishlist-grid';
+  wishlistGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;';
   
-  items.forEach(item => {
-      // Determine the best ID to use
-      // Check all possible ID locations and formats
-      console.log('Item being rendered:', item);
-      
-      let productId;
-      
-      // If item has an _id, use that
-      if (item._id) {
-        productId = item._id;
-      }
-      // Otherwise if item.product is an object with _id, use that
-      else if (item.product && typeof item.product === 'object' && item.product._id) {
-        productId = item.product._id;
-      }
-      // Otherwise use item.product directly if it's not null
-      else if (item.product) {
-        productId = item.product;
-      }
-      // Last resort - use a temporary ID if nothing else works
-      else {
-        productId = 'temp-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-        console.warn('Using temporary ID for wishlist item:', item.name);
-      }
-      
-      console.log(`Item ${item.name} using productId: ${productId}`);
-      
-      const wishlistItem = document.createElement('div');
-      wishlistItem.className = 'wishlist-item';
-      wishlistItem.innerHTML = `
-          <div class="item-image">
-              <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
-          </div>
-          <div class="item-info">
-              <h3 class="item-name">${item.name}</h3>
-              <div class="item-price">${formatCurrency(item.price)}</div>
-              <div class="item-actions">
-                  <button class="add-to-cart" data-product-id="${productId}" data-item-id="${item._id || ''}">Add to Cart</button>
-                  <button class="remove-item" data-product-id="${productId}" data-item-id="${item._id || ''}">Remove</button>
-              </div>
-          </div>
-      `;
-      
-      wishlistGrid.appendChild(wishlistItem);
+  // Filter out any null or invalid items
+  const validItems = items.filter(item => item !== null && item.name);
+  
+  if (validItems.length === 0) {
+    renderEmptyWishlist();
+    return;
+  }
+  
+  validItems.forEach(item => {
+    // Get the proper product ID safely
+    let productId;
+    
+    // If item has an _id, use that
+    if (item._id) {
+      productId = item._id;
+    }
+    // Otherwise if item.product is an object with _id, use that
+    else if (item.product && typeof item.product === 'object' && item.product._id) {
+      productId = item.product._id;
+    }
+    // Otherwise use item.product directly if it's not null
+    else if (item.product) {
+      productId = item.product;
+    }
+    // Last resort - use a temporary ID if nothing else works
+    else {
+      productId = 'temp-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      console.warn('Using temporary ID for wishlist item:', item.name);
+    }
+    
+    console.log(`Item ${item.name} using productId: ${productId}`);
+    
+    // Create a card for each item
+    const card = document.createElement('div');
+    card.className = 'wishlist-item';
+    card.style.cssText = 'border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; background-color: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);';
+    
+    // Create card content
+    card.innerHTML = `
+      <div class="item-image" style="height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+        <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: contain;">
+      </div>
+      <div class="item-info" style="padding: 20px;">
+        <h3 class="item-name" style="font-size: 18px; margin: 0 0 10px 0; color: #333; font-weight: bold;">${item.name}</h3>
+        <div class="item-price" style="font-size: 20px; color: #ff6b00; margin-bottom: 15px; font-weight: bold;">${formatCurrency(item.price)}</div>
+        <div class="item-actions" style="display: flex; gap: 10px;">
+          <button class="add-to-cart" data-product-id="${productId}" data-item-id="${item._id || ''}" 
+            style="flex: 1; padding: 10px; background-color: #ff6b00; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+            Add to Cart
+          </button>
+          <button class="remove-item" data-product-id="${productId}" data-item-id="${item._id || ''}"
+            style="padding: 10px; background-color: #f5f5f5; color: #555; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+            Remove
+          </button>
+        </div>
+      </div>
+    `;
+    
+    // Add hover effect
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-5px)';
+      this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
+    });
+    
+    wishlistGrid.appendChild(card);
   });
   
+  container.appendChild(wishlistGrid);
   wishlistContent.innerHTML = '';
-  wishlistContent.appendChild(wishlistGrid);
+  wishlistContent.appendChild(container);
   
   setupWishlistItemActions();
 }
-
 function renderEmptyWishlist() {
   const wishlistContent = document.getElementById('wishlist-content');
   wishlistContent.innerHTML = `
-      <div class="empty-wishlist">
-          <h3>Your Wishlist is Empty</h3>
-          <p>Looks like you haven't added any items to your wishlist yet.</p>
-          <a href="/" class="shop-now-btn">Shop Now</a>
+    <div class="empty-wishlist">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
       </div>
+      <h3>Your Wishlist is Empty</h3>
+      <p>Looks like you haven't added any items to your wishlist yet.</p>
+      <a href="/" class="shop-now-btn">Shop Now</a>
+    </div>
   `;
 }
 function setupWishlistItemActions() {
@@ -199,6 +237,7 @@ function setupWishlistItemActions() {
     });
   });
 }
+
 function removeFromWishlist(id) {
   if (!id || id === 'null') {
     console.error('Cannot remove: Invalid ID:', id);
@@ -237,6 +276,7 @@ function removeFromWishlist(id) {
       showNotification('Error removing product: ' + error.message, 'error');
   });
 }
+
 function clearWishlist() {
   fetch('/api/wishlist/clear', {
       method: 'DELETE',
@@ -256,6 +296,7 @@ function clearWishlist() {
       showNotification('Error clearing wishlist', 'error');
   });
 }
+
 function addToCart(productId, buttonElement, productName, productPrice, productImage) {
   try {
     // Validate inputs
@@ -339,9 +380,9 @@ function addToCart(productId, buttonElement, productName, productPrice, productI
 }
 
 function updateCartCount(count) {
-  const cartCountEl = document.querySelector('.user-actions a[href="/cart.html"]');
+  const cartCountEl = document.querySelector('#cart-count');
   if (cartCountEl) {
-    cartCountEl.textContent = `Cart (${count || 0})`;
+    cartCountEl.textContent = count || 0;
   }
 }
 
@@ -385,11 +426,36 @@ function defaultAddToCart(productId, quantity) {
   .then(data => data.success);
 }
 
-// Utility functions (ensure these are defined)
+// Add a notification system like in payment methods
 function showNotification(message, type = 'info') {
   console.log(`${type.toUpperCase()}: ${message}`);
-  // Implement your notification display logic here
-  alert(message);
+  
+  // Check if notification element exists, create if not
+  let notification = document.querySelector('.notification-toast');
+  if (!notification) {
+    notification = document.createElement('div');
+    notification.className = 'notification-toast';
+    notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 4px; color: white; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: none;';
+    document.body.appendChild(notification);
+  }
+  
+  // Set styling based on notification type
+  if (type === 'success') {
+    notification.style.backgroundColor = '#4CAF50';
+  } else if (type === 'error') {
+    notification.style.backgroundColor = '#f44336';
+  } else {
+    notification.style.backgroundColor = '#2196F3';
+  }
+  
+  // Set content and display
+  notification.textContent = message;
+  notification.style.display = 'block';
+  
+  // Hide after 3 seconds
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000);
 }
 
 function formatCurrency(amount) {
@@ -402,9 +468,9 @@ function formatCurrency(amount) {
 function displayErrorMessage(message) {
   const wishlistContent = document.getElementById('wishlist-content');
   wishlistContent.innerHTML = `
-      <div class="error-message">
+      <div class="error-message" style="text-align: center; padding: 20px; background-color: #ffebee; border-radius: 8px; margin: 20px 0; color: #c62828;">
           <p>${message}</p>
-          <button onclick="loadWishlist()">Try Again</button>
+          <button onclick="loadWishlist()" style="padding: 8px 16px; background-color: #ff6b00; color: white; border: none; border-radius: 4px; margin-top: 10px; cursor: pointer;">Try Again</button>
       </div>
   `;
 }

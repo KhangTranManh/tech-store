@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const socialAuthRoutes = require('./routes/socialAuth');
+
 
 // Database Connection
 const connectDB = require('./db/connection');
@@ -99,6 +101,22 @@ app.use(session({
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
 app.use(passport.session());
+// Passport serialization/deserialization
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
+
+// Mount the social auth routes
+app.use('/auth', socialAuthRoutes);
 
 // Initialize Passport JS for authentication
 initializePassport(app);
