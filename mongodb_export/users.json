@@ -1,0 +1,81 @@
+[
+  {
+    "_id": "67e589ca0e5596bab131639d",
+    "firstName": "ditme",
+    "lastName": "TRAN",
+    "email": "khangjaki12@gmail.com",
+    "password": "$2a$10$W3ZrnpQgv0W4wney2W7zxekefIslvPlyWkUCTYyjqZS25ZoPBg36W",
+    "phone": "",
+    "role": "user",
+    "isSubscribed": true,
+    "isEmailVerified": false,
+    "createdAt": "2025-03-27T17:24:26.468Z",
+    "__v": 0,
+    "resetPasswordExpires": "2025-05-09T16:55:36.291Z",
+    "resetPasswordToken": "1140790e572310d758992b2b74f0333720d258fd",
+    "preferences": {
+      "orderUpdates": true,
+      "promotions": false,
+      "newsletter": false,
+      "productAlerts": false,
+      "currency": "usd"
+    },
+    "security": {
+      "loginAlerts": false,
+      "sessionTimeout": 60,
+      "twoFactorEnabled": false
+    }
+  },
+  {
+    "_id": "67fe99159d329b4538c085a8",
+    "firstName": "eqqe",
+    "lastName": "ewqeqeqe",
+    "email": "kxcpro123@gmail.com",
+    "password": "$2a$10$64UYe1DFKm1DgWt/AmU/FOznAUPQqtbruCs/GPKhWytz06kNTojc.",
+    "role": "user",
+    "isSubscribed": false,
+    "googleId": "105116829984243468178",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJvcGaRdUbrdNsuplGr7q86vXk7XTNtqdijYSytXYnR5it4DQ=s96-c",
+    "isEmailVerified": true,
+    "preferences": {
+      "orderUpdates": true,
+      "promotions": false,
+      "newsletter": false,
+      "productAlerts": false,
+      "currency": "usd"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "loginAlerts": false,
+      "sessionTimeout": 60
+    },
+    "createdAt": "2025-04-15T17:36:21.706Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e241da52729f2a5eb8ceb",
+    "firstName": "Tran",
+    "lastName": "Kxc",
+    "email": "kxctran@gmail.com",
+    "password": "$2a$10$e5yPjwTcOI2NTAYCiWdg1OBJvF4KU1u4I/INrUBPDfHmgiL3zWqRW",
+    "role": "user",
+    "isSubscribed": false,
+    "googleId": "101896080296188087222",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocI4TkF6gvzR1RasWl-iYq7yOUiE1lHGw40_RzYfDV2KtB_qKA=s96-c",
+    "isEmailVerified": true,
+    "preferences": {
+      "orderUpdates": true,
+      "promotions": false,
+      "newsletter": false,
+      "productAlerts": false,
+      "currency": "usd"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "loginAlerts": false,
+      "sessionTimeout": 60
+    },
+    "createdAt": "2025-05-09T15:49:49.601Z",
+    "__v": 0
+  }
+]

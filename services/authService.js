@@ -179,6 +179,7 @@ function initializePassport(app) {
   return emailTransporter;
 }
 
+
 // Export initialization function and email transporter creator
 module.exports = { 
   initializePassport,

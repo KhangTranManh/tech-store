@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "67e9665d2b4d83b7603922c5",
+    "user": "67e589ca0e5596bab131639d",
+    "type": "card",
+    "cardBrand": "Visa",
+    "cardHolder": "TRAN MANH KHANG",
+    "last4": "9842",
+    "expiryMonth": "01",
+    "expiryYear": "2030",
+    "accountType": "checking",
+    "isVerified": false,
+    "isDefault": true,
+    "paymentToken": "sim_visa_1743349341166_9842",
+    "createdAt": "2025-03-30T15:42:21.168Z",
+    "__v": 0
+  }
+]

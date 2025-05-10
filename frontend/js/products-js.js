@@ -1,30 +1,20 @@
-/**
- * TechStore Products JavaScript File
- * Handles product-related functionality
- */
+// Make sure the DOM is loaded before initializing
 document.addEventListener('DOMContentLoaded', function() {
-  // Load products on category pages
+  // Load regular products on category pages
   loadProducts();
   
-  // Initialize filters
+  // Load featured products on pages with featured section
+  loadFeaturedProducts();
+  
+  // Initialize all product interactions
   initializeFilters();
-  
-  // Initialize product sorting
   initializeSorting();
-  
-  // Initialize view toggles (grid/list)
   initializeViewToggles();
-  
-  // Initialize price range sliders
   initializePriceRanges();
-  
-  // Initialize add to cart buttons (in case they're in the HTML)
   initializeAddToCartButtons();
-  
-  // Initialize wishlist buttons
   initializeWishlistButtons();
-
-
+  initializeProductListeners();
+});
 /**
 * Load products based on the current page
 */
@@ -323,7 +313,7 @@ function renderProducts(container, products) {
   
   products.forEach(product => {
       html += `
-          <div class="product-card" data-product-id="${product.id}">
+          <div class="product-card" data-product-id="${product.id}" ${product.slug ? `data-product-slug="${product.slug}"` : ''}>
               <div class="product-img">
                   <img src="${product.image}" alt="${product.name}">
               </div>
@@ -583,6 +573,7 @@ function renderStars(rating) {
   
   return stars;
 }
+
 function addToWishlist(productId, name, price, image, buttonElement) {
   // Validate inputs
   if (!productId) {
@@ -687,24 +678,24 @@ function addToWishlist(productId, name, price, image, buttonElement) {
 * @returns {string} A 24-character hex string
 */
 function hashStringTo24HexChars(str) {
-// Simple hash function to generate a number from a string
-let hash = 0;
-for (let i = 0; i < str.length; i++) {
-  const char = str.charCodeAt(i);
-  hash = ((hash << 5) - hash) + char;
-  hash = hash & hash; // Convert to 32bit integer
-}
+  // Simple hash function to generate a number from a string
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
 
-// Convert to a hex string and ensure it's 24 characters
-let hexHash = Math.abs(hash).toString(16);
+  // Convert to a hex string and ensure it's 24 characters
+  let hexHash = Math.abs(hash).toString(16);
 
-// Pad to ensure we have 24 characters
-while (hexHash.length < 24) {
-  hexHash = hexHash + Math.abs(hash).toString(16);
-}
+  // Pad to ensure we have 24 characters
+  while (hexHash.length < 24) {
+    hexHash = hexHash + Math.abs(hash).toString(16);
+  }
 
-// Trim if too long
-return hexHash.slice(0, 24);
+  // Trim if too long
+  return hexHash.slice(0, 24);
 }
   
 function initializeWishlistButtons() {
@@ -761,43 +752,364 @@ function initializeWishlistButtons() {
   });
 }
   
-  // Utility function to show notifications
-  function showNotification(message, type = 'info') {
-    console.log(`${type.toUpperCase()}: ${message}`);
+// Utility function to show notifications
+function showNotification(message, type = 'info') {
+  console.log(`${type.toUpperCase()}: ${message}`);
+  
+  // If a custom notification function exists, use it
+  if (typeof window.showNotification === 'function') {
+    window.showNotification(message, type);
+  } else {
+    // Fallback to browser alert
+    alert(message);
+  }
+}
+
+// Update wishlist count
+function updateWishlistCount() {
+  fetch('/api/wishlist/count', {
+    credentials: 'include'
+  })
+  .then(response => response.json())
+  .then(data => {
+    const wishlistCountEl = document.getElementById('wishlist-count');
+    if (wishlistCountEl) {
+      wishlistCountEl.textContent = data.count || 0;
+    }
+  })
+  .catch(error => {
+    console.error('Error updating wishlist count:', error);
+  });
+}
+/**
+ * Load featured products - displays all four specific featured products
+ */
+async function loadFeaturedProducts() {
+  try {
+    const container = document.querySelector('.featured-products .product-grid');
     
-    // If a custom notification function exists, use it
-    if (typeof window.showNotification === 'function') {
-      window.showNotification(message, type);
-    } else {
-      // Fallback to browser alert
-      alert(message);
+    if (!container) {
+      // No featured products container on this page
+      return;
+    }
+    
+    // Show loading state
+    container.innerHTML = '<div class="loading">Loading featured products...</div>';
+    
+    // Define the exact products we want to show with correct image paths
+    const featuredProducts = [
+      {
+        _id: "681e3143bf1727e8bb3a3d71",
+        name: "Acer Predator Helios 300",
+        slug: "acer-predator-helios-300",
+        price: 1299.99,
+        compareAtPrice: 1499.99,
+        discount: 13,
+        thumbnailUrl: "images/acer3000.jpg",
+        sku: "ACR10750H3060"
+      },
+      {
+        _id: "681e3143bf1727e8bb3a3d76",
+        name: "NVIDIA GeForce RTX 4080",
+        slug: "nvidia-geforce-rtx-4080",
+        price: 1199.99,
+        compareAtPrice: 1299.99,
+        discount: 7,
+        thumbnailUrl: "images/4080gi.jpg",
+        sku: "NV4080-16GB"
+      },
+      {
+        _id: "681e3143bf1727e8bb3a3d81",
+        name: "LG 27GN950-B UltraGear",
+        slug: "lg-27gn950-b-ultragear",
+        price: 799.99,
+        compareAtPrice: 899.99,
+        discount: 11,
+        thumbnailUrl: "images/lg27.jpg",
+        sku: "LG27GN950B"
+      },
+      {
+        _id: "681e3143bf1727e8bb3a3d7c",
+        name: "TechStore Voyager",
+        slug: "techstore-voyager",
+        price: 2299.99,
+        compareAtPrice: 2499.99,
+        discount: 8,
+        thumbnailUrl: "images/voyage.jpg",
+        sku: "TSVGR13700K4070"
+      }
+    ];
+    
+    // Create HTML for all four products
+    let productsHtml = '';
+    
+    featuredProducts.forEach(product => {
+      // Calculate price details
+      const regularPrice = product.compareAtPrice || product.price;
+      const salePrice = product.price;
+      const hasDiscount = regularPrice > salePrice;
+      const discountPercent = product.discount || Math.round((1 - salePrice / regularPrice) * 100);
+      
+      // Generate HTML for each product card - making entire card clickable
+      productsHtml += `
+        <div class="product-card" data-product-id="${product._id}" data-product-slug="${product.slug}">
+          <div class="product-img">
+            <img src="${product.thumbnailUrl}" alt="${product.name}">
+          </div>
+          <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">
+              $${salePrice.toFixed(2)} 
+              ${hasDiscount ? `
+                <span class="product-original-price">$${regularPrice.toFixed(2)}</span>
+                <span class="product-discount">-${discountPercent}%</span>
+              ` : ''}
+            </div>
+            <button class="add-to-cart" data-product-id="${product._id}">Add to Cart</button>
+          </div>
+        </div>
+      `;
+    });
+    
+    // Update the container with our products
+    container.innerHTML = productsHtml;
+    
+    // Add click handlers to product cards
+    const productCards = container.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+      // Make the whole card clickable (except the Add to Cart button)
+      card.addEventListener('click', function(e) {
+        // Don't navigate if clicking on a button
+        if (e.target.tagName === 'BUTTON') {
+          return;
+        }
+        
+        // Get product ID
+        const productId = this.getAttribute('data-product-id');
+        
+        // Navigate to the product detail page using the ID approach
+        window.location.href = `product-detail.html?id=${productId}`;
+      });
+    });
+    
+    // Initialize add to cart buttons
+    initializeAddToCartButtons();
+    
+  } catch (error) {
+    console.error('Error loading featured products:', error);
+    
+    const container = document.querySelector('.featured-products .product-grid');
+    if (container) {
+      container.innerHTML = '<p>Failed to load featured products. Please try again later.</p>';
     }
   }
-  
-  // Update wishlist count
-  function updateWishlistCount() {
-    fetch('/api/wishlist/count', {
-      credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(data => {
-      const wishlistCountEl = document.getElementById('wishlist-count');
-      if (wishlistCountEl) {
-        wishlistCountEl.textContent = data.count || 0;
-      }
-    })
-    .catch(error => {
-      console.error('Error updating wishlist count:', error);
-    });
-  }
-  
-  /**
-   * Get product ID from URL
-   * @returns {string|null} Product ID from URL or null if not found
-   */
-  function getProductIdFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('id');
-  }
+}
 
+/**
+ * Optional: Fetch featured products from API in the background
+ * This won't block the initial display of hardcoded products
+ */
+async function fetchFeaturedProductsInBackground() {
+  try {
+    // Try the dedicated featured endpoint first
+    let response = await fetch('/api/products/featured/list?limit=10');
+    
+    // Fall back to the regular endpoint with filter
+    if (!response.ok) {
+      response = await fetch('/products?isFeatured=true&limit=10');
+    }
+    
+    if (!response.ok) return; // If both fail, just keep using our hardcoded data
+    
+    const data = await response.json();
+    
+    if (!data.products || data.products.length === 0) return;
+    
+    // Log the successful fetch for debugging
+    console.log('Successfully fetched featured products from API');
+    
+    // Note: Here you could update the product data if needed
+    // For example, update prices or availability based on API data
+    
+  } catch (error) {
+    console.error('Background fetch of featured products failed:', error);
+    // This error is non-critical since we already displayed our hardcoded products
+  }
+}
+/**
+ * Render featured products to container
+ */
+function renderFeaturedProducts(container, products) {
+  if (!container) return;
+  
+  let productsHtml = '';
+  
+  products.forEach(product => {
+    // Calculate price details
+    const regularPrice = product.compareAtPrice || product.price;
+    const salePrice = product.price;
+    const hasDiscount = regularPrice > salePrice;
+    const discountPercent = product.discount || Math.round((1 - salePrice / regularPrice) * 100);
+    
+    // Generate HTML for each product card
+    productsHtml += `
+      <div class="product-card" data-product-id="${product._id}" data-product-slug="${product.slug}">
+        <div class="product-img">
+          <img src="${product.thumbnailUrl || '/images/product-placeholder.jpg'}" alt="${product.name}">
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">${product.name}</h3>
+          <div class="product-price">
+            $${salePrice.toFixed(2)} 
+            ${hasDiscount ? `
+              <span class="product-original-price">$${regularPrice.toFixed(2)}</span>
+              <span class="product-discount">-${discountPercent}%</span>
+            ` : ''}
+          </div>
+          <button class="add-to-cart" data-product-id="${product._id}">Add to Cart</button>
+        </div>
+      </div>
+    `;
+  });
+  
+  // Update the container with our products
+  container.innerHTML = productsHtml;
+  
+  // Add click handlers to cards
+  const productCards = document.querySelectorAll('.product-card');
+  
+  productCards.forEach(card => {
+    // Make the whole card clickable (except the Add to Cart button)
+    card.addEventListener('click', function(e) {
+      // Don't navigate if clicking on a button
+      if (e.target.tagName === 'BUTTON') {
+        return;
+      }
+      
+      // Get product ID and slug
+      const productId = this.getAttribute('data-product-id');
+      const productSlug = this.getAttribute('data-product-slug');
+      
+      // Navigate to the product detail page (prefer slug for SEO)
+      if (productSlug) {
+        window.location.href = `/product/${productSlug}`;
+      } else {
+        window.location.href = `/product-detail.html?id=${productId}`;
+      }
+    });
+  });
+  
+  // Initialize add to cart buttons
+  initializeAddToCartButtons();
+}
+
+// Make sure to call loadFeaturedProducts when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  loadFeaturedProducts();
 });
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Call the loadFeaturedProducts function
+  loadFeaturedProducts();
+});
+
+/**
+ * Generate star rating HTML
+ */
+function renderStars(rating) {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  
+  let stars = '';
+  
+  // Add full stars
+  for (let i = 0; i < fullStars; i++) {
+    stars += '★';
+  }
+  
+  // Add half star if needed
+  if (halfStar) {
+    stars += '★';
+  }
+  
+  // Add empty stars
+  for (let i = 0; i < emptyStars; i++) {
+    stars += '☆';
+  }
+  
+  return stars;
+}
+
+/**
+ * Initialize event listeners for product cards
+ */
+function initializeProductListeners() {
+  // Add event listeners to product cards
+  const productCards = document.querySelectorAll('.product-card');
+  
+  productCards.forEach(card => {
+    // Make the entire card clickable to view product details
+    card.addEventListener('click', function(e) {
+      // Don't navigate if clicking on a button
+      if (e.target.tagName === 'BUTTON') {
+        return;
+      }
+      
+      const productId = this.getAttribute('data-product-id');
+      const productSlug = this.getAttribute('data-product-slug');
+      
+      // Navigate to product detail page
+      navigateToProductDetail(productId, productSlug);
+    });
+  });
+  
+  // Add event listeners to "View Details" buttons
+  const viewDetailsButtons = document.querySelectorAll('.view-details');
+  
+  viewDetailsButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent triggering the card click
+      
+      const productId = this.getAttribute('data-product-id');
+      const productSlug = this.getAttribute('data-product-slug');
+      
+      // Navigate to product detail page
+      navigateToProductDetail(productId, productSlug);
+    });
+  });
+  
+  // Add event listeners to "Add to Cart" buttons
+  const addToCartButtons = document.querySelectorAll('.add-to-cart');
+  
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent triggering the card click
+      
+      const productId = this.getAttribute('data-product-id');
+      const productName = this.closest('.product-card').querySelector('.product-title').textContent;
+      
+      // Add to cart (function defined in cart.js)
+      if (typeof window.updateCart === 'function') {
+        window.updateCart(productId, productName, 1);
+      } else {
+        // Fallback if cart.js is not loaded
+        console.log('Added to cart:', productName, 'ID:', productId);
+        alert(`${productName} added to cart!`);
+      }
+    });
+  });
+}
+
+/**
+ * Navigate to product detail page
+ */
+function navigateToProductDetail(productId, productSlug) {
+  // Prefer using the slug for SEO-friendly URLs if available
+  if (productSlug) {
+    window.location.href = `/product/${productSlug}`;
+  } else {
+    window.location.href = `/product-detail.html?id=${productId}`;
+  }
+}

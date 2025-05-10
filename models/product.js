@@ -2,6 +2,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// Detailed specification schema for better organization
+const SpecificationSchema = new Schema({
+  title: String,
+  details: [String]
+}, { _id: false });
+
+const FAQSchema = new Schema({
+  question: String,
+  answer: String
+}, { _id: false });
+
 const ProductSchema = new Schema({
   name: {
     type: String,
@@ -24,6 +35,11 @@ const ProductSchema = new Schema({
   shortDescription: {
     type: String,
     maxlength: 200
+  },
+  
+  // New field: Detailed description for the Description tab
+  detailedDescription: {
+    type: String
   },
   
   price: {
@@ -56,6 +72,16 @@ const ProductSchema = new Schema({
     default: 0
   },
   
+  // New field: Brand information
+  brand: {
+    type: String
+  },
+  
+  // New field: Model number
+  modelNumber: {
+    type: String
+  },
+  
   sku: {
     type: String,
     unique: true,
@@ -81,8 +107,24 @@ const ProductSchema = new Schema({
   
   features: [String],
   
+  // Basic specs as a string (for simple display)
   specs: {
     type: String
+  },
+  
+  // New field: Detailed specifications for the Specifications tab
+  detailedSpecs: {
+    processor: SpecificationSchema,
+    graphics: SpecificationSchema,
+    memory: SpecificationSchema,
+    storage: SpecificationSchema,
+    display: SpecificationSchema,
+    audio: SpecificationSchema,
+    keyboard: SpecificationSchema,
+    connectivity: SpecificationSchema,
+    battery: SpecificationSchema,
+    operatingSystem: SpecificationSchema,
+    dimensions: SpecificationSchema
   },
   
   // Image fields - we'll store the references to separate Image documents
@@ -101,6 +143,18 @@ const ProductSchema = new Schema({
   // Thumbnail URL for quick access
   thumbnailUrl: {
     type: String
+  },
+  
+  // New field: Additional image URLs (if not using Image model references)
+  additionalImages: [String],
+  
+  // New field: Frequently Asked Questions
+  faqs: [FAQSchema],
+  
+  // New field: Shipping information
+  shippingInfo: {
+    type: String,
+    default: 'Free shipping on orders over $50. Free returns.'
   },
   
   tags: [String],
@@ -192,6 +246,11 @@ ProductSchema.virtual('inStock').get(function() {
   return this.stock > 0;
 });
 
+// Virtual for formatted discount percentage
+ProductSchema.virtual('discountPercentage').get(function() {
+  return Math.round(this.discount);
+});
+
 // Method to update images from Image collection
 ProductSchema.methods.updateImages = async function() {
   const Image = mongoose.model('Image');
@@ -224,5 +283,27 @@ ProductSchema.methods.updateImages = async function() {
   // Save the changes
   return this.save();
 };
-
+ProductSchema.statics.updateImages = async function(productId, mainImage, additionalImages) {
+  try {
+    const product = await this.findById(productId);
+    
+    if (!product) {
+      console.error(`Product with ID ${productId} not found`);
+      return false;
+    }
+    
+    // Update thumbnail URL
+    product.thumbnailUrl = mainImage;
+    
+    // Update additional images
+    product.additionalImages = additionalImages;
+    
+    await product.save();
+    console.log(`Updated images for ${product.name}`);
+    return true;
+  } catch (error) {
+    console.error(`Error updating product images: ${error}`);
+    return false;
+  }
+};
 module.exports = mongoose.model('Product', ProductSchema);

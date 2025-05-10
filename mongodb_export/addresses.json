@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "67e95d5d9e670a3fad034781",
+    "user": "67e589ca0e5596bab131639d",
+    "addressType": "home",
+    "firstName": "cc",
+    "lastName": "123",
+    "phone": "0942119869",
+    "street": "123",
+    "apartment": "1233",
+    "city": "Hoco",
+    "state": "123",
+    "postalCode": "223",
+    "country": "Viet Nam",
+    "isDefault": true,
+    "createdAt": "2025-03-30T15:03:57.503Z",
+    "__v": 0
+  },
+  {
+    "_id": "67e96134c49a99a69150c01d",
+    "user": "67e589ca0e5596bab131639d",
+    "addressType": "home",
+    "firstName": "kxc",
+    "lastName": "123",
+    "phone": "0942119869",
+    "street": "123",
+    "apartment": "34",
+    "city": "3",
+    "state": "123",
+    "postalCode": "111",
+    "country": "Viet Nam",
+    "isDefault": false,
+    "createdAt": "2025-03-30T15:20:20.441Z",
+    "__v": 0
+  }
+]

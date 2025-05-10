@@ -3,7 +3,8 @@ const router = express.Router();
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const User = require('../models/user');
-const { transporter } = require('../services/authService');
+const { createEmailTransporter } = require('../services/authService');
+const transporter = createEmailTransporter()
 const passport = require('passport');
 
 

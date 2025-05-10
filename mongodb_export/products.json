@@ -1,0 +1,1039 @@
+[
+  {
+    "_id": "681e3143bf1727e8bb3a3d71",
+    "name": "Acer Predator Helios 300",
+    "slug": "acer-predator-helios-300",
+    "description": "The Acer Predator Helios 300 features a 15.6\" Full HD IPS display with 144Hz refresh rate, Intel Core i7-11800H processor, 16GB DDR4 RAM, 512GB NVMe SSD, and NVIDIA GeForce RTX 3060 graphics.",
+    "shortDescription": "Powerful gaming laptop with RTX 3060 graphics",
+    "price": 1299.99,
+    "compareAtPrice": 1499.99,
+    "category": "681e2f4a7a418d374a94c196",
+    "subCategory": "681e2f4a7a418d374a94c19b",
+    "stock": 15,
+    "features": [
+      "144Hz Refresh Rate",
+      "RGB Backlit Keyboard",
+      "DTS:X Ultra Audio",
+      "PredatorSense Software"
+    ],
+    "specs": "Intel Core i7-11800H, 16GB RAM, 512GB SSD, RTX 3060, 15.6\" FHD 144Hz",
+    "images": [],
+    "tags": [
+      "gaming",
+      "laptops",
+      "nvidia",
+      "rtx3060",
+      "acer",
+      "predator"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 13,
+    "rating": 4.7,
+    "reviewCount": 128,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.453Z",
+    "updatedAt": "2025-05-09T16:45:55.453Z",
+    "__v": 0,
+    "additionalImages": [
+      "/images/product1-side.jpg",
+      "/images/product1-back.jpg",
+      "/images/product1-keyboard.jpg"
+    ],
+    "brand": "Acer",
+    "detailedDescription": "\n        <h4>Powerful Performance</h4>\n        <p>Equipped with a 10th Gen Intel Core i7-10750H processor featuring 6 cores and 12 threads, this laptop delivers impressive processing power for gaming and multitasking. The NVIDIA GeForce RTX 3060 graphics card with 6GB GDDR6 memory enables realistic ray-traced graphics and cutting-edge AI features in games.</p>\n        \n        <h4>Immersive Display</h4>\n        <p>Experience smooth, responsive gameplay on the 15.6\" Full HD IPS display with a 144Hz refresh rate and 3ms response time. The display features a 72% NTSC color gamut for vibrant, accurate colors whether you're gaming or creating content.</p>\n        \n        <h4>Advanced Cooling</h4>\n        <p>Acer's 4th Gen AeroBlade 3D Fan technology keeps the system cool even during extended gaming sessions. The custom-engineered fan design, strategically placed intake and exhaust vents, and heat pipes ensure optimal thermal performance.</p>\n        \n        <h4>Customizable RGB Keyboard</h4>\n        <p>The 4-zone RGB backlit keyboard allows for customizable lighting effects. The WASD and arrow keys are highlighted for quick identification during intense gaming sessions.</p>\n        \n        <h4>Fast Storage and Memory</h4>\n        <p>With 16GB of DDR4 3200MHz memory and a 512GB PCIe NVMe SSD, this laptop offers fast boot times, quick application launches, and smooth multitasking. The memory can be upgraded to 32GB, and there's room for additional storage drives.</p>\n        \n        <h4>Connectivity Options</h4>\n        <p>Stay connected with a full range of ports including USB 3.2 Type-C, USB 3.2 Type-A, USB 2.0, HDMI 2.0, Mini DisplayPort 1.4, and an RJ-45 Ethernet port. Wireless connectivity includes Killer Wi-Fi 6 AX1650i and Bluetooth 5.1.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "Processor",
+        "details": [
+          "Intel Core i7-10750H",
+          "6 cores, 12 threads",
+          "2.6GHz base frequency, up to 5.0GHz with Turbo Boost",
+          "12MB Intel Smart Cache"
+        ]
+      },
+      "graphics": {
+        "title": "Graphics",
+        "details": [
+          "NVIDIA GeForce RTX 3060 Laptop GPU",
+          "6GB GDDR6 VRAM",
+          "Ray Tracing Cores, Tensor Cores, DLSS support"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "16GB DDR4 3200MHz (2x8GB)",
+          "Upgradable to 32GB (2x16GB)",
+          "Dual-channel support"
+        ]
+      },
+      "storage": {
+        "title": "Storage",
+        "details": [
+          "512GB PCIe NVMe SSD",
+          "Additional empty 2.5\" drive bay for storage expansion"
+        ]
+      },
+      "display": {
+        "title": "Display",
+        "details": [
+          "15.6\" Full HD (1920 x 1080) IPS",
+          "144Hz refresh rate",
+          "3ms response time",
+          "72% NTSC color gamut",
+          "ComfyView LED-backlit"
+        ]
+      },
+      "audio": {
+        "title": "Audio",
+        "details": [
+          "DTS:X Ultra Audio",
+          "Dual speakers",
+          "Acer TrueHarmony technology"
+        ]
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "details": [
+          "4-zone RGB backlit keyboard",
+          "WASD and arrow keys highlighted",
+          "Dedicated Turbo button",
+          "NumPad"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "Killer Wi-Fi 6 AX1650i (802.11ax)",
+          "Bluetooth 5.1",
+          "1x USB 3.2 Gen 2 Type-C",
+          "3x USB 3.2 Gen 1 Type-A (one with power-off charging)",
+          "1x HDMI 2.0 with HDCP support",
+          "1x Mini DisplayPort 1.4",
+          "1x RJ-45 Ethernet port",
+          "1x 3.5mm headphone/microphone combo jack"
+        ]
+      },
+      "battery": {
+        "title": "Battery",
+        "details": [
+          "4-cell Li-ion, 59Wh",
+          "Up to 6 hours of battery life",
+          "230W power adapter"
+        ]
+      },
+      "operatingSystem": {
+        "title": "Operating System",
+        "details": [
+          "Windows 11 Home"
+        ]
+      },
+      "dimensions": {
+        "title": "Dimensions",
+        "details": [
+          "363.4 x 255 x 22.9 mm (14.31 x 10.04 x 0.90 inches)",
+          "Weight: 2.2 kg (4.85 lbs)"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Can the RAM be upgraded?",
+        "answer": "Yes, the laptop has two RAM slots. It comes with 16GB (2x8GB) and can be upgraded to a maximum of 32GB (2x16GB) DDR4 memory."
+      },
+      {
+        "question": "Does this laptop have an additional storage bay?",
+        "answer": "Yes, in addition to the 512GB NVMe SSD, there is an empty 2.5\" drive bay for additional storage expansion."
+      },
+      {
+        "question": "What is the battery life like?",
+        "answer": "Battery life varies depending on usage, but typically lasts up to 6 hours for regular tasks. For gaming, it's recommended to use the power adapter for optimal performance."
+      },
+      {
+        "question": "Does this laptop support external displays?",
+        "answer": "Yes, you can connect external displays using the HDMI 2.0 port or Mini DisplayPort 1.4. The USB Type-C port also supports DisplayPort over USB-C."
+      }
+    ],
+    "modelNumber": "PH315-53-71HN",
+    "shippingInfo": "Free shipping on orders over $50. Free returns.",
+    "sku": "ACR10750H3060",
+    "thumbnailUrl": "/images/product1.jpg"
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d72",
+    "name": "Lenovo ThinkPad X1 Carbon",
+    "slug": "lenovo-thinkpad-x1-carbon",
+    "description": "The Lenovo ThinkPad X1 Carbon is a premium business ultrabook designed for professionals. It features a 14\" WQHD display, Intel Core i7 processor, 16GB RAM, and military-grade durability.",
+    "shortDescription": "Premium business ultrabook with long battery life",
+    "price": 1699.99,
+    "compareAtPrice": 1899.99,
+    "category": "681e2f4a7a418d374a94c196",
+    "subCategory": "681e2f4a7a418d374a94c19c",
+    "stock": 12,
+    "features": [
+      "Fingerprint reader",
+      "ThinkShutter camera cover",
+      "Military-grade durability",
+      "Rapid charge technology"
+    ],
+    "specs": "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" WQHD, Windows 11 Pro",
+    "images": [],
+    "tags": [
+      "business",
+      "laptops",
+      "thinkpad",
+      "lenovo",
+      "ultrabook"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 10,
+    "rating": 4.8,
+    "reviewCount": 92,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.454Z",
+    "updatedAt": "2025-05-09T16:45:55.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d73",
+    "name": "Dell XPS 13",
+    "slug": "dell-xps-13",
+    "description": "The Dell XPS 13 features a stunning 13.4\" InfinityEdge display with virtually no bezels, 11th Gen Intel processors, and a compact design thats both powerful and portable.",
+    "shortDescription": "Premium ultrabook with InfinityEdge display",
+    "price": 1299.99,
+    "compareAtPrice": 1399.99,
+    "category": "681e2f4a7a418d374a94c196",
+    "subCategory": "681e2f4a7a418d374a94c19d",
+    "stock": 14,
+    "features": [
+      "InfinityEdge display",
+      "CNC machined aluminum chassis",
+      "Dolby Vision support",
+      "Thunderbolt 4 connectivity"
+    ],
+    "specs": "Intel Core i7-1185G7, 16GB RAM, 512GB SSD, 13.4\" UHD+ Touch Display",
+    "images": [],
+    "tags": [
+      "ultrabook",
+      "laptops",
+      "dell",
+      "xps",
+      "premium"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.9,
+    "reviewCount": 156,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.454Z",
+    "updatedAt": "2025-05-09T16:45:55.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d74",
+    "name": "HP Spectre x360",
+    "slug": "hp-spectre-x360",
+    "description": "The HP Spectre x360 is a versatile convertible laptop with a stunning OLED display, gem-cut design, and powerful performance for creators and professionals.",
+    "shortDescription": "Premium 2-in-1 convertible with OLED display",
+    "price": 1399.99,
+    "compareAtPrice": 1599.99,
+    "category": "681e2f4a7a418d374a94c196",
+    "subCategory": "681e2f4a7a418d374a94c19e",
+    "stock": 9,
+    "features": [
+      "360° hinge design",
+      "HP MPP 2.0 Tilt Pen support",
+      "Bang & Olufsen audio",
+      "Webcam kill switch"
+    ],
+    "specs": "Intel Core i7-1165G7, 16GB RAM, 1TB SSD, 13.5\" 3K2K OLED Touch Display",
+    "images": [],
+    "tags": [
+      "2-in-1",
+      "convertible",
+      "laptops",
+      "hp",
+      "spectre",
+      "oled"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 12,
+    "rating": 4.7,
+    "reviewCount": 108,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.454Z",
+    "updatedAt": "2025-05-09T16:45:55.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d75",
+    "name": "Google Pixelbook Go",
+    "slug": "google-pixelbook-go",
+    "description": "The Google Pixelbook Go is a premium Chromebook featuring a 13.3\" touchscreen display, up to 12 hours of battery life, and a lightweight, portable design perfect for on-the-go productivity.",
+    "shortDescription": "Premium Chromebook with 12-hour battery life",
+    "price": 649.99,
+    "compareAtPrice": 699.99,
+    "category": "681e2f4a7a418d374a94c196",
+    "subCategory": "681e2f4a7a418d374a94c19f",
+    "stock": 15,
+    "features": [
+      "Hush Keys for quiet typing",
+      "Titan C security chip",
+      "Quick Charge technology",
+      "HD webcam"
+    ],
+    "specs": "Intel Core i5, 8GB RAM, 128GB SSD, 13.3\" Full HD Touchscreen",
+    "images": [],
+    "tags": [
+      "chromebook",
+      "laptops",
+      "google",
+      "pixelbook",
+      "chrome os"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.6,
+    "reviewCount": 87,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.454Z",
+    "updatedAt": "2025-05-09T16:45:55.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d76",
+    "name": "NVIDIA GeForce RTX 4080",
+    "slug": "nvidia-geforce-rtx-4080",
+    "description": "The NVIDIA GeForce RTX 4080 delivers extreme gaming performance with 16GB of high-speed GDDR6X memory, DLSS 3 with AI frame generation, and advanced ray tracing capabilities.",
+    "shortDescription": "High-end gaming graphics card with 16GB GDDR6X",
+    "price": 1199.99,
+    "compareAtPrice": 1299.99,
+    "category": "681e2f4a7a418d374a94c197",
+    "subCategory": "681e2f4a7a418d374a94c1a0",
+    "stock": 8,
+    "features": [
+      "DLSS 3 with frame generation",
+      "Ray tracing cores",
+      "NVIDIA Reflex low latency",
+      "AV1 encode & decode"
+    ],
+    "specs": "16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design",
+    "images": [],
+    "tags": [
+      "graphics card",
+      "gpu",
+      "nvidia",
+      "rtx",
+      "gaming"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.9,
+    "reviewCount": 94,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.454Z",
+    "updatedAt": "2025-05-09T16:45:55.454Z",
+    "__v": 0,
+    "additionalImages": [
+      "/images/product2-side.jpg",
+      "/images/product2-back.jpg",
+      "/images/product2-io.jpg"
+    ],
+    "brand": "NVIDIA",
+    "detailedDescription": "\n        <h4>Next-Gen Gaming Performance</h4>\n        <p>The NVIDIA GeForce RTX 4070 is powered by the NVIDIA Ada Lovelace architecture and delivers exceptional gaming performance. With 12GB GDDR6X memory and advanced ray tracing capabilities, this card pushes the boundaries of realism in modern games.</p>\n        \n        <h4>DLSS 3 Technology</h4>\n        <p>Featuring DLSS 3 with Frame Generation, the RTX 4070 uses AI to generate entirely new frames, dramatically increasing game performance. Experience up to 2x performance in the latest games with ray tracing enabled.</p>\n        \n        <h4>Ray Tracing Excellence</h4>\n        <p>3rd generation RT Cores provide realistic lighting, reflections, and shadows, bringing unprecedented levels of realism to your games. The specialized ray tracing hardware delivers up to 2x the ray tracing performance of the previous generation.</p>\n        \n        <h4>Efficient Power Design</h4>\n        <p>The RTX 4070 features an efficient design that delivers high performance with optimized power consumption. The dual axial flow through cooling solution keeps temperatures low even during intensive gaming sessions.</p>\n        \n        <h4>NVIDIA Reflex</h4>\n        <p>Gain a competitive edge with NVIDIA Reflex, which delivers the lowest latency and best responsiveness in competitive games. The combination of low latency rendering, reduced system latency, and enhanced response times gives you the ultimate competitive advantage.</p>\n        \n        <h4>Content Creation Accelerated</h4>\n        <p>Beyond gaming, the RTX 4070 accelerates creative workflows. Take advantage of hardware-accelerated ray tracing, AI-assisted features, and NVIDIA Studio drivers to boost productivity in creative applications like video editing, 3D rendering, and graphic design.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "GPU Architecture",
+        "details": [
+          "NVIDIA Ada Lovelace",
+          "5888 CUDA Cores",
+          "46 RT Cores",
+          "184 Tensor Cores"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "12GB GDDR6X",
+          "192-bit memory interface",
+          "21 Gbps memory speed",
+          "504 GB/s memory bandwidth"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "PCIe 4.0 x16",
+          "3x DisplayPort 1.4a",
+          "1x HDMI 2.1"
+        ]
+      },
+      "display": {
+        "title": "Display Support",
+        "details": [
+          "Maximum Resolution: 8K (7680 x 4320)",
+          "Multi-monitor support: up to 4 displays",
+          "HDR support"
+        ]
+      },
+      "dimensions": {
+        "title": "Dimensions",
+        "details": [
+          "Length: 267 mm (10.5 inches)",
+          "Width: 112 mm (4.4 inches)",
+          "Height: 2-slot design",
+          "Weight: 900g"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Is this card suitable for 4K gaming?",
+        "answer": "Yes, the RTX 4070 is excellent for 4K gaming with high frame rates in most modern titles, especially when using DLSS."
+      },
+      {
+        "question": "What power supply do I need?",
+        "answer": "NVIDIA recommends at least a 650W power supply for systems using the RTX 4070."
+      },
+      {
+        "question": "Does this card support ray tracing?",
+        "answer": "Yes, the RTX 4070 features 3rd generation RT cores specifically designed for ray tracing, delivering excellent ray tracing performance."
+      },
+      {
+        "question": "What kind of power connector does this card use?",
+        "answer": "It uses the new 16-pin PCIe Gen 5 connector. An adapter is included in the box that connects to 8-pin PCIe power cables."
+      }
+    ],
+    "modelNumber": "RTX 4070-FE",
+    "shippingInfo": "Free shipping on orders over $50. Free returns. 3-year manufacturer warranty included.",
+    "sku": "NV4070-8GB",
+    "thumbnailUrl": "/images/product2.jpg"
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d77",
+    "name": "Intel Core i9-13900K",
+    "slug": "intel-core-i9-13900k",
+    "description": "The Intel Core i9-13900K is a high-performance desktop processor featuring 24 cores (8 P-cores + 16 E-cores), 32 threads, up to 5.8GHz boost clock, and support for DDR5 memory and PCIe 5.0.",
+    "shortDescription": "Flagship desktop processor with 24 cores",
+    "price": 599.99,
+    "compareAtPrice": 649.99,
+    "category": "681e2f4a7a418d374a94c197",
+    "subCategory": "681e2f4a7a418d374a94c1a1",
+    "stock": 10,
+    "features": [
+      "Hybrid architecture",
+      "Intel Thermal Velocity Boost",
+      "Intel Thread Director",
+      "Integrated Intel UHD 770 graphics"
+    ],
+    "specs": "24 Cores (8P+16E), 32 Threads, 5.8GHz Max Turbo, 36MB Cache, LGA 1700",
+    "images": [],
+    "tags": [
+      "processor",
+      "cpu",
+      "intel",
+      "core i9",
+      "desktop"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.9,
+    "reviewCount": 128,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.454Z",
+    "updatedAt": "2025-05-09T16:45:55.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d78",
+    "name": "ASUS ROG Maximus Z790 Hero",
+    "slug": "asus-rog-maximus-z790-hero",
+    "description": "The ASUS ROG Maximus Z790 Hero motherboard offers premium features for Intel 12th and 13th Gen processors, including advanced power delivery, high-speed connectivity, and extensive RGB lighting and customization options.",
+    "shortDescription": "Premium Intel Z790 motherboard for enthusiasts",
+    "price": 599.99,
+    "compareAtPrice": 649.99,
+    "category": "681e2f4a7a418d374a94c197",
+    "subCategory": "681e2f4a7a418d374a94c1a2",
+    "stock": 7,
+    "features": [
+      "20+1 power stages",
+      "PCIe 5.0 support",
+      "Thunderbolt 4 connectivity",
+      "Aura Sync RGB lighting"
+    ],
+    "specs": "Intel Z790 Chipset, ATX Form Factor, DDR5 Memory, LGA 1700 Socket",
+    "images": [],
+    "tags": [
+      "motherboard",
+      "intel",
+      "z790",
+      "asus",
+      "rog"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.8,
+    "reviewCount": 64,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.455Z",
+    "updatedAt": "2025-05-09T16:45:55.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d79",
+    "name": "Corsair Vengeance RGB Pro 32GB DDR4",
+    "slug": "corsair-vengeance-rgb-pro-32gb-ddr4",
+    "description": "Corsair Vengeance RGB Pro 32GB (2x16GB) DDR4 memory delivers premium performance and dynamic multi-zone RGB lighting for custom PC builds, with support for XMP 2.0 for easy overclocking.",
+    "shortDescription": "High-performance RGB memory for gaming PCs",
+    "price": 129.99,
+    "compareAtPrice": 149.99,
+    "category": "681e2f4a7a418d374a94c197",
+    "subCategory": "681e2f4a7a418d374a94c1a3",
+    "stock": 20,
+    "features": [
+      "Ten-zone RGB lighting",
+      "Custom performance PCB",
+      "Aluminum heat spreader",
+      "XMP 2.0 support"
+    ],
+    "specs": "32GB (2x16GB), DDR4-3600MHz, CL18, 1.35V",
+    "images": [],
+    "tags": [
+      "memory",
+      "ram",
+      "ddr4",
+      "corsair",
+      "rgb"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 13,
+    "rating": 4.9,
+    "reviewCount": 256,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.455Z",
+    "updatedAt": "2025-05-09T16:45:55.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7a",
+    "name": "Samsung 990 PRO 2TB NVMe SSD",
+    "slug": "samsung-990-pro-2tb-nvme-ssd",
+    "description": "The Samsung 990 PRO 2TB NVMe SSD delivers exceptional performance for gaming and content creation with sequential read speeds up to 7,450 MB/s and nickel-coated controller for optimal thermal control.",
+    "shortDescription": "Ultra-fast PCIe 4.0 NVMe SSD for gaming",
+    "price": 249.99,
+    "compareAtPrice": 279.99,
+    "category": "681e2f4a7a418d374a94c197",
+    "subCategory": "681e2f4a7a418d374a94c1a4",
+    "stock": 18,
+    "features": [
+      "7,450 MB/s read, 6,900 MB/s write",
+      "Samsung V-NAND technology",
+      "Samsung Magician software",
+      "Dynamic Thermal Guard"
+    ],
+    "specs": "2TB Capacity, PCIe 4.0 x4, NVMe 2.0, M.2 2280",
+    "images": [],
+    "tags": [
+      "storage",
+      "ssd",
+      "nvme",
+      "samsung",
+      "m.2"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 10,
+    "rating": 4.9,
+    "reviewCount": 187,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.455Z",
+    "updatedAt": "2025-05-09T16:45:55.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7b",
+    "name": "TechStore Titan X",
+    "slug": "techstore-titan-x",
+    "description": "The TechStore Titan X is our flagship gaming PC featuring the latest NVIDIA RTX 4090 graphics card, Intel Core i9-13900K processor, 64GB DDR5 RAM, and advanced liquid cooling in a premium case with extensive RGB lighting.",
+    "shortDescription": "Ultimate gaming PC with RTX 4090 and i9-13900K",
+    "price": 3999.99,
+    "compareAtPrice": 4299.99,
+    "category": "681e2f4a7a418d374a94c198",
+    "subCategory": "681e2f4a7a418d374a94c1a5",
+    "stock": 5,
+    "features": [
+      "Custom RGB liquid cooling",
+      "Premium tempered glass case",
+      "WiFi 6E connectivity",
+      "1200W Platinum PSU"
+    ],
+    "specs": "Intel Core i9-13900K, RTX 4090 24GB, 64GB DDR5-6000, 2TB NVMe SSD + 4TB HDD",
+    "images": [],
+    "tags": [
+      "gaming pc",
+      "high-end",
+      "custom pc",
+      "rtx 4090",
+      "intel",
+      "liquid cooling"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 5,
+    "reviewCount": 42,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.455Z",
+    "updatedAt": "2025-05-09T16:45:55.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7c",
+    "name": "TechStore Voyager",
+    "slug": "techstore-voyager",
+    "description": "The TechStore Voyager delivers exceptional gaming performance at a reasonable price, featuring the Intel Core i7-13700K processor, NVIDIA RTX 4070 graphics, and 32GB of DDR5 memory in a stylish mid-tower case.",
+    "shortDescription": "Balanced gaming PC with RTX 4070 and i7",
+    "price": 2299.99,
+    "compareAtPrice": 2499.99,
+    "category": "681e2f4a7a418d374a94c198",
+    "subCategory": "681e2f4a7a418d374a94c1a6",
+    "stock": 8,
+    "features": [
+      "240mm AIO liquid cooling",
+      "RGB lighting system",
+      "WiFi 6 and Bluetooth 5.2",
+      "850W Gold PSU"
+    ],
+    "specs": "Intel Core i7-13700K, RTX 4070 12GB, 32GB DDR5-5200, 1TB NVMe SSD + 2TB HDD",
+    "images": [],
+    "tags": [
+      "gaming pc",
+      "mid-range",
+      "custom pc",
+      "rtx 4070",
+      "intel"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 8,
+    "rating": 4.8,
+    "reviewCount": 64,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.455Z",
+    "updatedAt": "2025-05-09T16:45:55.455Z",
+    "__v": 0,
+    "additionalImages": [
+      "/images/product4-side.jpg",
+      "/images/product4-interior.jpg",
+      "/images/product4-rear.jpg"
+    ],
+    "brand": "TechStore",
+    "detailedDescription": "\n        <h4>Balanced Gaming Performance</h4>\n        <p>The TechStore Voyager delivers exceptional gaming performance with the Intel Core i7-13700K processor and NVIDIA RTX 4070 graphics card. This powerful combination handles modern AAA games at high resolutions and frame rates with ease.</p>\n        \n        <h4>Advanced Cooling Solution</h4>\n        <p>Featuring a 240mm AIO liquid cooler for the CPU and optimized airflow design, the Voyager maintains optimal temperatures even during extended gaming sessions. The strategically placed intake and exhaust fans create positive pressure to minimize dust buildup.</p>\n        \n        <h4>High-Speed DDR5 Memory</h4>\n        <p>Equipped with 32GB of DDR5-5200 memory in dual-channel configuration, the Voyager excels at multitasking and memory-intensive applications. The high-speed memory ensures smooth performance in games and content creation tasks.</p>\n        \n        <h4>Fast Storage Configuration</h4>\n        <p>The 1TB NVMe SSD delivers lightning-fast boot and load times, while the additional 2TB HDD provides ample storage for your game library and media files. Experience quick access to your most-used applications and plenty of space for everything else.</p>\n        \n        <h4>Customizable RGB Lighting</h4>\n        <p>Express your personal style with the fully customizable RGB lighting system. Coordinate colors and effects across all compatible components using the included software. Create a unique look that matches your gaming setup.</p>\n        \n        <h4>Built for Expansion</h4>\n        <p>The Voyager uses standardized components and includes extra drive bays, PCIe slots, and fan mounts, making future upgrades easy. As your needs evolve, your system can evolve with you.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "Processor",
+        "details": [
+          "Intel Core i7-13700K",
+          "16 Cores (8P + 8E), 24 Threads",
+          "3.4GHz Base, 5.4GHz Max Turbo",
+          "30MB Intel Smart Cache"
+        ]
+      },
+      "graphics": {
+        "title": "Graphics",
+        "details": [
+          "NVIDIA GeForce RTX 4070",
+          "12GB GDDR6X Memory",
+          "Ray Tracing Cores",
+          "DLSS 3 Support"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "32GB DDR5-5200MHz (2x16GB)",
+          "Dual Channel",
+          "Expandable to 64GB"
+        ]
+      },
+      "storage": {
+        "title": "Storage",
+        "details": [
+          "1TB NVMe PCIe 4.0 SSD (System Drive)",
+          "2TB 7200RPM HDD (Data Drive)",
+          "Additional M.2 and 2.5\"/3.5\" drive bays available"
+        ]
+      },
+      "operatingSystem": {
+        "title": "Operating System",
+        "details": [
+          "Windows 11 Home",
+          "No Bloatware",
+          "Latest Updates Installed"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Is this PC good for content creation in addition to gaming?",
+        "answer": "Yes, the Intel Core i7-13700K with 16 cores and the RTX 4070 graphics card make this PC excellent for content creation tasks like video editing, 3D rendering, and streaming alongside gaming."
+      },
+      {
+        "question": "Can I upgrade components in the future?",
+        "answer": "Absolutely! The Voyager uses standard components and has additional drive bays and PCIe slots for future expansion. The 850W power supply also has headroom for more powerful components."
+      },
+      {
+        "question": "What kind of warranty is included?",
+        "answer": "The TechStore Voyager comes with a 2-year warranty covering parts and labor. We also offer a 30-day satisfaction guarantee with free return shipping."
+      },
+      {
+        "question": "How quiet is this PC during gaming?",
+        "answer": "The Voyager is designed with a balance of performance and acoustics in mind. During typical gaming sessions, the noise level is kept below 40dBA. The liquid cooling helps maintain low noise levels even under heavy load."
+      }
+    ],
+    "modelNumber": "TS-VGR-2023",
+    "shippingInfo": "Free white-glove delivery service. 30-day satisfaction guarantee. 2-year warranty included.",
+    "sku": "TSVGR13700K4070",
+    "thumbnailUrl": "/images/product4.jpg"
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7d",
+    "name": "TechStore Scout",
+    "slug": "techstore-scout",
+    "description": "The TechStore Scout provides excellent entry-level gaming performance with the Intel Core i5-13600K processor, NVIDIA RTX 4060 graphics card, and 16GB of DDR5 memory at a budget-friendly price point.",
+    "shortDescription": "Affordable gaming PC with RTX 4060",
+    "price": 1299.99,
+    "compareAtPrice": 1399.99,
+    "category": "681e2f4a7a418d374a94c198",
+    "subCategory": "681e2f4a7a418d374a94c1a7",
+    "stock": 12,
+    "features": [
+      "Air cooling with RGB",
+      "Compact case design",
+      "WiFi 6 support",
+      "650W Bronze PSU"
+    ],
+    "specs": "Intel Core i5-13600K, RTX 4060 8GB, 16GB DDR5-4800, 1TB NVMe SSD",
+    "images": [],
+    "tags": [
+      "gaming pc",
+      "entry-level",
+      "budget pc",
+      "rtx 4060",
+      "intel"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.7,
+    "reviewCount": 86,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.455Z",
+    "updatedAt": "2025-05-09T16:45:55.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7e",
+    "name": "TechStore Custom Creator PC",
+    "slug": "techstore-custom-creator-pc",
+    "description": "The TechStore Custom Creator PC is optimized for content creation, video editing, and 3D rendering with powerful components that can be customized to your specific needs and workflow requirements.",
+    "shortDescription": "Customizable workstation for content creators",
+    "price": 2599.99,
+    "compareAtPrice": 2799.99,
+    "category": "681e2f4a7a418d374a94c198",
+    "subCategory": "681e2f4a7a418d374a94c1a8",
+    "stock": 3,
+    "features": [
+      "Customizable components",
+      "Professional-grade cooling",
+      "Clean professional aesthetic",
+      "Optional upgrades available"
+    ],
+    "specs": "Customizable, base config: Intel Core i9-13900K, RTX 4080 16GB, 64GB DDR5-5600, 2TB NVMe SSD",
+    "images": [],
+    "tags": [
+      "custom pc",
+      "workstation",
+      "content creation",
+      "video editing",
+      "professional"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.9,
+    "reviewCount": 28,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.456Z",
+    "updatedAt": "2025-05-09T16:45:55.456Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7f",
+    "name": "ASUS ROG Swift 360Hz PG259QN",
+    "slug": "asus-rog-swift-360hz-pg259qn",
+    "description": "The ASUS ROG Swift PG259QN features a 24.5\" Full HD IPS panel with a 360Hz refresh rate, 1ms response time, and NVIDIA G-SYNC technology, designed for competitive gamers who need the absolute fastest display.",
+    "shortDescription": "Ultra-fast 360Hz gaming monitor for esports",
+    "price": 699.99,
+    "compareAtPrice": 799.99,
+    "category": "681e2f4a7a418d374a94c199",
+    "subCategory": "681e2f4a7a418d374a94c1a9",
+    "stock": 10,
+    "features": [
+      "360Hz refresh rate",
+      "NVIDIA Reflex Latency Analyzer",
+      "ASUS Fast IPS technology",
+      "NVIDIA G-SYNC processor"
+    ],
+    "specs": "24.5\" IPS, 1920x1080, 360Hz, 1ms GTG, G-SYNC, DisplayHDR 400",
+    "images": [],
+    "tags": [
+      "monitor",
+      "gaming",
+      "high refresh rate",
+      "esports",
+      "asus"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 12,
+    "rating": 4.8,
+    "reviewCount": 86,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.456Z",
+    "updatedAt": "2025-05-09T16:45:55.456Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d80",
+    "name": "Samsung Odyssey G9 Neo",
+    "slug": "samsung-odyssey-g9-neo",
+    "description": "The Samsung Odyssey G9 Neo features a massive 49\" 1000R curved screen with Quantum Mini LED technology, 240Hz refresh rate, and 1ms response time, creating an incredibly immersive gaming experience.",
+    "shortDescription": "Massive 49\" curved gaming monitor with mini-LED",
+    "price": 1799.99,
+    "compareAtPrice": 1999.99,
+    "category": "681e2f4a7a418d374a94c199",
+    "subCategory": "681e2f4a7a418d374a94c1aa",
+    "stock": 5,
+    "features": [
+      "1000R curved screen",
+      "Quantum Mini LED backlighting",
+      "CoreSync ambient lighting",
+      "Picture-by-Picture"
+    ],
+    "specs": "49\" VA, 5120x1440 (32:9), 240Hz, 1ms, Quantum Mini LED, HDR2000",
+    "images": [],
+    "tags": [
+      "monitor",
+      "ultrawide",
+      "curved",
+      "gaming",
+      "samsung"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 10,
+    "rating": 4.9,
+    "reviewCount": 48,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.456Z",
+    "updatedAt": "2025-05-09T16:45:55.456Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d81",
+    "name": "LG 27GN950-B UltraGear",
+    "slug": "lg-27gn950-b-ultragear",
+    "description": "The LG 27GN950-B UltraGear is a 27\" 4K gaming monitor with 144Hz refresh rate, 1ms response time, and outstanding color performance with VESA DisplayHDR 600 certification and 98% DCI-P3 color gamut.",
+    "shortDescription": "4K gaming monitor with 144Hz refresh rate",
+    "price": 799.99,
+    "compareAtPrice": 899.99,
+    "category": "681e2f4a7a418d374a94c199",
+    "subCategory": "681e2f4a7a418d374a94c1ab",
+    "stock": 9,
+    "features": [
+      "Sphere Lighting 2.0",
+      "VESA DisplayHDR 600",
+      "G-Sync Compatible",
+      "AMD FreeSync Premium Pro"
+    ],
+    "specs": "27\" Nano IPS, 3840x2160, 144Hz, 1ms, HDR600, DCI-P3 98%",
+    "images": [],
+    "tags": [
+      "monitor",
+      "4k",
+      "gaming",
+      "hdr",
+      "lg"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 11,
+    "rating": 4.8,
+    "reviewCount": 92,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.457Z",
+    "updatedAt": "2025-05-09T16:45:55.457Z",
+    "__v": 0,
+    "additionalImages": [
+      "/images/product3-side.jpg",
+      "/images/product3-back.jpg",
+      "/images/product3-ports.jpg"
+    ],
+    "brand": "LG",
+    "detailedDescription": "\n        <h4>Superior Gaming Display</h4>\n        <p>The LG UltraGear 27GN950-B delivers exceptional gaming performance with its 27\" Nano IPS display, 4K UHD resolution, and 144Hz refresh rate. Experience breathtaking clarity and smooth motion in the latest games.</p>\n        \n        <h4>Ultra-Fast Response Time</h4>\n        <p>With a blazing-fast 1ms Gray-to-Gray (GtG) response time, this monitor eliminates motion blur and ghosting, ensuring clear images even in fast-paced action scenes.</p>\n        \n        <h4>VESA DisplayHDR 600</h4>\n        <p>Experience greater contrast with deep blacks and bright highlights thanks to VESA DisplayHDR 600 certification. See games and content as creators intended with exceptional HDR quality.</p>\n        \n        <h4>Wide Color Gamut</h4>\n        <p>The Nano IPS panel delivers 98% coverage of the DCI-P3 color space, providing rich, accurate colors. Whether you're gaming or creating content, colors appear vivid and true-to-life.</p>\n        \n        <h4>Adaptive Sync Technology</h4>\n        <p>Compatible with both NVIDIA G-SYNC and AMD FreeSync Premium Pro, this monitor eliminates screen tearing and stuttering, delivering a fluid gaming experience regardless of your graphics card.</p>\n        \n        <h4>Sphere Lighting 2.0</h4>\n        <p>The rear RGB lighting system creates an immersive atmosphere by projecting light that changes in harmony with the on-screen action. Customize the lighting effects to match your setup and preferences.</p>\n      ",
+    "detailedSpecs": {
+      "display": {
+        "title": "Display",
+        "details": [
+          "27\" Nano IPS Panel",
+          "4K UHD Resolution (3840 x 2160)",
+          "144Hz Refresh Rate",
+          "1ms Gray-to-Gray Response Time",
+          "98% DCI-P3 Color Gamut",
+          "10-bit Color Depth (8-bit + FRC)",
+          "VESA DisplayHDR 600 Certified"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "2x HDMI 2.1",
+          "1x DisplayPort 1.4",
+          "3-port USB 3.0 Hub",
+          "Headphone Out"
+        ]
+      },
+      "dimensions": {
+        "title": "Dimensions",
+        "details": [
+          "With Stand: 614.2 x 574.8 x 291.2 mm",
+          "Without Stand: 614.2 x 364.8 x 56.3 mm",
+          "Weight: 6.5 kg (with stand)"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Can this monitor display 4K at 144Hz?",
+        "answer": "Yes, the monitor can display 4K at 144Hz using DisplayPort 1.4 with DSC (Display Stream Compression). Via HDMI 2.1, it can reach 4K at 120Hz."
+      },
+      {
+        "question": "Does this monitor work with both NVIDIA and AMD graphics cards?",
+        "answer": "Yes, it is compatible with both NVIDIA G-SYNC and AMD FreeSync Premium Pro technologies for smooth gaming regardless of your graphics card manufacturer."
+      },
+      {
+        "question": "What cables are included in the box?",
+        "answer": "The monitor comes with a DisplayPort cable, HDMI cable, USB upstream cable, and power cable."
+      },
+      {
+        "question": "Is this monitor good for content creation?",
+        "answer": "Yes, with 98% DCI-P3 color gamut coverage and 10-bit color depth, this monitor is excellent for both gaming and content creation tasks like photo editing, video editing, and graphic design."
+      }
+    ],
+    "modelNumber": "27GN950-B",
+    "shippingInfo": "Free express shipping. 30-day return policy. 3-year manufacturer warranty included.",
+    "sku": "LG27GN950B",
+    "thumbnailUrl": "/images/product3.jpg"
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d82",
+    "name": "Dell UltraSharp U2720Q",
+    "slug": "dell-ultrasharp-u2720q",
+    "description": "The Dell UltraSharp U2720Q is a 27\" 4K monitor designed for professional work with excellent color accuracy, USB-C connectivity, and VESA DisplayHDR 400 certification for content creators.",
+    "shortDescription": "4K monitor for professional content creation",
+    "price": 649.99,
+    "compareAtPrice": 699.99,
+    "category": "681e2f4a7a418d374a94c199",
+    "subCategory": "681e2f4a7a418d374a94c1ac",
+    "stock": 12,
+    "features": [
+      "USB-C with 90W power delivery",
+      "Factory calibrated",
+      "VESA DisplayHDR 400",
+      "InfinityEdge design"
+    ],
+    "specs": "27\" IPS, 3840x2160, 60Hz, 5ms, 100% sRGB, 95% DCI-P3",
+    "images": [],
+    "tags": [
+      "monitor",
+      "professional",
+      "4k",
+      "content creation",
+      "dell"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 7,
+    "rating": 4.8,
+    "reviewCount": 104,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.458Z",
+    "updatedAt": "2025-05-09T16:45:55.458Z",
+    "__v": 0
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d83",
+    "name": "MSI MPG ARTYMIS 343CQR",
+    "slug": "msi-mpg-artymis-343cqr",
+    "description": "The MSI MPG ARTYMIS 343CQR features an aggressive 1000R curvature on a 34\" ultrawide panel with 165Hz refresh rate, 1ms response time, and AI-powered optimization for an incredibly immersive gaming experience.",
+    "shortDescription": "34\" ultra-curved gaming monitor",
+    "price": 899.99,
+    "compareAtPrice": 999.99,
+    "category": "681e2f4a7a418d374a94c199",
+    "subCategory": "681e2f4a7a418d374a94c1ad",
+    "stock": 8,
+    "features": [
+      "1000R super-curved panel",
+      "Gaming Intelligence AI",
+      "KVM built-in",
+      "Mystic Light RGB"
+    ],
+    "specs": "34\" VA, 3440x1440, 165Hz, 1ms, HDR400, 1000R Curve",
+    "images": [],
+    "tags": [
+      "monitor",
+      "curved",
+      "gaming",
+      "ultrawide",
+      "msi"
+    ],
+    "isActive": true,
+    "isFeatured": true,
+    "isOnSale": true,
+    "discount": 10,
+    "rating": 4.7,
+    "reviewCount": 56,
+    "relatedProducts": [],
+    "createdAt": "2025-05-09T16:45:55.458Z",
+    "updatedAt": "2025-05-09T16:45:55.458Z",
+    "__v": 0
+  }
+]

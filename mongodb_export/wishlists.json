@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "67fbf81466f263cb11363904",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "product": "67fe83247adf524f60309166",
+        "name": "Acer Predator Helios 300 Gaming Laptop",
+        "price": 1199,
+        "image": "images/product1.jpg",
+        "quantity": 1,
+        "_id": "67fe83247adf524f60309167",
+        "addedAt": "2025-04-15T16:02:44.105Z"
+      }
+    ],
+    "createdAt": "2025-04-13T17:44:52.421Z",
+    "updatedAt": "2025-04-15T16:02:44.109Z",
+    "__v": 28,
+    "maxItems": 50
+  }
+]

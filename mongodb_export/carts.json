@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "681ef0558f8e62bb5fdf30c7",
+    "userId": "681ef0558f8e62bb5fdf30c2",
+    "isGuest": false,
+    "items": [],
+    "createdAt": "2025-05-10T06:21:09.929Z",
+    "updatedAt": "2025-05-10T06:21:09.929Z",
+    "__v": 0
+  },
+  {
+    "_id": "681ef0558f8e62bb5fdf30c8",
+    "userId": "681ef0558f8e62bb5fdf30c3",
+    "isGuest": false,
+    "items": [
+      {
+        "productId": "681ef0558f8e62bb5fdf30c4",
+        "quantity": 1,
+        "name": "Sample Product",
+        "price": 99.99,
+        "image": "sample.jpg",
+        "_id": "681ef0558f8e62bb5fdf30c9",
+        "dateAdded": "2025-05-10T06:21:09.980Z"
+      }
+    ],
+    "createdAt": "2025-05-10T06:21:09.929Z",
+    "updatedAt": "2025-05-10T06:21:09.929Z",
+    "__v": 0
+  }
+]

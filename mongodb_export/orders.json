@@ -1,0 +1,284 @@
+[
+  {
+    "_id": "67eee02f563f0b457e7943f8",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "65f2b89d3cd9e23e8c6a1234",
+        "name": "Acer Predator Helios 300 Gaming Laptop",
+        "price": 1,
+        "quantity": 2,
+        "_id": "67eee02f563f0b457e7943f9"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a5678",
+        "name": "NVIDIA GeForce RTX 4070 Graphics Card",
+        "price": 599,
+        "quantity": 1,
+        "_id": "67eee02f563f0b457e7943fa"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a3456",
+        "name": "Logitech G Pro X Mechanical Gaming Keyboard",
+        "price": 129,
+        "quantity": 1,
+        "_id": "67eee02f563f0b457e7943fb"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a9012",
+        "name": "LG UltraGear 27\" 1ms 144Hz Gaming Monitor",
+        "price": 329,
+        "quantity": 1,
+        "_id": "67eee02f563f0b457e7943fc"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1059,
+    "tax": 84.72,
+    "shippingCost": 0,
+    "total": 1143.72,
+    "status": "cancelled",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "67eee02f563f0b457e7943fd",
+        "timestamp": "2025-04-03T19:23:27.991Z"
+      },
+      {
+        "status": "cancelled",
+        "timestamp": "2025-04-03T19:23:58.797Z",
+        "note": "Cancelled by customer",
+        "_id": "67eee04e563f0b457e79445a"
+      }
+    ],
+    "createdAt": "2025-04-03T19:23:27.991Z",
+    "updatedAt": "2025-04-03T19:23:58.800Z",
+    "orderNumber": "TS7e7943f8",
+    "__v": 1
+  },
+  {
+    "_id": "67eee06d563f0b457e794542",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "65f2b89d3cd9e23e8c6a1234",
+        "name": "Acer Predator Helios 300 Gaming Laptop",
+        "price": 1,
+        "quantity": 2,
+        "_id": "67eee06d563f0b457e794543"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a5678",
+        "name": "NVIDIA GeForce RTX 4070 Graphics Card",
+        "price": 599,
+        "quantity": 1,
+        "_id": "67eee06d563f0b457e794544"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a3456",
+        "name": "Logitech G Pro X Mechanical Gaming Keyboard",
+        "price": 129,
+        "quantity": 1,
+        "_id": "67eee06d563f0b457e794545"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a9012",
+        "name": "LG UltraGear 27\" 1ms 144Hz Gaming Monitor",
+        "price": 329,
+        "quantity": 1,
+        "_id": "67eee06d563f0b457e794546"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1059,
+    "tax": 84.72,
+    "shippingCost": 0,
+    "total": 1143.72,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "67eee06d563f0b457e794547",
+        "timestamp": "2025-04-03T19:24:29.977Z"
+      }
+    ],
+    "createdAt": "2025-04-03T19:24:29.977Z",
+    "updatedAt": "2025-04-03T19:24:29.980Z",
+    "orderNumber": "TS7e794542",
+    "__v": 0
+  },
+  {
+    "_id": "67eee0b74baddda4a635bf5a",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "65f2b89d3cd9e23e8c6a1234",
+        "name": "Acer Predator Helios 300 Gaming Laptop",
+        "price": 1,
+        "quantity": 2,
+        "_id": "67eee0b74baddda4a635bf5b"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a5678",
+        "name": "NVIDIA GeForce RTX 4070 Graphics Card",
+        "price": 599,
+        "quantity": 1,
+        "_id": "67eee0b74baddda4a635bf5c"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a3456",
+        "name": "Logitech G Pro X Mechanical Gaming Keyboard",
+        "price": 129,
+        "quantity": 1,
+        "_id": "67eee0b74baddda4a635bf5d"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a9012",
+        "name": "LG UltraGear 27\" 1ms 144Hz Gaming Monitor",
+        "price": 329,
+        "quantity": 1,
+        "_id": "67eee0b74baddda4a635bf5e"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1059,
+    "tax": 84.72,
+    "shippingCost": 0,
+    "total": 1143.72,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "67eee0b74baddda4a635bf5f",
+        "timestamp": "2025-04-03T19:25:43.559Z"
+      }
+    ],
+    "createdAt": "2025-04-03T19:25:43.559Z",
+    "updatedAt": "2025-04-03T19:25:43.567Z",
+    "orderNumber": "TSa635bf5a",
+    "__v": 0
+  },
+  {
+    "_id": "67eee1f4bef4907f4c2170af",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "65f2b89d3cd9e23e8c6a1234",
+        "name": "Acer Predator Helios 300 Gaming Laptop",
+        "price": 1,
+        "quantity": 2,
+        "_id": "67eee1f4bef4907f4c2170b0"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a5678",
+        "name": "NVIDIA GeForce RTX 4070 Graphics Card",
+        "price": 599,
+        "quantity": 1,
+        "_id": "67eee1f4bef4907f4c2170b1"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a3456",
+        "name": "Logitech G Pro X Mechanical Gaming Keyboard",
+        "price": 129,
+        "quantity": 1,
+        "_id": "67eee1f4bef4907f4c2170b2"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a9012",
+        "name": "LG UltraGear 27\" 1ms 144Hz Gaming Monitor",
+        "price": 329,
+        "quantity": 1,
+        "_id": "67eee1f4bef4907f4c2170b3"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1059,
+    "tax": 84.72,
+    "shippingCost": 0,
+    "total": 1143.72,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "67eee1f4bef4907f4c2170b4",
+        "timestamp": "2025-04-03T19:31:00.448Z"
+      }
+    ],
+    "createdAt": "2025-04-03T19:31:00.448Z",
+    "updatedAt": "2025-04-03T19:31:00.458Z",
+    "orderNumber": "TS4c2170af",
+    "__v": 0
+  },
+  {
+    "_id": "67eee20b9441977f3cb0d642",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "65f2b89d3cd9e23e8c6a1234",
+        "name": "Acer Predator Helios 300 Gaming Laptop",
+        "price": 1,
+        "quantity": 2,
+        "_id": "67eee20b9441977f3cb0d643"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a5678",
+        "name": "NVIDIA GeForce RTX 4070 Graphics Card",
+        "price": 599,
+        "quantity": 1,
+        "_id": "67eee20b9441977f3cb0d644"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a3456",
+        "name": "Logitech G Pro X Mechanical Gaming Keyboard",
+        "price": 129,
+        "quantity": 1,
+        "_id": "67eee20b9441977f3cb0d645"
+      },
+      {
+        "productId": "65f2b89d3cd9e23e8c6a9012",
+        "name": "LG UltraGear 27\" 1ms 144Hz Gaming Monitor",
+        "price": 329,
+        "quantity": 1,
+        "_id": "67eee20b9441977f3cb0d646"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1059,
+    "tax": 84.72,
+    "shippingCost": 0,
+    "total": 1143.72,
+    "status": "cancelled",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "67eee20b9441977f3cb0d647",
+        "timestamp": "2025-04-03T19:31:23.088Z"
+      },
+      {
+        "status": "cancelled",
+        "timestamp": "2025-04-03T19:31:35.468Z",
+        "note": "Cancelled by customer",
+        "_id": "67eee2179441977f3cb0d6a3"
+      }
+    ],
+    "createdAt": "2025-04-03T19:31:23.088Z",
+    "updatedAt": "2025-04-03T19:31:35.470Z",
+    "orderNumber": "TS3cb0d642",
+    "__v": 1
+  }
+]

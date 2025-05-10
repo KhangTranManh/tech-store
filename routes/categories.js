@@ -5,6 +5,7 @@ const Category = require('../models/category');
 const Product = require('../models/product');
 const multer = require('multer');
 const path = require('path');
+const Image = require('../models/image');
 
 // Middleware to check if user is admin
 const isAdmin = (req, res, next) => {
