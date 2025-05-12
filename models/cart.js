@@ -47,9 +47,45 @@ const CartSchema = new Schema({
   }
 });
 
+// KEY FIX: Add a compound index to prevent duplicate productIds for the same user
+// This will enforce uniqueness of productId within each user's cart
+CartSchema.index({ 'userId': 1, 'items.productId': 1 }, { unique: true });
+
+// Alternatively, use this approach which is more flexible:
+// This will help MongoDB find items more efficiently
+CartSchema.index({ 'userId': 1 });
+CartSchema.index({ 'items.productId': 1 });
+
 // Pre-save middleware to update the updatedAt field
 CartSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
+  next();
+});
+
+// Add pre-save middleware to handle potential duplicate items
+// This will combine quantities if the same product is added multiple times
+CartSchema.pre('save', function(next) {
+  if (!this.isModified('items')) return next();
+  
+  // Create a map to track products by ID
+  const productMap = new Map();
+  
+  // Group items by productId and combine quantities
+  this.items.forEach(item => {
+    const productIdStr = item.productId.toString();
+    
+    if (productMap.has(productIdStr)) {
+      // If this product already exists, add to its quantity
+      productMap.get(productIdStr).quantity += item.quantity;
+    } else {
+      // Otherwise, add it to the map
+      productMap.set(productIdStr, item);
+    }
+  });
+  
+  // Replace items array with deduplicated items
+  this.items = Array.from(productMap.values());
+  
   next();
 });
 
@@ -57,5 +93,33 @@ CartSchema.pre('save', function(next) {
 CartSchema.virtual('itemCount').get(function() {
   return this.items.reduce((total, item) => total + item.quantity, 0);
 });
+
+// Static method to find and merge duplicate items for an existing cart
+CartSchema.statics.deduplicateItems = async function(userId) {
+  const cart = await this.findOne({ userId });
+  if (!cart || !cart.items || cart.items.length === 0) return null;
+  
+  // Create a map to track products by ID
+  const productMap = new Map();
+  
+  // Group items by productId and combine quantities
+  cart.items.forEach(item => {
+    const productIdStr = item.productId.toString();
+    
+    if (productMap.has(productIdStr)) {
+      // If this product already exists, add to its quantity
+      productMap.get(productIdStr).quantity += item.quantity;
+    } else {
+      // Otherwise, add it to the map
+      productMap.set(productIdStr, item);
+    }
+  });
+  
+  // Replace items array with deduplicated items
+  cart.items = Array.from(productMap.values());
+  
+  // Save the cart with deduplicated items
+  return cart.save();
+};
 
 module.exports = mongoose.model('Cart', CartSchema);

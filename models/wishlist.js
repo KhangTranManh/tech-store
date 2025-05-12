@@ -9,8 +9,7 @@ const WishlistSchema = new mongoose.Schema({
   items: [{
     product: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
+      ref: 'Product'
     },
     name: {
       type: String,
@@ -41,17 +40,39 @@ const WishlistSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Ensure each product is only added once per user
-WishlistSchema.index({ user: 1, 'items.product': 1 }, { unique: true });
+// Pre-save middleware to ensure no duplicates
+WishlistSchema.pre('save', function(next) {
+  // Create a Set to track unique product IDs and names
+  const uniqueProducts = new Set();
+  const uniqueNames = new Set();
+  const uniqueItems = [];
 
-// Method to calculate total wishlist value
-WishlistSchema.methods.calculateTotalValue = function() {
-  return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-};
-
-// Method to check if wishlist is at max capacity
-WishlistSchema.methods.isAtMaxCapacity = function() {
-  return this.items.length >= this.maxItems;
-};
+  // Go through each item and only keep unique ones
+  for (const item of this.items) {
+    // Use product ID if available, otherwise use name
+    const productId = item.product ? item.product.toString() : null;
+    const key = productId || item.name;
+    
+    // If we've already seen this product/name, skip it
+    if ((productId && uniqueProducts.has(productId)) || 
+        (!productId && uniqueNames.has(item.name))) {
+      continue;
+    }
+    
+    // Otherwise, add it to our tracking sets and the new items array
+    if (productId) {
+      uniqueProducts.add(productId);
+    } else {
+      uniqueNames.add(item.name);
+    }
+    
+    uniqueItems.push(item);
+  }
+  
+  // Replace the items array with our de-duplicated version
+  this.items = uniqueItems;
+  
+  next();
+});
 
 module.exports = mongoose.model('Wishlist', WishlistSchema);

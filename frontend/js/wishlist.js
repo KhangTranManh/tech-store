@@ -31,7 +31,6 @@ function updateHeaderLinks() {
   if (registerLink) registerLink.style.display = isLoggedIn ? 'none' : 'inline-block';
   if (accountLink) accountLink.style.display = isLoggedIn ? 'inline-block' : 'none';
 }
-
 function loadWishlist() {
   const wishlistContent = document.getElementById('wishlist-content');
   wishlistContent.innerHTML = '<div class="loading">Loading your wishlist...</div>';
@@ -53,10 +52,11 @@ function loadWishlist() {
       // Check if wishlist exists and has items
       const wishlistItems = data.wishlist && data.wishlist.items ? data.wishlist.items : [];
       
-      console.log('Wishlist items:', wishlistItems.map(item => ({
+      console.log('Total wishlist items:', wishlistItems.length);
+      console.log('Wishlist items details:', wishlistItems.map(item => ({
+        id: item._id,
         name: item.name,
-        product: item.product,
-        _id: item._id
+        productId: item.product,
       })));
       
       if (wishlistItems.length > 0) {
@@ -82,7 +82,6 @@ function loadWishlist() {
     `;
   });
 }
-
 function renderWishlistItems(items) {
   const wishlistContent = document.getElementById('wishlist-content');
   
@@ -103,7 +102,36 @@ function renderWishlistItems(items) {
     return;
   }
   
+  // De-duplicate items client-side
+  const uniqueItems = [];
+  const seenProductIds = new Set();
+  const seenProductNames = new Set();
+  
   validItems.forEach(item => {
+    // Get product ID or use name as a fallback
+    const productId = item.product ? 
+      (typeof item.product === 'object' ? item.product._id : item.product) : 
+      null;
+    
+    // Skip if we've already seen this product
+    if ((productId && seenProductIds.has(productId.toString())) || 
+        (!productId && seenProductNames.has(item.name))) {
+      return;
+    }
+    
+    // Add to tracking sets
+    if (productId) {
+      seenProductIds.add(productId.toString());
+    } else {
+      seenProductNames.add(item.name);
+    }
+    
+    // Add to unique items
+    uniqueItems.push(item);
+  });
+  
+  // Now render only the unique items
+  uniqueItems.forEach(item => {
     // Get the proper product ID safely
     let productId;
     
@@ -124,8 +152,6 @@ function renderWishlistItems(items) {
       productId = 'temp-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
       console.warn('Using temporary ID for wishlist item:', item.name);
     }
-    
-    console.log(`Item ${item.name} using productId: ${productId}`);
     
     // Create a card for each item
     const card = document.createElement('div');

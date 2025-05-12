@@ -1073,6 +1073,20 @@ footer {
         padding: 20px 15px;
     }
 }
+/* Add this to your CSS files */
+.wishlist-btn.in-wishlist,
+.btn[data-action="wishlist"].in-wishlist {
+  background-color: #e6e6e6;
+  color: #666;
+  border-color: #ccc;
+  cursor: default;
+}
+
+.wishlist-btn.in-wishlist:hover,
+.btn[data-action="wishlist"].in-wishlist:hover {
+  background-color: #e6e6e6;
+}
+
 
     
 }

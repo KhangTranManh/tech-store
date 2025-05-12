@@ -122,19 +122,104 @@ function initializeCart() {
 }
 
 /**
- * Update cart (simulation)
+ * Update cart - FIXED VERSION
+ * This function needs to be updated to work with your cart-js.js system
  */
-function updateCart(productId, productName) {
-    // In a real implementation, this would make an API call to update the cart
-    console.log('Added to cart:', productName, 'ID:', productId);
+function updateCart(productId, productName, quantity = 1, productPrice = 0, productImage = '') {
+    console.log('Main updateCart called with:', { productId, productName, quantity, productPrice, productImage });
     
-    // Update cart count (simulated)
+    // IMPORTANT: Don't override - forward to cart-js.js functions if available
+    if (window.cartFunctions && typeof window.cartFunctions.addToCart === 'function') {
+      // Use the cart-js.js implementation
+      window.cartFunctions.addToCart(productId, productName, productPrice, productImage);
+      return;
+    }
+    
+    // Fallback implementation if cart-js.js isn't loaded yet
+    try {
+      // Get current cart from session storage
+      const cartData = sessionStorage.getItem('cart');
+      let cart = cartData ? JSON.parse(cartData) : { items: [], itemCount: 0 };
+      
+      // Ensure cart has items array
+      if (!cart.items) {
+        cart.items = [];
+      }
+      
+      // Check if product already exists in cart
+      const existingItemIndex = cart.items.findIndex(item => item.productId === productId);
+      
+      if (existingItemIndex >= 0) {
+        // Update quantity if product exists
+        const currentQty = parseInt(cart.items[existingItemIndex].quantity) || 0;
+        cart.items[existingItemIndex].quantity = Math.min(currentQty + quantity, 10); // Max quantity limit
+      } else {
+        // Add new item
+        cart.items.push({
+          productId: productId,
+          name: productName || 'Unknown Product',
+          price: parseFloat(productPrice) || 0,
+          quantity: quantity,
+          image: productImage || 'images/placeholder.jpg'
+        });
+      }
+      
+      // Update item count
+      cart.itemCount = cart.items.reduce((total, item) => total + (parseInt(item.quantity) || 1), 0);
+      
+      // Save to session storage
+      sessionStorage.setItem('cart', JSON.stringify(cart));
+      console.log('Cart saved to session storage:', cart);
+      
+      // Try to send to server if API is available
+      if (fetch) {
+        fetch('/api/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            productId: productId,
+            name: productName || 'Product',
+            price: parseFloat(productPrice) || 0,
+            image: productImage || '',
+            quantity: quantity
+          }),
+          credentials: 'include' // Important: include cookies for authentication
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to add to server cart');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            console.log('Product added to server cart successfully');
+          }
+        })
+        .catch(error => {
+          console.warn('Error adding to server cart:', error);
+          // Already added locally, so no need to show error
+        });
+      }
+    } catch (error) {
+      console.error('Error in updateCart fallback implementation:', error);
+    }
+    
+    // Update cart count in UI
     const cartCount = document.querySelector('.user-actions a:last-child');
     if (cartCount) {
-        const currentCount = parseInt(cartCount.textContent.match(/\d+/) || 0);
-        cartCount.textContent = cartCount.textContent.replace(/\(\d+\)/, `(${currentCount + 1})`);
+      const currentCount = parseInt(cartCount.textContent.match(/\d+/) || 0);
+      cartCount.textContent = cartCount.textContent.replace(/\(\d+\)/, `(${currentCount + 1})`);
     }
-}
+    
+    // Show notification
+    showNotification(productName + ' added to cart!', 'success');
+  }
+  
+  // Make updateCart function available globally
+  window.updateCart = updateCart;
 
 /**
  * Show notification
@@ -387,55 +472,62 @@ function loadFallbackCategories(categoryGrid) {
 document.addEventListener('DOMContentLoaded', function() {
     loadFeaturedProducts();
 });
-
-// featuredProductsComponent.js
+/**
+ * Load featured products - displays featured products from API or fallback data
+ */
 async function loadFeaturedProducts() {
     try {
-      const response = await fetch('/api/products?isFeatured=true&limit=4');
-      const data = await response.json();
+      const container = document.querySelector('.featured-products .product-grid');
       
-      if (!data.success) {
-        throw new Error('Failed to load featured products');
-      }
-      
-      const productsContainer = document.querySelector('.featured-products .product-grid');
-      
-      if (!productsContainer) {
+      if (!container) {
+        // No featured products container on this page
         return;
       }
       
-      productsContainer.innerHTML = data.products.map(product => {
-        const discountPercentage = Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100);
-        
-        return `
-          <div class="product-card">
-            <a href="/product/${product.slug}">
-              <div class="product-img">
-                <img src="${product.thumbnailUrl || '/images/placeholder.jpg'}" alt="${product.name}">
-              </div>
-              <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <div class="product-price">
-                  $${product.price.toFixed(2)} 
-                  ${product.compareAtPrice > product.price ? 
-                    `<span class="product-original-price">$${product.compareAtPrice.toFixed(2)}</span>
-                    <span class="product-discount">-${discountPercentage}%</span>` : 
-                    ''}
-                </div>
-              </div>
-            </a>
-            <button class="add-to-cart" data-product-id="${product._id}">Add to Cart</button>
-          </div>
-        `;
-      }).join('');
+      // Show loading state
+      container.innerHTML = '<div class="loading">Loading featured products...</div>';
       
-      // Initialize add to cart buttons
-      initializeAddToCartButtons();
+      // Try to fetch featured products from API
+      let featuredProducts = [];
+      try {
+        // Try the dedicated featured endpoint first (with the correct URL path)
+        let response = await fetch('/products/featured/list?limit=4');
+        
+        // Fall back to the regular endpoint with filter if the dedicated endpoint fails
+        if (!response.ok) {
+          response = await fetch('/products?isFeatured=true&limit=4');
+        }
+        
+        if (response.ok) {
+          const data = await response.json();
+          featuredProducts = data.products || [];
+        } else {
+          throw new Error('Failed to load featured products');
+        }
+      } catch (error) {
+        console.warn('API fetch failed, using fallback data:', error);
+        // Use fallback data if API fetch fails
+        featuredProducts = getFallbackFeaturedProducts();
+      }
+      
+      // If no products were found, use fallback data
+      if (featuredProducts.length === 0) {
+        featuredProducts = getFallbackFeaturedProducts();
+      }
+      
+      // Render featured products
+      renderFeaturedProducts(container, featuredProducts);
       
     } catch (error) {
       console.error('Error loading featured products:', error);
+      
+      const container = document.querySelector('.featured-products .product-grid');
+      if (container) {
+        container.innerHTML = '<p>Failed to load featured products. Please try again later.</p>';
+      }
     }
   }
+  
 
 /**
  * Initialize Add to Cart buttons

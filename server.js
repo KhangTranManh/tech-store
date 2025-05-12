@@ -7,11 +7,7 @@ const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const socialAuthRoutes = require('./routes/socialAuth');
-const User = require('./models/user'); 
-
-
-
-// Database Connection
+const User = require('./models/user'); // Database Connection
 const connectDB = require('./db/connection');
 
 // Auth service for passport configuration
@@ -35,17 +31,17 @@ const imageRoutes = require('./routes/images');
 const addressRoutes = safeRequire('./routes/addresses');
 const paymentMethodRoutes = safeRequire('./routes/payment-methods');
 const wishlistRoutes = require('./routes/wishlist');
-const app = express();
-const PORT = process.env.PORT || 3000;
 const categoryRoutes = require('./routes/categories');
 
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Load auth routes with enhanced debugging
 let authRoutes;
 try {
   authRoutes = require('./routes/auth');
   console.log('Auth routes loaded successfully');
-  
+    
   // Debug available routes
   if (authRoutes.stack) {
     console.log('Auth router routes:');
@@ -103,6 +99,7 @@ app.use(session({
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
 app.use(passport.session());
+
 // Passport serialization/deserialization
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -134,7 +131,10 @@ if (authRoutes) {
   console.error('Auth routes not available to mount!');
 }
 
-
+// Add this before your 404 handler
+app.get('/product/:slug', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'product-detail.html'));
+});
 
 // Mount other API routes
 if (addressRoutes) {
@@ -147,6 +147,14 @@ if (paymentMethodRoutes) {
   app.use('/api/payment-methods', paymentMethodRoutes);
 }
 
+// IMPORTANT: Mount cart routes BEFORE the 404 handler
+// Added debug middleware
+console.log('Mounting cart routes at /api/cart');
+app.use('/api/cart', (req, res, next) => {
+  console.log('Cart API Request:', req.method, req.path);
+  next();
+}, cartRoutes);
+
 if (productRoutes) {
   console.log('Mounting product routes at /products');
   app.use('/products', productRoutes);
@@ -156,8 +164,6 @@ if (orderRoutes) {
   console.log('Mounting order routes at /api/orders');
   app.use('/api/orders', orderRoutes);
 }
-app.use('/api/wishlist', wishlistRoutes);
-
 
 if (wishlistRoutes) {
   console.log('Mounting wishlist routes at /api/wishlist');
@@ -165,6 +171,7 @@ if (wishlistRoutes) {
 } else {
   console.warn('Wishlist routes not available to mount');
 }
+
 app.use('/api/categories', categoryRoutes);
 
 // Serve static HTML pages
@@ -216,18 +223,14 @@ staticPages.forEach(page => {
   }
 });
 
-// Authentication status middleware (makes user data available to templates)
-app.use((req, res, next) => {
-  res.locals.user = req.isAuthenticated() ? req.user : null;
-  next();
-});
+
 
 // Add a test route to check if basic routing is working
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is running correctly' });
 });
 
-// 404 handler
+// 404 handler - NOW AFTER all route registrations
 app.use((req, res, next) => {
   console.log('404 Not Found:', req.method, req.path);
   res.status(404).json({
@@ -274,7 +277,6 @@ const gracefulShutdown = () => {
     process.exit(1);
   }, 10000);
 };
-app.use('/api/cart', cartRoutes);
 
 // Listen for termination signals
 process.on('SIGTERM', gracefulShutdown);

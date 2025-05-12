@@ -41,7 +41,6 @@ router.get('/', async (req, res) => {
     });
   }
 });
-// In your wishlist routes file
 router.post('/add', async (req, res) => {
   try {
     const { productId, name, price, image } = req.body;
@@ -54,7 +53,7 @@ router.post('/add', async (req, res) => {
       });
     }
 
-    // Find or create wishlist
+    // Find the user's wishlist or create a new one
     let wishlist = await Wishlist.findOne({ user: req.user._id });
     
     if (!wishlist) {
@@ -75,44 +74,46 @@ router.post('/add', async (req, res) => {
       product = await Product.findById(productId);
     }
     
-    // If still no product but we have the details from frontend, create a "virtual" product reference
-    if (!product && name && price) {
-      const productData = {
-        _id: new mongoose.Types.ObjectId(),
-        name: name,
-        price: parseFloat(price),
-        image: image || 'images/placeholder.jpg'
-      };
-      
-      // Add product with the data from the UI
-      wishlist.items.push({
-        product: productData._id,
-        name: productData.name,
-        price: productData.price,
-        image: productData.image,
-        quantity: 1
-      });
-    } else if (product) {
-      // Using the found product
-      // Check if product is already in wishlist
-      const existingItem = wishlist.items.find(item => 
-        item.product.toString() === product._id.toString()
+    // Check if product already exists in wishlist
+    let existingItemIndex = -1;
+    
+    if (product) {
+      // Check by product ID
+      existingItemIndex = wishlist.items.findIndex(item => 
+        item.product && item.product.toString() === product._id.toString()
       );
-      
-      if (existingItem) {
-        return res.status(200).json({
-          success: true,
-          message: 'Product already in wishlist',
-          wishlist
-        });
-      }
-      
-      // Add the product to wishlist
+    } else if (name) {
+      // No product found, check by name
+      existingItemIndex = wishlist.items.findIndex(item => 
+        item.name === name
+      );
+    }
+    
+    // If item already exists, return early
+    if (existingItemIndex >= 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'Product already in wishlist',
+        wishlist
+      });
+    }
+    
+    // Add the item to wishlist
+    if (product) {
       wishlist.items.push({
         product: product._id,
         name: product.name,
         price: product.price,
         image: product.thumbnailUrl || image || 'images/placeholder.jpg',
+        quantity: 1
+      });
+    } else if (name && price) {
+      // If no product found but we have details
+      wishlist.items.push({
+        product: new mongoose.Types.ObjectId(), // Create a virtual ID
+        name: name,
+        price: parseFloat(price),
+        image: image || 'images/placeholder.jpg',
         quantity: 1
       });
     } else {
@@ -122,14 +123,83 @@ router.post('/add', async (req, res) => {
       });
     }
     
-    // Save the wishlist
-    await wishlist.save();
+    // Save wishlist with a retry mechanism for concurrent operations
+    let savedWishlist;
+    let retries = 3;
+    
+    while (retries > 0) {
+      try {
+        savedWishlist = await wishlist.save();
+        break; // Exit the loop if save was successful
+      } catch (saveError) {
+        retries--;
+        
+        // If it's a duplicate key error, the item is already in wishlist
+        if (saveError.code === 11000) {
+          return res.status(200).json({
+            success: true,
+            message: 'Product already in wishlist',
+            wishlist
+          });
+        }
+        
+        // If it's a version error or we've run out of retries, throw the error
+        if (saveError.name !== 'VersionError' || retries === 0) {
+          throw saveError;
+        }
+        
+        // Otherwise, refresh the wishlist and try again
+        wishlist = await Wishlist.findOne({ user: req.user._id });
+        
+        // Re-check for existing item
+        let existingItemIndex = -1;
+        
+        if (product) {
+          existingItemIndex = wishlist.items.findIndex(item => 
+            item.product && item.product.toString() === product._id.toString()
+          );
+        } else if (name) {
+          existingItemIndex = wishlist.items.findIndex(item => 
+            item.name === name
+          );
+        }
+        
+        // If item exists after refresh, return early
+        if (existingItemIndex >= 0) {
+          return res.status(200).json({
+            success: true,
+            message: 'Product already in wishlist',
+            wishlist
+          });
+        }
+        
+        // Otherwise, add the item again
+        if (product) {
+          wishlist.items.push({
+            product: product._id,
+            name: product.name,
+            price: product.price,
+            image: product.thumbnailUrl || image || 'images/placeholder.jpg',
+            quantity: 1
+          });
+        } else if (name && price) {
+          wishlist.items.push({
+            product: new mongoose.Types.ObjectId(),
+            name: name,
+            price: parseFloat(price),
+            image: image || 'images/placeholder.jpg',
+            quantity: 1
+          });
+        }
+      }
+    }
     
     res.status(200).json({
       success: true,
       message: 'Product added to wishlist',
-      wishlist
+      wishlist: savedWishlist || wishlist
     });
+    
   } catch (error) {
     console.error('Error adding to wishlist:', error);
     res.status(500).json({
@@ -160,75 +230,41 @@ router.get('/count', async (req, res) => {
     });
   }
 });
-// Update the remove route in routes/wishlist.js
 router.delete('/remove/:productId', async (req, res) => {
   try {
     const { productId } = req.params;
     
-    console.log('Attempting to remove item with ID:', productId);
+    // Find user's wishlist and atomically update it
+    const result = await Wishlist.findOneAndUpdate(
+      { user: req.user._id },
+      { 
+        $pull: { 
+          items: {
+            $or: [
+              // Pull by item._id
+              { _id: mongoose.Types.ObjectId.isValid(productId) ? productId : null },
+              // Pull by product._id
+              { product: mongoose.Types.ObjectId.isValid(productId) ? productId : null }
+            ]
+          }
+        } 
+      },
+      { new: true }
+    );
     
-    // Find user's wishlist
-    const wishlist = await Wishlist.findOne({ user: req.user._id });
-    
-    if (!wishlist) {
+    if (!result) {
       return res.status(404).json({
         success: false,
         message: 'Wishlist not found'
       });
     }
     
-    // Track if we found and removed anything
-    let itemRemoved = false;
+    res.status(200).json({
+      success: true,
+      message: 'Product removed from wishlist',
+      wishlist: result
+    });
     
-    // Case 1: Try to remove by direct match on item._id
-    if (mongoose.Types.ObjectId.isValid(productId)) {
-      const originalLength = wishlist.items.length;
-      wishlist.items = wishlist.items.filter(item => item._id.toString() !== productId);
-      itemRemoved = wishlist.items.length < originalLength;
-      
-      console.log(`Attempted removal by item._id: ${itemRemoved ? 'Success' : 'No match'}`);
-    }
-    
-    // Case 2: If still not removed and ID is valid MongoDB ID, try by product ID
-    if (!itemRemoved && mongoose.Types.ObjectId.isValid(productId)) {
-      const originalLength = wishlist.items.length;
-      wishlist.items = wishlist.items.filter(item => 
-        !item.product || item.product.toString() !== productId
-      );
-      itemRemoved = wishlist.items.length < originalLength;
-      
-      console.log(`Attempted removal by product ID: ${itemRemoved ? 'Success' : 'No match'}`);
-    }
-    
-    // Case 3: Last resort - try by product SKU
-    if (!itemRemoved) {
-      for (let i = 0; i < wishlist.items.length; i++) {
-        const product = await Product.findOne({ sku: productId });
-        if (product && wishlist.items[i].product.toString() === product._id.toString()) {
-          wishlist.items.splice(i, 1);
-          itemRemoved = true;
-          console.log('Removed by product SKU match');
-          break;
-        }
-      }
-    }
-    
-    // Save the updated wishlist
-    await wishlist.save();
-    
-    if (itemRemoved) {
-      res.status(200).json({
-        success: true,
-        message: 'Product removed from wishlist',
-        wishlist
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'Product not found in wishlist',
-        wishlist
-      });
-    }
   } catch (error) {
     console.error('Error removing from wishlist:', error);
     res.status(500).json({
@@ -254,26 +290,32 @@ router.get('/check/:productId', async (req, res) => {
       return res.status(200).json({ inWishlist: false });
     }
     
-    // Try to find product by SKU first
-    let product = await Product.findOne({ sku: productId });
+    // First check if productId is a valid MongoDB ID and check by product ID
+    let inWishlist = false;
     
-    // If not found by SKU and it's a valid ObjectId, try that
-    if (!product && mongoose.Types.ObjectId.isValid(productId)) {
-      product = await Product.findById(productId);
-    }
-    
-    // If product found, check if it's in wishlist
-    if (product) {
-      const inWishlist = wishlist.items.some(item => 
-        item.product.toString() === product._id.toString()
+    if (mongoose.Types.ObjectId.isValid(productId)) {
+      inWishlist = wishlist.items.some(item => 
+        item.product && item.product.toString() === productId
       );
-      return res.status(200).json({ inWishlist });
     }
     
-    // If no product found but we have items with matching productId (as SKU)
-    const inWishlist = wishlist.items.some(item => 
-      item.name && item.name.includes(productId)
-    );
+    // If not found by ID, check if there's a product with this SKU
+    if (!inWishlist) {
+      const product = await Product.findOne({ sku: productId });
+      
+      if (product) {
+        inWishlist = wishlist.items.some(item => 
+          item.product && item.product.toString() === product._id.toString()
+        );
+      }
+    }
+    
+    // If still not found, check by name (as fallback)
+    if (!inWishlist) {
+      inWishlist = wishlist.items.some(item => 
+        item.name && item.name.includes(productId)
+      );
+    }
     
     return res.status(200).json({ inWishlist });
     
@@ -286,28 +328,28 @@ router.get('/check/:productId', async (req, res) => {
     });
   }
 });
-// Clear entire wishlist
 router.delete('/clear', async (req, res) => {
   try {
-    // Find user's wishlist
-    const wishlist = await Wishlist.findOne({ user: req.user._id });
+    // Find user's wishlist and atomically update it
+    const result = await Wishlist.findOneAndUpdate(
+      { user: req.user._id },
+      { $set: { items: [] } },
+      { new: true }
+    );
     
-    if (!wishlist) {
+    if (!result) {
       return res.status(404).json({
         success: false,
         message: 'Wishlist not found'
       });
     }
     
-    // Clear wishlist
-    wishlist.items = [];
-    await wishlist.save();
-    
     res.status(200).json({
       success: true,
       message: 'Wishlist cleared',
-      wishlist
+      wishlist: result
     });
+    
   } catch (error) {
     console.error('Error clearing wishlist:', error);
     res.status(500).json({

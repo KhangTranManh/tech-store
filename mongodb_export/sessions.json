@@ -1,7 +1,7 @@
 [
   {
-    "_id": "h4DBX7tIPXc9qCSlSVQUz63lFLbiN-1e",
-    "expires": "2025-05-11T06:18:03.827Z",
-    "session": "{\"cookie\":{\"originalMaxAge\":86399999,\"expires\":\"2025-05-10T16:00:26.936Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":\"67fe99159d329b4538c085a8\"}}"
+    "_id": "iBM_ocogItLZBAkuO99Rhgd7QGfNW081",
+    "expires": "2025-05-12T16:02:32.803Z",
+    "session": "{\"cookie\":{\"originalMaxAge\":86400000,\"expires\":\"2025-05-12T16:01:02.725Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":\"67e589ca0e5596bab131639d\"}}"
   }
 ]
