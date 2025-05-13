@@ -1289,6 +1289,324 @@ function initializeCategoryPage(categorySlug) {
   }
   
 }
+/**
+ * Live Search Functionality for TechStore
+ * This script adds autocomplete search functionality to the search bar
+ */
+
+// Add this to your main.js file or create a new search.js file
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize live search
+  initializeLiveSearch();
+});
+
+/**
+ * Initialize live search functionality
+ */
+function initializeLiveSearch() {
+  const searchInput = document.querySelector('.search-bar input');
+  const searchButton = document.querySelector('.search-bar button');
+  
+  if (!searchInput || !searchButton) {
+    console.warn('Search elements not found on page');
+    return;
+  }
+  
+  // Create dropdown container for search results
+  const searchResultsContainer = document.createElement('div');
+  searchResultsContainer.className = 'search-results';
+  searchResultsContainer.style.display = 'none';
+  
+  // Insert the dropdown after the search bar
+  const searchBar = document.querySelector('.search-bar');
+  searchBar.style.position = 'relative';
+  searchBar.appendChild(searchResultsContainer);
+  
+  // Style the search results dropdown
+  const style = document.createElement('style');
+  style.textContent = `
+    .search-bar {
+      position: relative;
+    }
+    
+    .search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .search-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .search-item:hover {
+      background-color: #f9f9f9;
+    }
+    
+    .search-item-image {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-right: 15px;
+      background-color: #f8f8f8;
+      padding: 5px;
+    }
+    
+    .search-item-details {
+      flex: 1;
+    }
+    
+    .search-item-name {
+      margin: 0 0 5px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .search-item-price {
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-item-current-price {
+      font-weight: bold;
+      color: #ff6b00;
+      font-size: 15px;
+      margin-right: 8px;
+    }
+    
+    .search-item-original-price {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 13px;
+    }
+    
+    .no-results {
+      padding: 15px;
+      text-align: center;
+      color: #666;
+    }
+    
+    .all-results-link {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      background-color: #f5f5f5;
+      color: #333;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    
+    .all-results-link:hover {
+      background-color: #e9e9e9;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Debounce function to prevent excessive API calls
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      const context = this;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+  
+  // Function to fetch search results
+  const fetchSearchResults = debounce(async (query) => {
+    if (!query || query.length < 2) {
+      searchResultsContainer.style.display = 'none';
+      return;
+    }
+    
+    try {
+      // Show loading indicator in the dropdown
+      searchResultsContainer.style.display = 'block';
+      searchResultsContainer.innerHTML = '<div class="no-results">Searching...</div>';
+      
+      // Try to fetch from API first
+      let products = [];
+      let error = null;
+      
+      try {
+        // Make API request to search endpoint
+        const response = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && Array.isArray(data.products)) {
+          products = data.products;
+        } else {
+          throw new Error(data.message || 'Invalid response format');
+        }
+      } catch (apiError) {
+        console.warn('API search failed, using fallback:', apiError);
+        error = apiError;
+        
+        // Try alternate API endpoint
+        try {
+          const altResponse = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+          if (altResponse.ok) {
+            const altData = await altResponse.json();
+            if (altData.results && Array.isArray(altData.results)) {
+              products = altData.results;
+              error = null; // Clear error if alternate API worked
+            }
+          }
+        } catch (altError) {
+          console.warn('Alternate API search also failed:', altError);
+        }
+      }
+      
+      // If API calls failed, try to use embedded data if available
+      if (products.length === 0 && error && window.techstore && window.techstore.products) {
+        console.log('Using embedded product data for search');
+        
+        // Search within embedded product data
+        const allProducts = window.techstore.products.all || [];
+        products = allProducts.filter(product => {
+          const searchRegex = new RegExp(query, 'i');
+          return searchRegex.test(product.name) || 
+                 searchRegex.test(product.description) || 
+                 searchRegex.test(product.specs);
+        }).slice(0, 5); // Limit to 5 results
+      }
+      
+      // Display the results
+      displaySearchResults(products, query);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      searchResultsContainer.innerHTML = '<div class="no-results">Error searching for products</div>';
+    }
+  }, 300); // 300ms debounce
+  
+  // Function to display search results
+  function displaySearchResults(products, query) {
+    // Clear previous results
+    searchResultsContainer.innerHTML = '';
+    
+    if (!products || products.length === 0) {
+      searchResultsContainer.innerHTML = '<div class="no-results">No products found</div>';
+      return;
+    }
+    
+    // Limit to 5 products max for dropdown
+    const displayProducts = products.slice(0, 5);
+    
+    // Create results list
+    displayProducts.forEach(product => {
+      const item = document.createElement('div');
+      item.className = 'search-item';
+      
+      // Format prices
+      const currentPrice = parseFloat(product.price) || 0;
+      const originalPrice = parseFloat(product.compareAtPrice || product.originalPrice) || 0;
+      const hasDiscount = originalPrice > currentPrice && originalPrice > 0;
+      
+      // Create product thumbnail
+      let thumbnailUrl = product.thumbnailUrl || product.imageUrl || 'images/placeholder.jpg';
+      
+      // HTML for the item
+      item.innerHTML = `
+        <img src="${thumbnailUrl}" alt="${product.name}" class="search-item-image">
+        <div class="search-item-details">
+          <h4 class="search-item-name">${product.name}</h4>
+          <div class="search-item-price">
+            <span class="search-item-current-price">${formatPrice(currentPrice)}</span>
+            ${hasDiscount ? `<span class="search-item-original-price">${formatPrice(originalPrice)}</span>` : ''}
+          </div>
+        </div>
+      `;
+      
+      // Add click event to navigate to product
+      item.addEventListener('click', function() {
+        window.location.href = `/product-detail.html?id=${product._id || product.id}`;
+      });
+      
+      searchResultsContainer.appendChild(item);
+    });
+    
+    // Add "View all results" link
+    const viewAllLink = document.createElement('a');
+    viewAllLink.className = 'all-results-link';
+    viewAllLink.href = `/search-results.html?q=${encodeURIComponent(query)}`;
+    viewAllLink.textContent = `View all results for "${query}"`;
+    searchResultsContainer.appendChild(viewAllLink);
+    
+    // Show the container
+    searchResultsContainer.style.display = 'block';
+  }
+  
+  // Function to format price
+  function formatPrice(price) {
+    // If price is 0 or invalid, show as "Free"
+    if (!price) return 'Free';
+    
+    // Format with thousand separators and 2 decimal places
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0
+    }).format(price);
+  }
+  
+  // Add event listener to input for searching as you type
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim();
+    fetchSearchResults(query);
+  });
+  
+  // Handle focus and blur events
+  searchInput.addEventListener('focus', function() {
+    const query = this.value.trim();
+    if (query.length >= 2) {
+      fetchSearchResults(query);
+    }
+  });
+  
+  // Close results when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!searchBar.contains(event.target)) {
+      searchResultsContainer.style.display = 'none';
+    }
+  });
+  
+  // Handle search button click
+  searchButton.addEventListener('click', function() {
+    const query = searchInput.value.trim();
+    if (query.length > 0) {
+      window.location.href = `/search-results.html?q=${encodeURIComponent(query)}`;
+    }
+  });
+  
+  // Handle Enter key in search input
+  searchInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      const query = this.value.trim();
+      if (query.length > 0) {
+        window.location.href = `/search-results.html?q=${encodeURIComponent(query)}`;
+      }
+    }
+  });
+}
 // Make showNotification available globally
 window.showNotification = showNotification;
 

@@ -23,7 +23,6 @@ const safeRequire = (modulePath) => {
   }
 };
 
-const pagesRoutes = require('./routes/pages');
 const productRoutes = safeRequire('./routes/products');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = safeRequire('./routes/orders');
@@ -32,6 +31,8 @@ const addressRoutes = safeRequire('./routes/addresses');
 const paymentMethodRoutes = safeRequire('./routes/payment-methods');
 const wishlistRoutes = require('./routes/wishlist');
 const categoryRoutes = require('./routes/categories');
+const searchRoutes = require('./routes/search');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -60,6 +61,7 @@ try {
   console.error('Error loading auth routes:', error.message, error.stack);
   authRoutes = null;
 }
+app.use('/api', searchRoutes);
 
 // Connect to Database
 connectDB().catch(err => {
