@@ -16,8 +16,6 @@ const API_ENDPOINTS = {
   SYNC_CART: '/api/cart/sync',
   CHECKOUT: '/checkout.html'
 };
-
-// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
   // Prevent duplicate initialization
   if (cartInitialized) return;
@@ -25,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   console.log('Initializing cart functionality...');
   
-  // Initialize cart functionality
-  initializeCart();
+  // Initialize cart functionality - ENSURE THIS RUNS FIRST
+  initializeCartFunctionality();
   
   // Set up cart page functionality if on cart page
   if (window.location.pathname.includes('cart.html')) {
@@ -45,7 +43,93 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 });
+// Add this function to cart-js.js
+function initializeCartFunctionality() {
+  console.log('Setting up Add to Cart buttons...');
+  
+  // Get all "Add to Cart" buttons on the page (handle both classes)
+  const addToCartButtons = document.querySelectorAll('.add-to-cart, .add-to-cart-btn');
+  
+  console.log('Found ' + addToCartButtons.length + ' Add to Cart buttons');
+  
+  // Add event listeners to each button
+  addToCartButtons.forEach(button => {
+    // Clone the button to remove any existing event listeners
+    const newButton = button.cloneNode(true);
+    if (button.parentNode) {
+      button.parentNode.replaceChild(newButton, button);
+    }
+    
+    newButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event bubbling
+      
+      // Disable button to prevent double-clicks
+      this.disabled = true;
+      
+      // Get product information from the parent product card or detail container
+      const productCard = this.closest('.product-card, .product-info, .product-detail');
+      if (!productCard) {
+        console.error('No product container found');
+        this.disabled = false;
+        return;
+      }
+      
+      // Get product ID
+      const productId = this.getAttribute('data-product-id') || productCard.getAttribute('data-product-id');
+      if (!productId) {
+        console.error('No product ID found');
+        this.disabled = false;
+        return;
+      }
+      
+      // Get product name
+      const productNameEl = productCard.querySelector('.product-title, .product-name, .item-name');
+      const productName = productNameEl ? productNameEl.textContent.trim() : 'Unknown Product';
+      
+      // Get price - extract numeric value from price text
+      const productPriceEl = productCard.querySelector('.product-price, .current-price');
+      let productPrice = 0;
+      if (productPriceEl) {
+        const priceText = productPriceEl.textContent;
+        const priceMatch = priceText.match(/\$?(\d+(\.\d+)?)/);
+        if (priceMatch) {
+          productPrice = parseFloat(priceMatch[1]);
+        }
+      }
+      
+      // Get product image
+      const productImageEl = productCard.querySelector('img');
+      const productImage = productImageEl ? productImageEl.getAttribute('src') : '';
+      
+      console.log('Adding to cart:', {
+        id: productId,
+        name: productName,
+        price: productPrice,
+        image: productImage
+      });
+      
+      // Call the addToCart function
+      addToCart(productId, productName, productPrice, productImage, this);
+      
+      // Visual feedback is handled in the addToCart function
+    });
+  });
+  
+  // Initialize cart count on page load
+  updateCartCountFromLocalStorage();
+}
 
+// Add CSS for the added state
+const addedButtonStyle = document.createElement('style');
+addedButtonStyle.textContent = `
+  .add-to-cart-btn.added {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+  }
+`;
+
+document.head.appendChild(addedButtonStyle);
 /**
  * Initialize cart functionality
  * Sets up event listeners and cart counter
@@ -118,6 +202,7 @@ function initializeCart() {
   // Initialize cart count
   updateCartCountFromLocalStorage();
 }
+
 function addToCart(productId, productName, productPrice, productImage = '', buttonElement = null) {
   try {
     // Disable button to prevent multiple clicks
@@ -205,9 +290,7 @@ function addToCart(productId, productName, productPrice, productImage = '', butt
 }
 
 
-/**
- * Updated addToCartLocal function with improved duplicate detection
- */
+// Fix for the addToCartLocal function - remove the debugCart call or implement it
 function addToCartLocal(productId, productName, productPrice, productImage = '') {
   try {
     // Get current cart or initialize if not exists
@@ -724,16 +807,23 @@ function setupPeriodicSync() {
     }
   }, 5 * 60 * 1000); // 5 minutes
 }
-// Add this function to your cart.js route file
+/**
+ * Deduplicates cart items by combining items with the same productId
+ * @param {Object} cart - The cart object with items array
+ * @returns {Object} - Deduplicated cart object
+ */
 function deduplicateCart(cart) {
-  if (!cart || !cart.items || !cart.items.length === 0) {
-    return cart;
+  // Return early if cart is empty or invalid
+  if (!cart || !cart.items || cart.items.length === 0) {
+    return cart || { items: [], itemCount: 0 };
   }
   
+  // Create a Map to store unique items by productId (as string)
   const uniqueProductMap = new Map();
   
   // First, group items by their productId (as string)
   cart.items.forEach(item => {
+    // Convert productId to string for consistent comparison
     const productIdStr = String(item.productId);
     
     if (uniqueProductMap.has(productIdStr)) {
@@ -750,7 +840,7 @@ function deduplicateCart(cart) {
     }
   });
   
-  // Convert back to array
+  // Convert Map back to array
   cart.items = Array.from(uniqueProductMap.values());
   
   // Recalculate total item count
@@ -758,6 +848,8 @@ function deduplicateCart(cart) {
   
   return cart;
 }
+
+module.exports = deduplicateCart;
 
 
 /**

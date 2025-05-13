@@ -202,52 +202,118 @@
       initializeCartCount();
     });
   })();
-  // Add this function to cart-js.js or global-cart.js 
+  /**
+ * Improved debugCart function with better error handling for server errors
+ * Add this to global-cart.js or cart-js.js
+ */
 function debugCart() {
   try {
     console.group("🔍 Cart Debug Information");
     
-    // Check session storage
+    // Check session storage first
     const cartData = sessionStorage.getItem('cart');
     if (cartData) {
-      const localCart = JSON.parse(cartData);
-      console.log("Local cart from session storage:", localCart);
-      
-      if (localCart.items && localCart.items.length > 0) {
-        console.table(localCart.items.map(item => ({
-          productId: item.productId,
-          productId_type: typeof item.productId,
-          name: item.name,
-          quantity: item.quantity
-        })));
+      try {
+        const localCart = JSON.parse(cartData);
+        console.log("📋 Local cart from session storage:", localCart);
+        
+        if (localCart.items && localCart.items.length > 0) {
+          console.table(localCart.items.map(item => ({
+            productId: item.productId,
+            productId_type: typeof item.productId,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+          })));
+          
+          // Check for duplicates in local cart
+          const ids = {};
+          const duplicates = [];
+          
+          localCart.items.forEach(item => {
+            const id = String(item.productId);
+            if (ids[id]) {
+              duplicates.push(id);
+            } else {
+              ids[id] = true;
+            }
+          });
+          
+          if (duplicates.length > 0) {
+            console.warn("⚠️ DUPLICATES FOUND in local cart:", duplicates);
+          } else {
+            console.log("✅ No duplicates found in local cart");
+          }
+        } else {
+          console.log("📭 Local cart exists but has no items");
+        }
+      } catch (parseError) {
+        console.error("❌ Error parsing local cart:", parseError);
       }
     } else {
-      console.log("No cart found in session storage");
+      console.log("📭 No cart found in session storage");
     }
     
-    // Check if we can fetch server cart
-    console.log("Attempting to fetch server cart...");
-    fetch('/api/cart', {
-      credentials: 'include'
-    })
+    // Try to fetch server cart, but with better error handling
+    console.log("🔄 Attempting to fetch server cart...");
+    
+    // Use a timeout to prevent hanging on server issues
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Server request timed out")), 5000)
+    );
+    
+    // Skip server check if we're getting 500 errors consistently
+    // You can remove this check if your server is fixed
+    const skipServerCheck = sessionStorage.getItem('skip_server_cart_check') === 'true';
+    
+    if (skipServerCheck) {
+      console.log("⏩ Skipping server cart check due to previous errors");
+      console.log("💡 You can reset this by running: sessionStorage.removeItem('skip_server_cart_check')");
+      console.groupEnd();
+      return;
+    }
+    
+    Promise.race([
+      fetch('/api/cart', {
+        credentials: 'include',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      }),
+      timeoutPromise
+    ])
     .then(response => {
-      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      if (!response.ok) {
+        if (response.status === 500) {
+          console.warn("⚠️ Server returned 500 error. This is likely a server-side issue.");
+          console.log("💡 Try checking your backend logs for details.");
+          // Set flag to skip future server checks until fixed
+          sessionStorage.setItem('skip_server_cart_check', 'true');
+          throw new Error(`Server returned ${response.status}`);
+        }
+        throw new Error(`Server returned ${response.status}`);
+      }
       return response.json();
     })
     .then(data => {
-      console.log("Server cart:", data.cart);
+      if (!data || !data.cart) {
+        console.log("⚠️ Server returned empty or invalid cart data");
+        return;
+      }
       
-      if (data.cart && data.cart.items && data.cart.items.length > 0) {
+      console.log("📋 Server cart:", data.cart);
+      
+      if (data.cart.items && data.cart.items.length > 0) {
         console.table(data.cart.items.map(item => ({
           productId: item.productId,
           productId_type: typeof item.productId,
           name: item.name,
-          quantity: item.quantity
+          quantity: item.quantity,
+          price: item.price
         })));
-      }
-      
-      // Check for duplicates
-      if (data.cart && data.cart.items && data.cart.items.length > 0) {
+        
+        // Check for duplicate IDs in server cart
         const ids = {};
         const duplicates = [];
         
@@ -265,16 +331,52 @@ function debugCart() {
         } else {
           console.log("✅ No duplicates found in server cart");
         }
+        
+        // Compare with local cart
+        if (cartData) {
+          const localCart = JSON.parse(cartData);
+          console.log("🔄 Comparing local and server carts...");
+          
+          // Check if counts match
+          if (localCart.itemCount !== data.cart.itemCount) {
+            console.warn(`⚠️ Item count mismatch: Local (${localCart.itemCount}) vs Server (${data.cart.itemCount})`);
+          } else {
+            console.log("✅ Item counts match");
+          }
+          
+          // Check for items in local but not in server
+          const serverIds = data.cart.items.map(item => String(item.productId));
+          const localIds = localCart.items.map(item => String(item.productId));
+          
+          const missingFromServer = localIds.filter(id => !serverIds.includes(id));
+          const missingFromLocal = serverIds.filter(id => !localIds.includes(id));
+          
+          if (missingFromServer.length > 0) {
+            console.warn("⚠️ Items in local cart but missing from server:", missingFromServer);
+          }
+          
+          if (missingFromLocal.length > 0) {
+            console.warn("⚠️ Items in server cart but missing from local:", missingFromLocal);
+          }
+          
+          if (missingFromServer.length === 0 && missingFromLocal.length === 0) {
+            console.log("✅ All items present in both carts");
+          }
+        }
+      } else {
+        console.log("📭 Server cart exists but has no items");
       }
     })
     .catch(error => {
-      console.error("Failed to fetch server cart:", error);
+      console.error("❌ Failed to fetch server cart:", error.message);
+      console.log("💡 This could be a server issue or a network problem");
+      console.log("💡 You can continue using the local cart functionality");
     })
     .finally(() => {
       console.groupEnd();
     });
   } catch (error) {
-    console.error("Error in debugCart:", error);
+    console.error("❌ Error in debugCart:", error);
     console.groupEnd();
   }
 }

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/products.js"></script>
+    <script src="/js/cart-js.js"></script>
+    <script src="/js/global-cart.js"></script>
+
     <style>
         .category-container {
             max-width: 1200px;
@@ -696,58 +700,5 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
-    <script>
-        // View switching functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButtons = document.querySelectorAll('.view-btn');
-            const productsGrid = document.querySelector('.products-grid');
-            
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    viewButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Get the view type (grid or list)
-                    const viewType = this.getAttribute('data-view');
-                    
-                    // Toggle views (would need additional code for list view implementation)
-                    if (viewType === 'grid') {
-                        productsGrid.style.display = 'grid';
-                    } else {
-                        // This would switch to list view in a complete implementation
-                        alert('List view is under development');
-                    }
-                });
-            });
-            
-            // Price range functionality
-            const priceRange = document.getElementById('price-range');
-            const maxPriceInput = document.querySelector('.price-input[max="2000"]');
-            
-            priceRange.addEventListener('input', function() {
-                maxPriceInput.value = this.value;
-            });
-            
-            maxPriceInput.addEventListener('input', function() {
-                priceRange.value = this.value;
-            });
-            
-            // Add to cart functionality
-            const addToCartButtons = document.querySelectorAll('.add-to-cart');
-            
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    alert('Product added to cart!');
-                    // In a real app, this would add the product to the cart
-                });
-            });
-        });
-    </script>
-    <script src="/js/products.js"></script>
-    <script src="/js/cart.js"></script>
 </body>
 </html>
