@@ -10,11 +10,8 @@ const { isAuthenticated } = require('../middleware/auth');
 // Apply authentication middleware to all routes
 router.use(isAuthenticated);
 
-/**
- * @route   POST /api/orders
- * @desc    Create a new order
- * @access  Private
- */
+// In routes/orders.js - Find your POST /api/orders route and update it
+
 router.post('/', async (req, res) => {
     try {
         // Get user from authenticated session
@@ -32,13 +29,15 @@ router.post('/', async (req, res) => {
             items, 
             addressId, 
             paymentMethodId, 
+            paymentType, // New field for payment type
             subtotal, 
             shipping, 
-            tax 
+            tax,
+            notes 
         } = req.body;
         
         // Validate required fields
-        if (!items || !addressId || !paymentMethodId) {
+        if (!items || !addressId) {
             return res.status(400).json({ 
                 success: false, 
                 message: 'Missing required order information' 
@@ -48,7 +47,7 @@ router.post('/', async (req, res) => {
         // Verify address belongs to user
         const address = await Address.findOne({ 
             _id: addressId, 
-            user: user._id  // Note: changed from userId to match your existing model
+            user: user._id
         });
         
         if (!address) {
@@ -58,17 +57,33 @@ router.post('/', async (req, res) => {
             });
         }
         
-        // Verify payment method belongs to user
-        const paymentMethod = await PaymentMethod.findOne({ 
-            _id: paymentMethodId, 
-            user: user._id  // Note: changed from userId to match your existing model
-        });
+        // For COD orders, skip payment method verification
+        let paymentLast4 = '';
         
-        if (!paymentMethod) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Invalid payment method' 
+        // Only verify payment method for card payments
+        if (paymentType !== 'cod') {
+            if (!paymentMethodId) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Payment method is required for non-COD orders'
+                });
+            }
+            
+            // Verify payment method belongs to user
+            const paymentMethod = await PaymentMethod.findOne({ 
+                _id: paymentMethodId, 
+                user: user._id
             });
+            
+            if (!paymentMethod) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Invalid payment method' 
+                });
+            }
+            
+            // Set payment last4 if available
+            paymentLast4 = paymentMethod.last4 || '';
         }
         
         // Calculate total
@@ -76,7 +91,7 @@ router.post('/', async (req, res) => {
         
         // Create new order
         const newOrder = new Order({
-            user: user._id,  // Note: changed from userId to match your existing model
+            user: user._id,
             items: items.map(item => ({
                 productId: item.productId,
                 name: item.name,
@@ -85,25 +100,40 @@ router.post('/', async (req, res) => {
                 image: item.image
             })),
             shippingAddress: addressId,
-            paymentMethod: paymentMethodId,
-            paymentLast4: paymentMethod.last4,
+            paymentType: paymentType || 'card', // Set payment type
+            // Only include paymentMethod if not COD
+            ...(paymentType !== 'cod' && { paymentMethod: paymentMethodId }),
+            paymentLast4,
             subtotal,
             shippingCost: shipping,
             tax,
             total,
             status: 'pending',
+            notes: notes || '',
             statusHistory: [{
                 status: 'pending',
                 note: 'Order created'
             }]
         });
         
+        // If this is a COD order, add an initial tracking entry
+        if (paymentType === 'cod') {
+            newOrder.tracking = [{
+                status: 'Order Placed',
+                description: 'Your order has been received and will be processed upon delivery',
+                timestamp: new Date(),
+                location: 'Online Store'
+            }];
+        }
+        
         // Save order
         await newOrder.save();
         
-        // Generate order number
-        newOrder.orderNumber = `TS${newOrder._id.toString().slice(-8)}`;
-        await newOrder.save();
+        // Generate order number (if your pre-save hook doesn't do this)
+        if (!newOrder.orderNumber) {
+            newOrder.orderNumber = `TS${newOrder._id.toString().slice(-8)}`;
+            await newOrder.save();
+        }
         
         // Clear user's cart
         const cart = await Cart.findOne({ userId: user._id });

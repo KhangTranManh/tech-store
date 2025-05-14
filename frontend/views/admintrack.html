@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking Management - Admin Panel</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-name {
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #2c3e50;
+        }
+        
+        /* Admin Panel Styles */
+        .tracking-panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            padding: 20px;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .panel-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Order Select Dropdown */
+        .order-select-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .order-select-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .order-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        
+        /* Order Info */
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .info-group {
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            color: #333;
+            font-size: 15px;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #ffeaa7;
+            color: #d35400;
+        }
+        
+        .status-processing {
+            background-color: #81ecec;
+            color: #00838f;
+        }
+        
+        .status-shipped {
+            background-color: #a29bfe;
+            color: #4834d4;
+        }
+        
+        .status-in_transit {
+            background-color: #74b9ff;
+            color: #0984e3;
+        }
+        
+        .status-out_for_delivery {
+            background-color: #fab1a0;
+            color: #e17055;
+        }
+        
+        .status-delivered {
+            background-color: #55efc4;
+            color: #00b894;
+        }
+        
+        /* Tracking Timeline */
+        .tracking-timeline {
+            margin: 30px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-track {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #ddd;
+        }
+        
+        .timeline-step {
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .step-indicator {
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid #ddd;
+        }
+        
+        .step-indicator.active {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+        
+        .step-indicator.completed {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+        }
+        
+        .step-content {
+            padding-left: 15px;
+            flex-grow: 1;
+            min-width: 0;
+            width: calc(100% - 150px);
+        }
+        
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .step-date {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            color: #666;
+        }
+        
+        .step-location {
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        .step-actions {
+            flex-shrink: 0;
+            width: 150px;
+            text-align: right;
+        }
+        
+        .action-btn {
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+        }
+        
+        .action-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        /* Update Status Form */
+        .status-form {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+        
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Customer View Preview */
+        .customer-view {
+            position: relative;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .view-label {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .order-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-content {
+                width: 100%;
+            }
+            
+            .step-actions {
+                width: 100%;
+                text-align: left;
+                padding-left: 15px;
+                margin-top: 10px;
+            }
+            
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">TechStore Admin</div>
+            <div class="user-info">
+                <span class="user-name">Welcome, Admin</span>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Order Tracking Panel -->
+        <section class="tracking-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">Order Tracking Management</h2>
+                <a href="/" class="btn btn-primary">Return to Dashboard</a>
+            </div>
+            
+            <!-- Order Selection -->
+            <div class="order-select-container">
+                <label for="order-select" class="order-select-label">Select Order to Manage</label>
+                <select id="order-select" class="order-select">
+                    <option value="">Select an order...</option>
+                    <!-- Orders will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <!-- Order Information Summary -->
+            <div class="order-info">
+                <!-- Order details will be populated by JavaScript -->
+            </div>
+            
+            <!-- Tracking Timeline -->
+            <h3 class="form-title">Shipment Timeline</h3>
+            <div class="tracking-timeline">
+                <div class="timeline-track"></div>
+                <!-- Timeline steps will be populated by JavaScript -->
+            </div>
+            
+            <!-- Add New Tracking Status -->
+            <div class="status-form">
+                <h3 class="form-title">Add New Tracking Status</h3>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="status">Status Type</label>
+                            <select id="status">
+                                <option value="">Select status...</option>
+                                <option value="order_placed">Order Placed</option>
+                                <option value="processing">Order Processed</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="in_transit">In Transit</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="custom">Custom Status</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="display: none;">
+                            <label for="custom-status">Custom Status Title</label>
+                            <input type="text" id="custom-status" placeholder="e.g. Arrived at destination facility">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" placeholder="e.g. New York Distribution Center">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date-time">Date & Time</label>
+                            <input type="datetime-local" id="date-time">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Status Description</label>
+                        <textarea id="notes" placeholder="Enter details about this tracking update..."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="carrier">Shipping Carrier</label>
+                            <select id="carrier">
+                                <option value="fedex">FedEx</option>
+                                <option value="ups">UPS</option>
+                                <option value="usps">USPS</option>
+                                <option value="dhl">DHL</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tracking-number">Tracking Number (Optional)</label>
+                            <input type="text" id="tracking-number" placeholder="e.g. 1Z999AA10123456784">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notify">Notify Customer</label>
+                        <select id="notify">
+                            <option value="yes">Yes, send email notification</option>
+                            <option value="no">No, don't notify</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="submit" class="btn btn-success">Add Status Update</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Edit Existing Status -->
+            <div class="status-form">
+                <h3 class="form-title">Edit Tracking Status</h3>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-status">Status Type</label>
+                            <select id="edit-status">
+                                <option value="custom">Custom Status</option>
+                                <option value="order_placed">Order Placed</option>
+                                <option value="processing">Order Processed</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="in_transit">In Transit</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-title">Status Title</label>
+                            <input type="text" id="edit-title" placeholder="Status title">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-location">Location</label>
+                            <input type="text" id="edit-location" placeholder="Location">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-date-time">Date & Time</label>
+                            <input type="datetime-local" id="edit-date-time">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-notes">Status Description</label>
+                        <textarea id="edit-notes" placeholder="Status description"></textarea>
+                    </div>
+                    
+                    <input type="hidden" id="edit-tracking-id">
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" id="cancel-edit">Cancel</button>
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Customer View Preview (what the customer will see) -->
+            <div class="customer-view">
+                <div class="view-label">Customer View Preview</div>
+                
+                <div class="tracking-steps">
+                    <!-- This will be filled dynamically based on the current order's tracking info -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/adminTracking.js"></script>
+</body>
+</html>

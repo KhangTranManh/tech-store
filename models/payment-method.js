@@ -12,7 +12,7 @@ const PaymentMethodSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ['card', 'bank'],
+        enum: ['card', 'bank','cod'],
         required: true,
         default: 'card'
     },

@@ -35,9 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
+          // Debug: Log user data from server
+          console.log('Login successful. User data:', data.user);
+          
           // Store user data in session storage
           if (window.authUtils) {
             window.authUtils.storeUserData(data.user);
+            
+            // Debug: Verify data was stored correctly
+            const storedData = sessionStorage.getItem('authUser');
+            if (storedData) {
+              console.log('User data stored in session:', JSON.parse(storedData));
+            }
           }
           
           // Show success message
@@ -50,16 +59,26 @@ document.addEventListener('DOMContentLoaded', function() {
           
           // Redirect after successful login
           setTimeout(() => {
-            // Check if we have a redirect URL stored
-            const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
-            
-            if (redirectUrl) {
-              // Clear the stored URL
-              sessionStorage.removeItem('redirectAfterLogin');
-              window.location.href = redirectUrl;
+            // Check if user is admin
+            if (data.user && data.user.role === 'admin') {
+              console.log('Admin user detected. Redirecting to admin tracking page...');
+              
+              // UPDATED: Redirect to admintrack.html (not /admin/tracking.html)
+              window.location.href = '/admintrack.html';
             } else {
-              // Default redirect to home page
-              window.location.href = '/';
+              console.log('Regular user detected. Redirecting to regular page...');
+              
+              // Regular user flow - check for redirect URL
+              const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+              
+              if (redirectUrl) {
+                // Clear the stored URL
+                sessionStorage.removeItem('redirectAfterLogin');
+                window.location.href = redirectUrl;
+              } else {
+                // Default redirect to home page
+                window.location.href = '/';
+              }
             }
           }, 1000);
         } else {
@@ -155,8 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   /**
    * Helper function to show notifications
-   * This assumes you have a showNotification function defined elsewhere
-   * If not, you can implement it or use an alternative approach
    */
   function showNotification(message, type = 'info') {
     // Check if we have a notification function from main.js
@@ -170,48 +187,5 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(message);
       }
     }
-  }
-
-  
-  // Google login button handler
-  if (googleLoginBtn) {
-    googleLoginBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = '/auth/google';
-    });
-  }
-  
-  // Facebook login button handler
-  if (facebookLoginBtn) {
-    facebookLoginBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = '/auth/facebook';
-    });
-  }
-  
-  // Helper function to show notifications
-  function showNotification(message, type = 'info') {
-    // Check if we have a notification function from main.js
-    if (typeof window.showNotification === 'function') {
-      window.showNotification(message, type);
-    } else {
-      // Fallback alert if the main.js function isn't available
-      if (type === 'error') {
-        alert('Error: ' + message);
-      } else {
-        alert(message);
-      }
-    }
-  }
-  
-  // Helper function to toggle form state (disabled/enabled)
-  function toggleFormState(form, isDisabled) {
-    Array.from(form.elements).forEach(element => {
-      element.disabled = isDisabled;
-    });
-    
-    // Also disable social login buttons if they exist
-    if (googleLoginBtn) googleLoginBtn.disabled = isDisabled;
-    if (facebookLoginBtn) facebookLoginBtn.disabled = isDisabled;
   }
 });

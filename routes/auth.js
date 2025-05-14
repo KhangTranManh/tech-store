@@ -137,6 +137,24 @@ router.post('/reset-password', async (req, res) => {
     });
   }
 });
+// routes/auth.js - Add this logout route
+
+// Add logout route
+router.get('/logout', (req, res) => {
+  // Clear the user's session
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Error logging out');
+    }
+    
+    // Clear authentication cookie if you're using one
+    res.clearCookie('connect.sid'); // This name might vary depending on your session setup
+    
+    // Redirect to login page
+    res.redirect('/login.html');
+  });
+});
 router.get('/check', (req, res) => {
     if (req.isAuthenticated()) {
       return res.status(200).json({ 

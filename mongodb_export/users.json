@@ -1,12 +1,12 @@
 [
   {
     "_id": "67e589ca0e5596bab131639d",
-    "firstName": "ditme",
+    "firstName": "KXCP",
     "lastName": "TRAN",
     "email": "khangjaki12@gmail.com",
     "password": "$2a$10$W3ZrnpQgv0W4wney2W7zxekefIslvPlyWkUCTYyjqZS25ZoPBg36W",
     "phone": "",
-    "role": "user",
+    "role": "admin",
     "isSubscribed": true,
     "isEmailVerified": false,
     "createdAt": "2025-03-27T17:24:26.468Z",
@@ -24,7 +24,9 @@
       "loginAlerts": false,
       "sessionTimeout": 60,
       "twoFactorEnabled": false
-    }
+    },
+    "googleId": "101605621987973372563",
+    "facebookId": "2096772937468981"
   },
   {
     "_id": "67fe99159d329b4538c085a8",
@@ -57,7 +59,7 @@
     "firstName": "Tran",
     "lastName": "Kxc",
     "email": "kxctran@gmail.com",
-    "password": "$2a$10$e5yPjwTcOI2NTAYCiWdg1OBJvF4KU1u4I/INrUBPDfHmgiL3zWqRW",
+    "password": "$2a$10$a2pF8Wohr1XDWov3NE048uopJLsJeafnZvXg0BTZ.ueCt2cXt2T8q",
     "role": "user",
     "isSubscribed": false,
     "googleId": "101896080296188087222",

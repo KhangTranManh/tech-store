@@ -1,3 +1,5 @@
+// UPDATED server.js with correct path and mounting order
+
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
@@ -9,6 +11,8 @@ const passport = require('passport');
 const socialAuthRoutes = require('./routes/socialAuth');
 const User = require('./models/user'); // Database Connection
 const connectDB = require('./db/connection');
+// CORRECTED PATH: Use ./ not ../
+const { isAuthenticated, isAdmin, isTrackingAdmin } = require('./middleware/auth');
 
 // Auth service for passport configuration
 const { initializePassport } = require('./services/authService');
@@ -32,7 +36,7 @@ const paymentMethodRoutes = safeRequire('./routes/payment-methods');
 const wishlistRoutes = require('./routes/wishlist');
 const categoryRoutes = require('./routes/categories');
 const searchRoutes = require('./routes/search');
-
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -61,7 +65,6 @@ try {
   console.error('Error loading auth routes:', error.message, error.stack);
   authRoutes = null;
 }
-app.use('/api', searchRoutes);
 
 // Connect to Database
 connectDB().catch(err => {
@@ -69,7 +72,6 @@ connectDB().catch(err => {
   process.exit(1);
 });
 
-// IMPORTANT: Move middleware order - bodyParser should be before route mounting
 // Middleware for request body parsing
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -100,21 +102,10 @@ app.use(session({
 
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session());  // MOVED here to be right after initialize
 
-// Passport serialization/deserialization
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});
+// Mount API routes that require search
+app.use('/api', searchRoutes);
 
 // Mount the social auth routes
 app.use('/auth', socialAuthRoutes);
@@ -132,6 +123,11 @@ if (authRoutes) {
 } else {
   console.error('Auth routes not available to mount!');
 }
+
+// IMPORTANT: Mount admin routes BEFORE 404 handler but AFTER authentication
+// This is the correct position for admin routes
+console.log('Mounting admin routes');
+app.use(adminRoutes);
 
 // Add this before your 404 handler
 app.get('/product/:slug', (req, res) => {
@@ -225,14 +221,12 @@ staticPages.forEach(page => {
   }
 });
 
-
-
 // Add a test route to check if basic routing is working
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is running correctly' });
 });
 
-// 404 handler - NOW AFTER all route registrations
+// 404 handler - AFTER all route registrations
 app.use((req, res, next) => {
   console.log('404 Not Found:', req.method, req.path);
   res.status(404).json({

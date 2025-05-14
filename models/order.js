@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Schema for individual order items
+// Schema for individual order items - Define this FIRST
 const OrderItemSchema = new Schema({
     productId: {
         type: Schema.Types.ObjectId,
@@ -27,7 +27,7 @@ const OrderItemSchema = new Schema({
     image: String
 });
 
-// Main Order schema
+// Main Order schema - Modified to support Cash on Delivery
 const OrderSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -45,10 +45,19 @@ const OrderSchema = new Schema({
         ref: 'Address',
         required: true
     },
+    // Add paymentType field to support COD
+    paymentType: {
+        type: String,
+        enum: ['card', 'bank', 'cod'],
+        default: 'card',
+        required: true
+    },
+    // Make paymentMethod optional since it's not needed for COD
     paymentMethod: {
         type: Schema.Types.ObjectId,
         ref: 'PaymentMethod',
-        required: true
+        // Required will be enforced in validation middleware
+        required: false
     },
     paymentLast4: {
         type: String
@@ -89,6 +98,24 @@ const OrderSchema = new Schema({
         },
         note: String
     }],
+    tracking: [{
+        status: {
+            type: String,
+            required: true
+        },
+        location: String,
+        description: String,
+        timestamp: {
+            type: Date,
+            default: Date.now
+        },
+        carrier: String,
+        updatedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        lastUpdated: Date
+    }],
     trackingNumber: String,
     carrier: String,
     notes: String,
@@ -100,6 +127,15 @@ const OrderSchema = new Schema({
         type: Date,
         default: Date.now
     }
+});
+
+// Pre-validate middleware to enforce conditional requirement for paymentMethod
+OrderSchema.pre('validate', function(next) {
+    // If payment type is not COD, paymentMethod is required
+    if (this.paymentType !== 'cod' && !this.paymentMethod) {
+        this.invalidate('paymentMethod', 'Payment method is required for non-COD orders');
+    }
+    next();
 });
 
 // Pre-save middleware to generate order number and update timestamps
@@ -120,12 +156,62 @@ OrderSchema.pre('save', async function(next) {
 
 // Method to update order status
 OrderSchema.methods.updateStatus = function(status, note) {
+    // Update status
     this.status = status;
+    
+    // Add to status history
     this.statusHistory.push({
         status,
-        timestamp: Date.now(),
+        timestamp: new Date(),
         note: note || `Order status updated to ${status}`
     });
+    
+    // Synchronize with tracking
+    this.addTrackingUpdate({
+        status: this.getStatusDisplay(status),
+        description: note || `Order status updated to ${status}`,
+        timestamp: new Date()
+    });
+    
+    return this.save();
+};
+
+// Helper method to convert system status to display status
+OrderSchema.methods.getStatusDisplay = function(status) {
+    const statusMap = {
+        'pending': 'Order Placed',
+        'processing': 'Order Processed',
+        'shipped': 'Shipped', 
+        'in_transit': 'In Transit',
+        'out_for_delivery': 'Out for Delivery',
+        'delivered': 'Delivered',
+        'cancelled': 'Order Cancelled'
+    };
+    
+    return statusMap[status] || status;
+};
+
+// Method to add tracking update
+OrderSchema.methods.addTrackingUpdate = function(trackingData) {
+    // Initialize tracking array if it doesn't exist
+    if (!this.tracking) {
+        this.tracking = [];
+    }
+    
+    // Add new tracking entry
+    this.tracking.push({
+        status: trackingData.status,
+        location: trackingData.location,
+        description: trackingData.description,
+        timestamp: trackingData.timestamp || new Date(),
+        carrier: trackingData.carrier,
+        updatedBy: trackingData.updatedBy
+    });
+    
+    // Update current status if this is a status change
+    if (trackingData.status) {
+        this.status = trackingData.status.toLowerCase();
+    }
     
     return this.save();
 };

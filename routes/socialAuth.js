@@ -1,3 +1,5 @@
+// Modified socialAuth.js with role-based redirects
+
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -115,13 +117,19 @@ function googleAuthRoutes() {
     })
   );
 
-  // Google OAuth Callback
+  // Google OAuth Callback - MODIFIED to check admin role
   router.get('/google/callback', 
-    passport.authenticate('google', { 
-      successRedirect: '/', 
-      failureRedirect: '/login',
-      failureFlash: true // Requires connect-flash middleware
-    })
+    passport.authenticate('google', { failureRedirect: '/login', failureFlash: true }),
+    (req, res) => {
+      // Check if user is admin and redirect accordingly
+      if (req.user && req.user.role === 'admin') {
+        console.log(`Google OAuth: Admin user ${req.user.email} detected, redirecting to admin tracking`);
+        return res.redirect('/admintrack.html');
+      } else {
+        console.log(`Google OAuth: Regular user ${req.user.email} detected, redirecting to homepage`);
+        return res.redirect('/');
+      }
+    }
   );
 }
 
@@ -134,13 +142,19 @@ function facebookAuthRoutes() {
     })
   );
 
-  // Facebook OAuth Callback
+  // Facebook OAuth Callback - MODIFIED to check admin role
   router.get('/facebook/callback',
-    passport.authenticate('facebook', { 
-      successRedirect: '/', 
-      failureRedirect: '/login',
-      failureFlash: true // Requires connect-flash middleware
-    })
+    passport.authenticate('facebook', { failureRedirect: '/login', failureFlash: true }),
+    (req, res) => {
+      // Check if user is admin and redirect accordingly
+      if (req.user && req.user.role === 'admin') {
+        console.log(`Facebook OAuth: Admin user ${req.user.email} detected, redirecting to admin tracking`);
+        return res.redirect('/admintrack.html');
+      } else {
+        console.log(`Facebook OAuth: Regular user ${req.user.email} detected, redirecting to homepage`);
+        return res.redirect('/');
+      }
+    }
   );
 }
 

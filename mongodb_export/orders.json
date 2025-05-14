@@ -280,5 +280,115 @@
     "updatedAt": "2025-04-03T19:31:35.470Z",
     "orderNumber": "TS3cb0d642",
     "__v": 1
+  },
+  {
+    "_id": "6821ea6f8b6221aeb9da9830",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6821ea6f8b6221aeb9da9831"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 3,
+        "image": "images/placeholder.jpg",
+        "_id": "6821ea6f8b6221aeb9da9832"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 4399.96,
+    "tax": 351.9968,
+    "shippingCost": 0,
+    "total": 4751.9568,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "6821ea6f8b6221aeb9da9833",
+        "timestamp": "2025-05-12T12:32:47.641Z"
+      }
+    ],
+    "createdAt": "2025-05-12T12:32:47.641Z",
+    "updatedAt": "2025-05-12T12:32:47.645Z",
+    "orderNumber": "TSb9da9830",
+    "__v": 0
+  },
+  {
+    "_id": "68239995089d37910aa88223",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "68239995089d37910aa88224"
+      }
+    ],
+    "shippingAddress": "67e96134c49a99a69150c01d",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1599.98,
+    "tax": 127.9984,
+    "shippingCost": 0,
+    "total": 1727.9784,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "68239995089d37910aa88225",
+        "timestamp": "2025-05-13T19:12:21.985Z"
+      }
+    ],
+    "createdAt": "2025-05-13T19:12:21.985Z",
+    "updatedAt": "2025-05-13T19:12:21.989Z",
+    "orderNumber": "TS0aa88223",
+    "__v": 0
+  },
+  {
+    "_id": "6823999e089d37910aa88266",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "6823999e089d37910aa88267"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 1599.98,
+    "tax": 127.9984,
+    "shippingCost": 0,
+    "total": 1727.9784,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "6823999e089d37910aa88268",
+        "timestamp": "2025-05-13T19:12:30.913Z"
+      }
+    ],
+    "createdAt": "2025-05-13T19:12:30.913Z",
+    "updatedAt": "2025-05-13T19:12:30.916Z",
+    "orderNumber": "TS0aa88266",
+    "__v": 0
   }
 ]

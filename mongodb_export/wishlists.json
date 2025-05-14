@@ -2,20 +2,10 @@
   {
     "_id": "67fbf81466f263cb11363904",
     "user": "67e589ca0e5596bab131639d",
-    "items": [
-      {
-        "product": "681e3143bf1727e8bb3a3d7c",
-        "name": "TechStore Voyager",
-        "price": 2299.99,
-        "image": "frontendimages\u000boyage.jpg",
-        "quantity": 1,
-        "_id": "6820ca0eb26bf936eed4a8da",
-        "addedAt": "2025-05-11T16:02:22.304Z"
-      }
-    ],
+    "items": [],
     "createdAt": "2025-04-13T17:44:52.421Z",
-    "updatedAt": "2025-05-11T16:02:32.779Z",
-    "__v": 35,
+    "updatedAt": "2025-05-13T18:59:03.388Z",
+    "__v": 49,
     "maxItems": 50
   }
 ]

@@ -26,5 +26,94 @@
     "createdAt": "2025-05-10T06:21:09.929Z",
     "updatedAt": "2025-05-10T06:21:09.929Z",
     "__v": 0
+  },
+  {
+    "_id": "68219c380e95b95c094d946b",
+    "userId": "67e589ca0e5596bab131639d",
+    "isGuest": false,
+    "items": [],
+    "createdAt": "2025-05-12T06:59:04.403Z",
+    "updatedAt": "2025-05-13T19:12:30.918Z",
+    "__v": 35
+  },
+  {
+    "_id": "6821e392b97a4d9ad0052602",
+    "userId": "6821e38ab97a4d9ad00525f3",
+    "isGuest": true,
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "quantity": 1,
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "image": "images/placeholder.jpg",
+        "specs": "27\" Nano IPS, 3840x2160, 144Hz, 1ms, HDR600, DCI-P3 98%",
+        "_id": "6821ea238b6221aeb9da9770",
+        "dateAdded": "2025-05-12T12:31:31.155Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "quantity": 3,
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "image": "images/placeholder.jpg",
+        "specs": "16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design",
+        "_id": "6821ea238b6221aeb9da9772",
+        "dateAdded": "2025-05-12T12:31:31.158Z"
+      }
+    ],
+    "createdAt": "2025-05-12T12:03:30.012Z",
+    "updatedAt": "2025-05-12T12:31:31.159Z",
+    "__v": 5
+  },
+  {
+    "_id": "682350d3bde82bb17065bc14",
+    "userId": "68234eda66c7bf5321df822b",
+    "__v": 12,
+    "createdAt": "2025-05-13T14:01:55.379Z",
+    "isGuest": true,
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d71",
+        "quantity": 1,
+        "name": "Acer Predator Helios 300",
+        "price": 1299.99,
+        "image": "frontendimagesacer3000.jpg",
+        "specs": "Intel Core i7-11800H, 16GB RAM, 512GB SSD, RTX 3060, 15.6\" FHD 144Hz",
+        "_id": "6823564044a2c70afbee0628",
+        "dateAdded": "2025-05-13T14:25:04.950Z"
+      }
+    ],
+    "updatedAt": "2025-05-13T18:50:29.868Z"
+  },
+  {
+    "_id": "6823991ebde82bb17065bc15",
+    "userId": "681e241da52729f2a5eb8ceb",
+    "__v": 4,
+    "createdAt": "2025-05-13T19:10:22.571Z",
+    "isGuest": false,
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "quantity": 1,
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "image": "images/placeholder.jpg",
+        "specs": "16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design",
+        "_id": "68239969089d37910aa88132",
+        "dateAdded": "2025-05-13T19:11:37.219Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d72",
+        "quantity": 1,
+        "name": "Lenovo ThinkPad X1 Carbon",
+        "price": 1699.991899,
+        "image": "images/placeholder.jpg",
+        "specs": "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" WQHD, Windows 11 Pro",
+        "_id": "68239969089d37910aa88134",
+        "dateAdded": "2025-05-13T19:11:37.224Z"
+      }
+    ],
+    "updatedAt": "2025-05-13T19:11:37.225Z"
   }
 ]

@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
             addressList.innerHTML = `
                 <div class="no-address-msg">
                     <p>You don't have any saved addresses.</p>
-                    <button class="add-new-btn" id="add-address-btn">+ Add New Address</button>
                 </div>
             `;
             return;
@@ -187,8 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         });
     }
-    
-    // Display user's payment methods
     function displayPaymentMethods(paymentMethods) {
         const paymentMethodList = document.getElementById('payment-method-list');
         
@@ -197,29 +194,50 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear previous content
         paymentMethodList.innerHTML = '';
         
+        // Add Pay on Delivery option first
+        const payOnDeliveryCard = document.createElement('div');
+        payOnDeliveryCard.className = 'payment-method-card';
+        payOnDeliveryCard.dataset.id = 'pay_on_delivery';
+        payOnDeliveryCard.innerHTML = `
+            <div class="card-type">
+                <i style="color: #4caf50;">💵</i> Pay on Delivery
+            </div>
+            <div style="margin: 10px 0;">
+                <div>Pay with cash or card when your order arrives</div>
+                <div>No payment information required now</div>
+            </div>
+        `;
+        
+        // Add click event to select this payment method
+        payOnDeliveryCard.addEventListener('click', function() {
+            // Remove selected class from all payment methods
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to this payment method
+            this.classList.add('selected');
+            
+            // Update selected payment method ID with special value
+            selectedPaymentMethodId = 'pay_on_delivery';
+            
+            // Check if we can enable Place Order button
+            updateOrderButtonState();
+        });
+        
+        paymentMethodList.appendChild(payOnDeliveryCard);
+        
+        // If user has no saved payment methods, select Pay on Delivery by default
         if (!paymentMethods || paymentMethods.length === 0) {
-            // Display empty state
-            paymentMethodList.innerHTML = `
-                <div class="no-payment-msg">
-                    <p>You don't have any saved payment methods.</p>
-                    <button class="add-new-btn" id="add-payment-btn">+ Add New Payment Method</button>
-                </div>
-            `;
+            payOnDeliveryCard.classList.add('selected');
+            selectedPaymentMethodId = 'pay_on_delivery';
+            updateOrderButtonState();
             return;
         }
         
+        // Rest of your existing code for displaying credit cards
         // Filter just credit cards for now (we can add bank accounts later)
         const creditCards = paymentMethods.filter(method => method.type === 'card');
-        
-        if (creditCards.length === 0) {
-            paymentMethodList.innerHTML = `
-                <div class="no-payment-msg">
-                    <p>You don't have any saved credit cards.</p>
-                    <button class="add-new-btn" id="add-payment-btn">+ Add New Payment Method</button>
-                </div>
-            `;
-            return;
-        }
         
         // Display each credit card
         creditCards.forEach(card => {
@@ -644,8 +662,6 @@ function loadCartData() {
             showStatusMessage('An error occurred while placing your order. Please try again.', 'error');
         });
     }
-    
-    // Modify the showOrderSuccessModal function
 function showOrderSuccessModal(order) {
     const orderSuccessModal = document.getElementById('order-success-modal');
     const orderNumber = document.getElementById('order-number');
@@ -669,6 +685,12 @@ function showOrderSuccessModal(order) {
             day: 'numeric'
         });
         
+        // Determine payment method text
+        let paymentMethodText = 'Credit Card ending in ' + (order.paymentLast4 || '****');
+        if (order.paymentMethod === 'cod') {
+            paymentMethodText = 'Pay on Delivery (Cash or Card)';
+        }
+        
         // Set order details
         orderDetails.innerHTML = `
             <div class="order-summary-row">
@@ -677,7 +699,7 @@ function showOrderSuccessModal(order) {
             </div>
             <div class="order-summary-row">
                 <span>Payment Method:</span>
-                <span>Credit Card ending in ${order.paymentLast4 || '****'}</span>
+                <span>${paymentMethodText}</span>
             </div>
             <div class="order-summary-row">
                 <span>Subtotal:</span>
@@ -696,15 +718,6 @@ function showOrderSuccessModal(order) {
                 <span>$${total.toFixed(2)}</span>
             </div>
         `;
-        
-        // Setup view orders button to navigate to specific order
-        const viewOrdersBtn = document.getElementById('view-orders-btn');
-        if (viewOrdersBtn) {
-            viewOrdersBtn.addEventListener('click', function() {
-                // Navigate to the specific order details page
-                window.location.href = `/order-details.html?id=${order._id}`;
-            });
-        }
         
         // Show modal
         orderSuccessModal.classList.add('active');
@@ -943,80 +956,92 @@ function showStatusMessage(message, type = 'success') {
             }
         }
     }
-    function placeOrder() {
-        // Validate selections
-        if (!selectedAddressId) {
-            showStatusMessage('Please select a shipping address', 'error');
-            return;
-        }
-        
-        if (!selectedPaymentMethodId) {
-            showStatusMessage('Please select a payment method', 'error');
-            return;
-        }
-        
-        if (!cartData || !cartData.items || cartData.items.length === 0) {
-            showStatusMessage('Your cart is empty', 'error');
-            return;
-        }
-        
-        // Show processing message
-        showStatusMessage('Processing your order...', 'info');
-        
-        // Prepare order data directly from cartData
-        const orderData = {
-            items: cartData.items.map(item => ({
-                productId: item.productId,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                image: item.image
-            })),
-            addressId: selectedAddressId,
-            paymentMethodId: selectedPaymentMethodId,
-            subtotal: calculateSubtotal(cartData.items),
-            shipping: calculateShipping(calculateSubtotal(cartData.items)),
-            tax: calculateTax(calculateSubtotal(cartData.items))
-        };
-        
-        // Place order directly
-        fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData),
-            credentials: 'include'
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message || 'Failed to place order');
-                });
-            }
-            return response.json();
-        })
-        
-        .then(data => {
-            if (data.success) {
-                // Show success message
-                showStatusMessage('Order placed successfully!', 'success');
-                
-                // Show order success modal instead of redirecting
-                showOrderSuccessModal(data.order);
-                
-                // Clear cart
-                clearCart();
-            } else {
-                // Show error message
-                showStatusMessage('Error: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error placing order:', error);
-            showStatusMessage('An error occurred while placing your order: ' + error.message, 'error');
-        });
+    // In checkout.js - Update the placeOrder function
+
+function placeOrder() {
+    // Validate selections
+    if (!selectedAddressId) {
+        showStatusMessage('Please select a shipping address', 'error');
+        return;
     }
+    
+    if (!selectedPaymentMethodId) {
+        showStatusMessage('Please select a payment method', 'error');
+        return;
+    }
+    
+    if (!cartData || !cartData.items || cartData.items.length === 0) {
+        showStatusMessage('Your cart is empty', 'error');
+        return;
+    }
+    
+    // Show processing message
+    showStatusMessage('Processing your order...', 'info');
+    
+    // Prepare order data
+    const orderData = {
+        items: cartData.items.map(item => ({
+            productId: item.productId,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image
+        })),
+        addressId: selectedAddressId,
+        subtotal: calculateSubtotal(cartData.items),
+        shipping: calculateShipping(calculateSubtotal(cartData.items)),
+        tax: calculateTax(calculateSubtotal(cartData.items))
+    };
+    
+    // Handle payment method differently based on selection
+    if (selectedPaymentMethodId === 'pay_on_delivery') {
+        // For Cash on Delivery, set paymentType but don't include paymentMethodId
+        orderData.paymentType = 'cod';
+        // Add a note about payment method
+        orderData.notes = 'Cash on Delivery order';
+    } else {
+        // For regular payment methods, include both paymentType and paymentMethodId
+        orderData.paymentType = 'card';
+        orderData.paymentMethodId = selectedPaymentMethodId;
+    }
+    
+    // Place order
+    fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData),
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Failed to place order');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            showStatusMessage('Order placed successfully!', 'success');
+            
+            // Show order success modal
+            showOrderSuccessModal(data.order);
+            
+            // Clear cart
+            clearCart();
+        } else {
+            // Show error message
+            showStatusMessage('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error placing order:', error);
+        showStatusMessage('An error occurred while placing your order: ' + error.message, 'error');
+    });
+}
     
     // Helper functions to calculate order totals
     function calculateSubtotal(items) {
