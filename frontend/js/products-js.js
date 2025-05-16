@@ -830,7 +830,7 @@ function updateWishlistCount() {
 }
 function loadFeaturedProducts() {
   try {
-    const container = document.querySelector('.featured-products .product-grid');
+    const container = document.querySelector('.featured-products .product-grid' );
     if (!container) return;
     
     // Show loading state

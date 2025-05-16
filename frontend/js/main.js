@@ -1555,18 +1555,17 @@ function initializeLiveSearch() {
     searchResultsContainer.style.display = 'block';
   }
   
-  // Function to format price
-  function formatPrice(price) {
-    // If price is 0 or invalid, show as "Free"
-    if (!price) return 'Free';
-    
-    // Format with thousand separators and 2 decimal places
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-      maximumFractionDigits: 0
-    }).format(price);
-  }
+  // Function to format price - consistent with product listings
+function formatPrice(price) {
+  // If price is 0 or invalid, show as "Free"
+  if (!price) return 'Free';
+  
+  // Make sure price is a number
+  const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+  
+  // Format with $ sign and 2 decimal places to match product listing format
+  return '$' + numericPrice.toFixed(2);
+}
   
   // Add event listener to input for searching as you type
   searchInput.addEventListener('input', function() {

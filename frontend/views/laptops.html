@@ -8,6 +8,10 @@
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/cart-js.js"></script>
+    <script src="/js/products-js.js"></script>
+    <script src="/js/cart.js"></script>
+    <script src="/js/product-details.js"></script>
+
 
     <style>
         .category-container {
@@ -814,60 +818,72 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
     <script>
-        // View switching functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButtons = document.querySelectorAll('.view-btn');
-            const productsGrid = document.querySelector('.products-grid');
-            const productsList = document.querySelector('.products-list');
-            
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    viewButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Get the view type (grid or list)
-                    const viewType = this.getAttribute('data-view');
-                    
-                    // Toggle views
-                    if (viewType === 'grid') {
-                        productsGrid.classList.add('active-view');
-                        productsList.classList.remove('active-view');
-                    } else {
-                        productsGrid.classList.remove('active-view');
-                        productsList.classList.add('active-view');
-                    }
-                });
-            });
-            
-            // Price range functionality
-            const priceRange = document.getElementById('price-range');
-            const maxPriceInput = document.querySelector('.price-input[max="3000"]');
-            
-            priceRange.addEventListener('input', function() {
-                maxPriceInput.value = this.value;
-            });
-            
-            maxPriceInput.addEventListener('input', function() {
-                priceRange.value = this.value;
-            });
-            
-            // Add to cart functionality
-            const addToCartButtons = document.querySelectorAll('.add-to-cart');
-            
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    alert('Product added to cart!');
-                    // In a real app, this would add the product to the cart
-                });
-            });
+        // Wait for the page to fully load
+        window.addEventListener('load', function() {
+          // Wait a short moment to ensure all products are rendered
+          setTimeout(function() {
+            makeAllProductCardsClickable();
+          }, 500);
         });
-    </script>
-    <script src="/js/products.js"></script>
-    <script src="/js/cart.js"></script>
+        
+        function makeAllProductCardsClickable() {
+          console.log('Making all product cards clickable...');
+          
+          // Get all product cards on the page
+          const productCards = document.querySelectorAll('.product-card');
+          console.log('Found', productCards.length, 'product cards');
+          
+          productCards.forEach((card, index) => {
+            // Skip if already made clickable
+            if (card.hasAttribute('data-clickable')) return;
+            
+            // Add clickable attribute to prevent duplicate handlers
+            card.setAttribute('data-clickable', 'true');
+            
+            // Make the whole card look clickable
+            card.style.cursor = 'pointer';
+            
+            // Get product ID and slug
+            const productId = card.getAttribute('data-product-id') || 'laptop-' + (index + 301);
+            
+            // Generate slug from product title if not already set
+            let productSlug = card.getAttribute('data-product-slug');
+            if (!productSlug) {
+              const titleElement = card.querySelector('.product-title');
+              if (titleElement) {
+                productSlug = titleElement.textContent.trim()
+                  .toLowerCase()
+                  .replace(/[^\w\s-]/g, '')
+                  .replace(/\s+/g, '-')
+                  .replace(/-+/g, '-');
+                
+                // Set the slug on the card for future use
+                card.setAttribute('data-product-slug', productSlug);
+              }
+            }
+            
+            // Log to debug
+            console.log('Card', index, 'ID:', productId, 'Slug:', productSlug);
+            
+            // Add click event handler
+            card.addEventListener('click', function(e) {
+              // Prevent navigation when clicking on buttons or links
+              if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                  e.target.closest('button') || e.target.closest('a')) {
+                return;
+              }
+              
+              console.log('Product card clicked:', productId, productSlug);
+              
+              // Navigate to product detail page
+              window.location.href = `/product-detail.html?id=${productId}`;
+            });
+          });
+          
+          console.log('Product cards initialized for clicking');
+        }
+        </script>
+
 </body>
 </html>

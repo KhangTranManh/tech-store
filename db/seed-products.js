@@ -1,512 +1,1778 @@
-// seedProducts.js - Create products for each category/subcategory
-const mongoose = require('mongoose');
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-const Category = require('../models/category');
-const Product = require('../models/product');
+// product-seed.js
+require('dotenv').config();
+const { MongoClient, ObjectId } = require('mongodb');
 
-// Set your MongoDB connection string here
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/techstore';
 
-// Connect to MongoDB
-console.log('Attempting to connect to MongoDB...');
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('MongoDB connected for seeding products'))
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-  });
+// Product details data with detailed descriptions added for all products
+const productDetailsData = [
+  // Already detailed products - no changes needed
+  {
+    "_id": "681e3143bf1727e8bb3a3d71",
+    "name": "Acer Predator Helios 300",
+    // Existing data kept the same
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d76",
+    "name": "NVIDIA GeForce RTX 4080",
+    // Existing data kept the same
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d81",
+    "name": "LG 27GN950-B UltraGear",
+    // Existing data kept the same
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d7c",
+    "name": "TechStore Voyager",
+    // Existing data kept the same
+  },
+  
+  // Products needing detailed descriptions
+  {
+    "_id": "681e3143bf1727e8bb3a3d72",
+    "name": "Lenovo ThinkPad X1 Carbon",
+    "slug": "lenovo-thinkpad-x1-carbon",
+    "description": "The Lenovo ThinkPad X1 Carbon is a premium business ultrabook designed for professionals. It features a 14\" WQHD display, Intel Core i7 processor, 16GB RAM, and military-grade durability.",
+    "shortDescription": "Premium business ultrabook with long battery life",
+    "price": 1699.99,
+    "compareAtPrice": 1899.99,
+    "discount": 10,
+    "stock": 12,
+    "features": [
+      "Fingerprint reader",
+      "ThinkShutter camera cover",
+      "Military-grade durability",
+      "Rapid charge technology"
+    ],
+    "specs": "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" WQHD, Windows 11 Pro",
+    "rating": 4.8,
+    "reviewCount": 92,
+    "additionalImages": [
+      "images/thinkpad-side.jpg",
+      "images/thinkpad-open.jpg",
+      "images/thinkpad-keyboard.jpg"
+    ],
+    "brand": "Lenovo",
+    "modelNumber": "20U9005GUS",
+    "sku": "LNV-X1C-G9",
+    "thumbnailUrl": "images/thinkpad.jpg",
+    "detailedDescription": "\n        <h4>Premium Business Performance</h4>\n        <p>The ThinkPad X1 Carbon Gen 9 delivers exceptional business performance with the 11th Gen Intel Core i7-1165G7 processor and Intel Iris Xe graphics. Experience faster application loading, smoother multitasking, and increased productivity for your professional workflow.</p>\n        \n        <h4>Ultra-Portable Design</h4>\n        <p>Weighing just 2.49 lbs (1.13 kg) and measuring only 14.9mm at its thickest point, the X1 Carbon is designed for professionals on the move. The carbon fiber reinforced chassis provides durability while keeping the laptop lightweight and portable.</p>\n        \n        <h4>Stunning Visual Experience</h4>\n        <p>The 14\" WQHD (2560 x 1440) IPS display offers exceptional clarity, vivid colors, and wide viewing angles. With low blue light technology and anti-glare coating, you can work comfortably for extended periods without eye strain.</p>\n        \n        <h4>Military-Grade Durability</h4>\n        <p>Built to withstand extreme conditions, the ThinkPad X1 Carbon passes 12 military-grade requirements (MIL-STD-810H) and over 200 quality checks. From the Arctic wilderness to desert dust storms, from zero-gravity to spills and drops, this laptop is designed to handle it all.</p>\n        \n        <h4>All-Day Battery Life</h4>\n        <p>With up to 16 hours of battery life and Rapid Charge technology that provides 80% charge in just 60 minutes, the X1 Carbon keeps you productive throughout the workday and beyond. The intelligent power management system adapts to your usage patterns for optimal battery performance.</p>\n        \n        <h4>Advanced Security Features</h4>\n        <p>Protect your sensitive business data with features like the match-on-chip fingerprint reader, ThinkShutter camera cover, dTPM 2.0 chip, and optional IR camera for Windows Hello facial recognition. The X1 Carbon is designed with security at its core.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "Processor",
+        "details": [
+          "11th Generation Intel Core i7-1165G7",
+          "4 cores, 8 threads",
+          "2.8GHz base frequency, up to 4.7GHz with Turbo Boost",
+          "12MB Intel Smart Cache"
+        ]
+      },
+      "graphics": {
+        "title": "Graphics",
+        "details": [
+          "Intel Iris Xe Graphics",
+          "Integrated with shared memory"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "16GB LPDDR4X-4266MHz (Soldered)",
+          "Dual-channel memory"
+        ]
+      },
+      "storage": {
+        "title": "Storage",
+        "details": [
+          "512GB PCIe NVMe M.2 SSD",
+          "Read speeds up to 3500MB/s"
+        ]
+      },
+      "display": {
+        "title": "Display",
+        "details": [
+          "14\" WQHD (2560 x 1440) IPS",
+          "Anti-glare, 400 nits brightness",
+          "100% sRGB color gamut",
+          "Low blue light technology",
+          "Dolby Vision HDR"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "Intel Wi-Fi 6 AX201 (802.11ax)",
+          "Bluetooth 5.2",
+          "2x Thunderbolt 4 (USB-C)",
+          "2x USB 3.2 Gen 1 Type-A",
+          "HDMI 2.0",
+          "Headphone/microphone combo jack"
+        ]
+      },
+      "battery": {
+        "title": "Battery",
+        "details": [
+          "57Wh battery",
+          "Up to 16 hours battery life",
+          "Rapid Charge technology (80% in 60 minutes)"
+        ]
+      },
+      "operatingSystem": {
+        "title": "Operating System",
+        "details": [
+          "Windows 11 Pro"
+        ]
+      },
+      "dimensions": {
+        "title": "Dimensions",
+        "details": [
+          "323.5 x 217.5 x 14.9 mm (12.74 x 8.56 x 0.59 inches)",
+          "Weight: 1.13 kg (2.49 lbs)"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Is the RAM upgradable?",
+        "answer": "No, the RAM is soldered to the motherboard and cannot be upgraded after purchase. It's recommended to choose the memory configuration you need at the time of purchase."
+      },
+      {
+        "question": "Can I upgrade the SSD?",
+        "answer": "Yes, the M.2 SSD can be upgraded by removing the bottom cover. The laptop supports M.2 2280 PCIe NVMe SSDs."
+      },
+      {
+        "question": "What is the battery life like for everyday tasks?",
+        "answer": "For typical office tasks like document editing, web browsing, and video conferencing, the battery lasts approximately 13-16 hours depending on display brightness and workload."
+      },
+      {
+        "question": "Does this laptop have facial recognition?",
+        "answer": "This configuration includes a fingerprint reader but not the IR camera for facial recognition. Models with the IR camera option do support Windows Hello facial recognition."
+      }
+    ]
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d73",
+    "name": "Dell XPS 13",
+    "slug": "dell-xps-13",
+    "description": "The Dell XPS 13 features a stunning 13.4\" InfinityEdge display with virtually no bezels, 11th Gen Intel processors, and a compact design that's both powerful and portable.",
+    "shortDescription": "Premium ultrabook with InfinityEdge display",
+    "price": 1299.99,
+    "compareAtPrice": 1399.99,
+    "discount": 7,
+    "stock": 14,
+    "features": [
+      "InfinityEdge display",
+      "CNC machined aluminum chassis",
+      "Dolby Vision support",
+      "Thunderbolt 4 connectivity"
+    ],
+    "specs": "Intel Core i7-1185G7, 16GB RAM, 512GB SSD, 13.4\" UHD+ Touch Display",
+    "rating": 4.9,
+    "reviewCount": 156,
+    "additionalImages": [
+      "images/xps13-angle.jpg",
+      "images/xps13-open.jpg",
+      "images/xps13-side.jpg"
+    ],
+    "brand": "Dell",
+    "modelNumber": "XPS 9310",
+    "sku": "DELL-XPS13-9310",
+    "thumbnailUrl": "images/xps13.jpg",
+    "detailedDescription": "\n        <h4>Stunning Borderless Display</h4>\n        <p>The Dell XPS 13 features the revolutionary InfinityEdge display with a 91.5% screen-to-body ratio. The virtually borderless 13.4-inch UHD+ (3840x2400) touch display delivers stunning visuals with 500 nits of brightness and 100% sRGB color coverage, bringing your content to life with exceptional clarity and vibrant colors.</p>\n        \n        <h4>Premium Construction</h4>\n        <p>Crafted from a single block of aluminum, the XPS 13 features a CNC-machined chassis for maximum durability while maintaining a lightweight profile. The arctic white interior uses a stain-resistant coating and woven glass fiber palm rest that stays cool to the touch and maintains its pristine appearance over time.</p>\n        \n        <h4>Powerful Performance</h4>\n        <p>Equipped with the 11th Gen Intel Core i7-1185G7 processor and Intel Iris Xe graphics, the XPS 13 delivers impressive performance for productivity, content creation, and entertainment. The efficient thermal design keeps the system cool even during intensive tasks, ensuring consistent performance without throttling.</p>\n        \n        <h4>All-Day Productivity</h4>\n        <p>With up to 12 hours of battery life on the UHD+ display, the XPS 13 keeps you productive throughout the workday. The integrated Dell Power Manager lets you customize performance and thermal settings to match your usage needs, balancing performance and battery life for your specific tasks.</p>\n        \n        <h4>Advanced Connectivity</h4>\n        <p>Featuring Thunderbolt 4 (USB Type-C) ports with power delivery and DisplayPort capabilities, the XPS 13 provides versatile connectivity options for modern peripherals. The integrated Killer Wi-Fi 6 (AX1650) delivers fast and reliable wireless connectivity, while Bluetooth 5.1 ensures seamless connection with your accessories.</p>\n        \n        <h4>Immersive Audio Experience</h4>\n        <p>The quad-speaker design delivers immersive sound with enhanced bass and clearer vocals. Supporting Dolby Atmos and Waves MaxxAudio Pro, the XPS 13 provides a premium audio experience whether you're watching movies, enjoying music, or participating in video conferences.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "Processor",
+        "details": [
+          "11th Generation Intel Core i7-1185G7",
+          "4 cores, 8 threads",
+          "3.0GHz base frequency, up to 4.8GHz with Turbo Boost",
+          "12MB Intel Smart Cache"
+        ]
+      },
+      "graphics": {
+        "title": "Graphics",
+        "details": [
+          "Intel Iris Xe Graphics",
+          "Shared system memory"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "16GB LPDDR4x 4267MHz (Soldered)",
+          "Dual-channel memory"
+        ]
+      },
+      "storage": {
+        "title": "Storage",
+        "details": [
+          "512GB M.2 PCIe NVMe SSD",
+          "User-upgradable"
+        ]
+      },
+      "display": {
+        "title": "Display",
+        "details": [
+          "13.4\" UHD+ (3840 x 2400) Touch Display",
+          "16:10 aspect ratio",
+          "500-nit brightness",
+          "100% sRGB, 90% DCI-P3",
+          "Anti-reflective coating",
+          "Dolby Vision support"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "Killer Wi-Fi 6 AX1650 (802.11ax)",
+          "Bluetooth 5.1",
+          "2x Thunderbolt 4 (USB Type-C) with power delivery & DisplayPort",
+          "1x 3.5mm headphone/microphone combo jack",
+          "MicroSD card reader"
+        ]
+      },
+      "battery": {
+        "title": "Battery",
+        "details": [
+          "52WHr battery",
+          "Up to 12 hours on UHD+ display",
+          "ExpressCharge capable (80% in one hour)"
+        ]
+      },
+      "operatingSystem": {
+        "title": "Operating System",
+        "details": [
+          "Windows 11 Home"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Can I upgrade the RAM myself?",
+        "answer": "No, the RAM is soldered to the motherboard and cannot be upgraded after purchase. It's important to select the amount of RAM you need when configuring your system."
+      },
+      {
+        "question": "Is the SSD upgradable?",
+        "answer": "Yes, the M.2 PCIe NVMe SSD can be upgraded. The laptop uses a standard M.2 2280 form factor SSD."
+      },
+      {
+        "question": "Does this laptop have a touchscreen?",
+        "answer": "Yes, this configuration includes a UHD+ (3840x2400) touch display with Dolby Vision support."
+      },
+      {
+        "question": "Can I connect multiple external monitors?",
+        "answer": "Yes, you can connect multiple external displays using the Thunderbolt 4 ports. Each port supports DisplayPort and can drive up to two 4K displays or one 8K display."
+      }
+    ]
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d74",
+    "name": "HP Spectre x360",
+    "slug": "hp-spectre-x360",
+    "description": "The HP Spectre x360 is a versatile convertible laptop with a stunning OLED display, gem-cut design, and powerful performance for creators and professionals.",
+    "shortDescription": "Premium 2-in-1 convertible with OLED display",
+    "price": 1399.99,
+    "compareAtPrice": 1599.99,
+    "discount": 12,
+    "stock": 9,
+    "features": [
+      "360° hinge design",
+      "HP MPP 2.0 Tilt Pen support",
+      "Bang & Olufsen audio",
+      "Webcam kill switch"
+    ],
+    "specs": "Intel Core i7-1165G7, 16GB RAM, 1TB SSD, 13.5\" 3K2K OLED Touch Display",
+    "rating": 4.7,
+    "reviewCount": 108,
+    "additionalImages": [
+      "images/spectre-tablet.jpg",
+      "images/spectre-tent.jpg",
+      "images/spectre-side.jpg"
+    ],
+    "brand": "HP",
+    "modelNumber": "14-ea0000",
+    "sku": "HP-SPECTREX360-14",
+    "thumbnailUrl": "images/spectre.jpg",
+    "detailedDescription": "\n        <h4>Distinctive Gem-Cut Design</h4>\n        <p>The HP Spectre x360 features a bold gem-cut design with precisely cut angles and faceted edges. Crafted from a single block of aluminum, this convertible laptop combines premium aesthetics with exceptional durability, creating a device that stands out from the crowd while maintaining professional elegance.</p>\n        \n        <h4>Breathtaking OLED Display</h4>\n        <p>Experience content like never before on the stunning 13.5\" 3K2K (3000x2000) OLED touch display. With true blacks, 100% DCI-P3 color gamut, and VESA DisplayHDR 400 certification, the Spectre x360 delivers incredible contrast, vibrant colors, and exceptional detail. The 3:2 aspect ratio provides more vertical screen space for documents and web browsing.</p>\n        \n        <h4>Versatile 4-in-1 Design</h4>\n        <p>The 360-degree hinge allows you to use the Spectre x360 in four different modes: laptop mode for work, tent mode for presentations, tablet mode for drawing and note-taking, and stand mode for entertainment. The sturdy hinge ensures stability in any position while maintaining smooth transitions between modes.</p>\n        \n        <h4>Creative Freedom</h4>\n        <p>Unleash your creativity with the included HP MPP 2.0 Tilt Pen featuring 4,096 levels of pressure sensitivity. Take notes, sketch, or annotate with precision and natural feel. Palm rejection technology lets you rest your hand on the screen while drawing, creating a natural pen-to-paper experience.</p>\n        \n        <h4>Powerhouse Performance</h4>\n        <p>Equipped with the 11th Gen Intel Core i7-1165G7 processor and Intel Iris Xe graphics, the Spectre x360 delivers impressive performance for demanding creative tasks. The thermal design maintains optimal temperatures even during intensive workloads, ensuring consistent performance without sacrificing the slim profile.</p>\n        \n        <h4>Enhanced Privacy Features</h4>\n        <p>Take control of your privacy with dedicated features like the webcam kill switch that electrically disconnects the camera, the privacy camera shutter, and the dedicated mute button. The HP Sure View Reflect integrated privacy screen (activated with a simple keystroke) prevents visual hacking when working in public spaces.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "Processor",
+        "details": [
+          "11th Generation Intel Core i7-1165G7",
+          "4 cores, 8 threads",
+          "2.8GHz base frequency, up to 4.7GHz with Turbo Boost",
+          "12MB Intel Smart Cache"
+        ]
+      },
+      "graphics": {
+        "title": "Graphics",
+        "details": [
+          "Intel Iris Xe Graphics",
+          "Integrated with shared memory"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "16GB LPDDR4x-4266MHz (Soldered)",
+          "Dual-channel memory"
+        ]
+      },
+      "storage": {
+        "title": "Storage",
+        "details": [
+          "1TB PCIe NVMe M.2 SSD",
+          "Read speeds up to 3500MB/s"
+        ]
+      },
+      "display": {
+        "title": "Display",
+        "details": [
+          "13.5\" 3K2K (3000 x 2000) OLED Touch Display",
+          "3:2 aspect ratio",
+          "400 nits brightness",
+          "100% DCI-P3 color gamut",
+          "VESA DisplayHDR 400",
+          "Gorilla Glass NBT"
+        ]
+      },
+      "audio": {
+        "title": "Audio",
+        "details": [
+          "Bang & Olufsen quad speakers",
+          "HP Audio Boost",
+          "Dual-array microphones with AI noise reduction"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "Intel Wi-Fi 6 AX201 (802.11ax)",
+          "Bluetooth 5.0",
+          "2x Thunderbolt 4 with USB4 Type-C",
+          "1x USB-A 3.2 Gen 1",
+          "1x 3.5mm headphone/microphone combo",
+          "MicroSD card reader"
+        ]
+      },
+      "battery": {
+        "title": "Battery",
+        "details": [
+          "66Wh lithium-ion polymer battery",
+          "Up to 15 hours of mixed usage",
+          "Fast Charge: 50% in 45 minutes"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Does this laptop come with a stylus?",
+        "answer": "Yes, the HP Spectre x360 includes the HP MPP 2.0 Tilt Pen with 4,096 levels of pressure sensitivity, tilt support, and USB-C rechargeable battery."
+      },
+      {
+        "question": "What is the battery life when watching videos?",
+        "answer": "When streaming videos, the battery typically lasts around 10-12 hours. This may vary depending on display brightness and other settings."
+      },
+      {
+        "question": "Can I upgrade the SSD later?",
+        "answer": "Yes, the M.2 SSD can be upgraded by removing the bottom cover. The laptop uses a standard M.2 2280 PCIe NVMe SSD."
+      },
+      {
+        "question": "Does the laptop get hot during intensive tasks?",
+        "answer": "The laptop features HP's advanced thermal design with dual fans and heat pipes to manage temperature. During intensive tasks, it may get warm but rarely uncomfortable, and the fans remain relatively quiet."
+      }
+    ]
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d75",
+    "name": "Google Pixelbook Go",
+    "slug": "google-pixelbook-go",
+    "description": "The Google Pixelbook Go is a premium Chromebook featuring a 13.3\" touchscreen display, up to 12 hours of battery life, and a lightweight, portable design perfect for on-the-go productivity.",
+    "shortDescription": "Premium Chromebook with 12-hour battery life",
+    "price": 649.99,
+    "compareAtPrice": 699.99,
+    "discount": 7,
+    "stock": 15,
+    "features": [
+      "Hush Keys for quiet typing",
+      "Titan C security chip",
+      "Quick Charge technology",
+      "HD webcam"
+    ],
+    "specs": "Intel Core i5, 8GB RAM, 128GB SSD, 13.3\" Full HD Touchscreen",
+    "rating": 4.6,
+    "reviewCount": 87,
+    "additionalImages": [
+      "images/pixelbook-side.jpg",
+      "images/pixelbook-bottom.jpg",
+      "images/pixelbook-typing.jpg"
+    ],
+    "brand": "Google",
+    "modelNumber": "GA00526-US",
+    "sku": "GOOGLE-PIXELBOOK-GO",
+    "thumbnailUrl": "images/pixelbook.jpg",
+    "detailedDescription": "\n        <h4>Lightweight Portability</h4>\n        <p>The Google Pixelbook Go weighs just 2.3 pounds (1.04 kg) and features a slim 13mm profile, making it the perfect companion for professionals and students on the go. The unique rippled bottom provides a secure grip while carrying, ensuring your device stays firmly in your hands during transport.</p>\n        \n        <h4>All-Day Battery Life</h4>\n        <p>With up to 12 hours of battery life on a single charge, the Pixelbook Go keeps you productive throughout your entire workday. When you do need to recharge, Quick Charge technology provides 2 hours of use from just 20 minutes of charging, minimizing downtime and keeping you connected.</p>\n        \n        <h4>Premium Typing Experience</h4>\n        <p>The backlit keyboard features Hush Keys technology, designed to deliver a comfortable typing experience with ultra-quiet keys. The perfect key travel distance, tactile feel, and minimal sound make this one of the best laptop keyboards available, allowing you to work comfortably in quiet environments like libraries or during night sessions.</p>\n        \n        <h4>Impressive Audio and Video</h4>\n        <p>Dual front-firing speakers deliver clear, powerful sound for media consumption and video conferencing. The 1080p webcam with 60fps capability ensures smooth, high-quality video during virtual meetings, while the dual microphones with noise cancellation keep your voice crystal clear even in noisy environments.</p>\n        \n        <h4>Chrome OS Efficiency</h4>\n        <p>Chrome OS provides a streamlined, secure computing experience that starts up in seconds and stays fast over time. With automatic updates and built-in virus protection, your Pixelbook Go stays secure without requiring manual management. The operating system integrates seamlessly with Google Workspace applications for maximum productivity.</p>\n        \n        <h4>Android App Compatibility</h4>\n        <p>Access your favorite Android applications directly on your Pixelbook Go. The Google Play Store provides access to millions of apps optimized for Chrome OS, from productivity tools to entertainment options, expanding the capabilities of your Chromebook beyond the browser.</p>\n      ",
+    "detailedSpecs": {
+      "processor": {
+        "title": "Processor",
+        "details": [
+          "8th Generation Intel Core i5-8200Y",
+          "2 cores, 4 threads",
+          "1.3GHz base frequency, up to 3.9GHz with Turbo Boost",
+          "4MB cache"
+        ]
+      },
+      "graphics": {
+        "title": "Graphics",
+        "details": [
+          "Intel UHD Graphics 615",
+          "Integrated with shared memory"
+        ]
+      },
+      "memory": {
+        "title": "Memory",
+        "details": [
+          "8GB LPDDR3 RAM",
+          "Soldered, non-upgradable"
+        ]
+      },
+      "storage": {
+        "title": "Storage",
+        "details": [
+          "128GB eMMC storage",
+          "Non-upgradable"
+        ]
+      },
+      "display": {
+        "title": "Display",
+        "details": [
+          "13.3\" Full HD (1920 x 1080) touchscreen",
+          "16:9 aspect ratio",
+          "72% NTSC color gamut",
+          "Corning Gorilla Glass"
+        ]
+      },
+      "audio": {
+        "title": "Audio",
+        "details": [
+          "Dual front-firing speakers",
+          "Dual microphones with noise cancellation"
+        ]
+      },
+      "connectivity": {
+        "title": "Connectivity",
+        "details": [
+          "Wi-Fi: 802.11a/b/g/n/ac, 2x2 MIMO, dual-band (2.4 GHz, 5.0 GHz)",
+          "Bluetooth 4.2",
+          "2x USB Type-C ports (charging, data, display)",
+          "3.5mm headphone jack"
+        ]
+      },
+      "battery": {
+        "title": "Battery",
+        "details": [
+          "47Wh battery",
+          "Up to 12 hours of usage",
+          "Quick Charge: 2 hours use from 20 minutes charge",
+          "45W USB-C power adapter"
+        ]
+      }
+    },
+    "faqs": [
+      {
+        "question": "Can I use Microsoft Office on this Chromebook?",
+        "answer": "Yes, you can use Microsoft Office on the Pixelbook Go in two ways: through the web-based Office Online versions or by installing the Android versions of Office apps from the Google Play Store."
+      },
+      {
+        "question": "Does the Pixelbook Go work offline?",
+        "answer": "Yes, many Chrome OS and Android applications work offline, including Google Docs, Sheets, and Slides. You can edit documents offline and they will automatically sync when you reconnect to the internet."
+      },
+      {
+        "question": "Can I connect external monitors?",
+        "answer": "Yes, you can connect external displays using the USB-C ports. The Pixelbook Go supports up to one 4K external display or two 1080p displays simultaneously."
+      },
+      {
+        "question": "Is the touchscreen compatible with a stylus?",
+        "answer": "The Pixelbook Go's touchscreen supports generic capacitive styluses, but it does not support the pressure-sensitive Pixelbook Pen that works with the regular Pixelbook."
+      }
+    ]
+  },
+  {
+    "_id": "681e3143bf1727e8bb3a3d77",
+    "name": "Intel Core i9-13900K",
+    "slug": "intel-core-i9-13900k",
+    "description": "The Intel Core i9-13900K is a high-performance desktop processor featuring 24 cores (8 P-cores + 16 E-cores), 32 threads, up to 5.8GHz boost clock, and support for DDR5 memory and PCIe 5.0.",
+    "shortDescription": "Flagship desktop processor with 24 cores",
+    "price": 599.99,
+    "compareAtPrice": 649.99,
+    "discount": 7,
+    "stock": 10,
+    "features": [
+      "Hybrid architecture",
+      "Intel Thermal Velocity Boost",
+      "Intel Thread Director",
+      "Integrated Intel UHD 770 graphics"
+    ],
+    "specs": "24 Cores (8P+16E), 32 Threads, 5.8GHz Max Turbo, 36MB Cache, LGA 1700",
+    "rating": 4.9,
+    "reviewCount": 128,
+    "additionalImages": [
+      "images/i9-top.jpg",
+      "images/i9-bottom.jpg",
+      "images/i9-box.jpg"
+    ],
+    "brand": "Intel",
+    "modelNumber": "BX8071513900K",
+    "sku": "INTEL-I9-13900K",
+    "thumbnailUrl": "images/i9-13900k.jpg",
+// continuing from previous code
+
+"detailedDescription": "\n        <h4>Unprecedented Performance</h4>\n        <p>The Intel Core i9-13900K represents the pinnacle of desktop processor performance, featuring a revolutionary hybrid architecture with 8 Performance cores and 16 Efficient cores. With up to 5.8GHz boost clock via Intel Thermal Velocity Boost and a massive 36MB of Intel Smart Cache, this processor delivers exceptional performance for the most demanding computing tasks.</p>\n        \n        <h4>Innovative Hybrid Architecture</h4>\n        <p>Intel's hybrid architecture combines high-performance P-cores for latency-sensitive tasks with energy-efficient E-cores for background tasks and multi-threaded workloads. This design provides optimal performance and efficiency across diverse workloads, from gaming to content creation, without compromising on power consumption.</p>\n        \n        <h4>Intel Thread Director</h4>\n        <p>Working in tandem with Windows 11, Intel Thread Director dynamically allocates workloads to the appropriate cores based on real-time demands. This intelligent scheduling ensures that your most critical applications get priority access to the high-performance cores, while background tasks run efficiently on the E-cores.</p>\n        \n        <h4>Advanced Overclocking Capabilities</h4>\n        <p>Unlocked for overclocking, the i9-13900K gives enthusiasts full control over performance tuning. With Intel Extreme Tuning Utility (XTU) and support for per-core overclocking, you can push this processor beyond its already impressive stock specifications to achieve even greater performance in your specific use cases.</p>\n        \n        <h4>Next-Generation Connectivity</h4>\n        <p>Supporting both PCIe 5.0 and DDR5 memory, the i9-13900K enables the latest high-speed connectivity options for maximum data throughput. With up to 16 PCIe 5.0 lanes directly from the CPU and support for memory speeds beyond 5600MHz, this processor provides the foundation for a cutting-edge computing platform.</p>\n        \n        <h4>Integrated Graphics</h4>\n        <p>The integrated Intel UHD Graphics 770 provides basic display capabilities and hardware acceleration for media encoding and decoding. While most users will pair this processor with a dedicated graphics card, the integrated GPU offers a valuable backup option and enhanced capabilities for creative applications.</p>\n      ",
+"detailedSpecs": {
+  "processor": {
+    "title": "Processor Specifications",
+    "details": [
+      "24 cores (8 P-cores + 16 E-cores)",
+      "32 threads (P-cores support Hyper-Threading)",
+      "3.0GHz P-core base frequency, 2.2GHz E-core base frequency",
+      "Up to 5.8GHz P-core max turbo frequency with Intel Thermal Velocity Boost",
+      "Up to 4.3GHz E-core max turbo frequency",
+      "36MB Intel Smart Cache",
+      "LGA 1700 socket"
+    ]
+  },
+  "memory": {
+    "title": "Memory Support",
+    "details": [
+      "Up to DDR5-5600",
+      "Up to DDR4-3200",
+      "Dual-channel memory architecture",
+      "Up to 128GB maximum memory size"
+    ]
+  },
+  "graphics": {
+    "title": "Integrated Graphics",
+    "details": [
+      "Intel UHD Graphics 770",
+      "Up to 1.65GHz graphics frequency",
+      "Support for 4K resolution at 60Hz",
+      "DirectX 12 and OpenGL 4.5 support"
+    ]
+  },
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "Up to 16 PCIe 5.0 lanes",
+      "Additional PCIe 4.0 lanes via chipset",
+      "Up to 8 SATA 6Gb/s ports (chipset dependent)",
+      "USB 3.2 Gen 2x2 support (chipset dependent)"
+    ]
+  },
+  "thermals": {
+    "title": "Thermal Specifications",
+    "details": [
+      "Processor Base Power (PBP): 125W",
+      "Maximum Turbo Power (MTP): 253W",
+      "Maximum temperature (Tjunction): 100°C",
+      "High-performance cooler required (not included)"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "What motherboards are compatible with the i9-13900K?",
+    "answer": "The i9-13900K uses the LGA 1700 socket and is compatible with Intel 600 and 700 series chipsets. For best results with overclocking and power delivery, high-end Z690 or Z790 motherboards are recommended."
+  },
+  {
+    "question": "What CPU cooler should I use with this processor?",
+    "answer": "Due to the high power draw and thermal output, a high-performance cooling solution is necessary. We recommend a premium 360mm AIO liquid cooler or a high-end air cooler with at least 6 heatpipes for optimal performance."
+  },
+  {
+    "question": "Does the i9-13900K support DDR4 memory?",
+    "answer": "Yes, the processor supports both DDR4 and DDR5 memory, though the actual memory type will depend on your motherboard. Some LGA 1700 motherboards support DDR4, while others support DDR5."
+  },
+  {
+    "question": "What power supply is recommended for a system with this CPU?",
+    "answer": "For a system using the i9-13900K with a high-end graphics card, we recommend a quality 850W or higher power supply. If you plan to overclock or use multiple GPUs, consider 1000W or higher."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d78",
+"name": "ASUS ROG Maximus Z790 Hero",
+"slug": "asus-rog-maximus-z790-hero",
+"description": "The ASUS ROG Maximus Z790 Hero motherboard offers premium features for Intel 12th and 13th Gen processors, including advanced power delivery, high-speed connectivity, and extensive RGB lighting and customization options.",
+"shortDescription": "Premium Intel Z790 motherboard for enthusiasts",
+"price": 599.99,
+"compareAtPrice": 649.99,
+"discount": 7,
+"stock": 7,
+"features": [
+  "20+1 power stages",
+  "PCIe 5.0 support",
+  "Thunderbolt 4 connectivity",
+  "Aura Sync RGB lighting"
+],
+"specs": "Intel Z790 Chipset, ATX Form Factor, DDR5 Memory, LGA 1700 Socket",
+"rating": 4.8,
+"reviewCount": 64,
+"additionalImages": [
+  "images/z790-io.jpg",
+  "images/z790-close.jpg",
+  "images/z790-box.jpg"
+],
+"brand": "ASUS",
+"modelNumber": "ROG MAXIMUS Z790 HERO",
+"sku": "ASUS-Z790-HERO",
+"thumbnailUrl": "images/z790-hero.jpg",
+"detailedDescription": "\n        <h4>Superior Power Delivery</h4>\n        <p>The ROG Maximus Z790 Hero features a robust 20+1 power stage design with 90A power stages, providing clean and stable power for even the most demanding Intel 13th and 12th Gen processors. The sophisticated VRM thermal design with multiple heatsinks and an integrated heat pipe ensures optimal cooling during extended overclocking sessions.</p>\n        \n        <h4>Next-Generation Connectivity</h4>\n        <p>Experience blazing-fast data transfers with PCIe 5.0 x16 support for the latest graphics cards and storage devices. The motherboard includes onboard Thunderbolt 4 with dual Type-C ports supporting 40 Gbps data transfers, DisplayPort 1.4, and power delivery. Additional connectivity options include 2.5Gb Ethernet, WiFi 6E, and multiple USB 3.2 Gen 2x2 ports.</p>\n        \n        <h4>High-Performance Memory Support</h4>\n        <p>Featuring four DDR5 DIMM slots with support for memory speeds up to 7800+ MT/s (OC), the Maximus Z790 Hero enables extreme memory performance. The OptiMem III design reduces signal interference and improves memory stability at high frequencies, while the integrated memory heatspreaders help maintain optimal operating temperatures.</p>\n        \n        <h4>Advanced Cooling Solutions</h4>\n        <p>Take control of your system's cooling with comprehensive fan headers and temperature sensors placed strategically across the motherboard. The Q-Fan utility allows fine-tuned control over fans based on multiple temperature sources, while the dedicated water cooling zone with flow rate monitoring and leak detection provides peace of mind for custom loop enthusiasts.</p>\n        \n        <h4>Premium Audio Experience</h4>\n        <p>The ROG SupremeFX 7.1 Surround Sound audio solution uses a high-quality ESS ES9218 DAC with dedicated amplification for audiophile-grade sound. The audio component isolation and premium capacitors deliver exceptional clarity with 120 dB signal-to-noise ratio, while DTS:X Ultra provides immersive 3D audio for gaming and entertainment.</p>\n        \n        <h4>Extensive Customization</h4>\n        <p>Express your personal style with the integrated Aura Sync RGB lighting system that can be synchronized across compatible components. The 2-inch LiveDash OLED display provides real-time system information or custom animations, while the integrated RGB and ARGB headers allow for additional lighting expansion throughout your build.</p>\n      ",
+"detailedSpecs": {
+  "chipset": {
+    "title": "Chipset",
+    "details": [
+      "Intel Z790 Chipset",
+      "LGA 1700 socket for 13th & 12th Gen Intel Core processors",
+      "Support for Intel Turbo Boost Technology 2.0"
+    ]
+  },
+  "memory": {
+    "title": "Memory",
+    "details": [
+      "4x DIMM, Max. 128GB, DDR5",
+      "Memory speeds up to 7800+ MT/s (OC)",
+      "Intel XMP 3.0 profile support",
+      "ASUS OptiMem III design"
+    ]
+  },
+  "expansion": {
+    "title": "Expansion Slots",
+    "details": [
+      "1x PCIe 5.0 x16 slot (x16 mode)",
+      "1x PCIe 4.0 x16 slot (x8 mode)",
+      "1x PCIe 4.0 x16 slot (x4 mode)",
+      "1x PCIe 3.0 x1 slot",
+      "5x M.2 slots (various configurations with PCIe 5.0/4.0)"
+    ]
+  },
+  "storage": {
+    "title": "Storage",
+    "details": [
+      "1x M.2 PCIe 5.0 x4 slot",
+      "3x M.2 PCIe 4.0 x4 slots",
+      "1x M.2 PCIe 4.0 x4 slot (SATA mode supported)",
+      "6x SATA 6Gb/s ports with RAID 0, 1, 5, 10 support"
+    ]
+  },
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "Intel Wi-Fi 6E AX211 (2.4/5/6 GHz)",
+      "Bluetooth 5.3",
+      "Intel 2.5Gb Ethernet",
+      "Marvell 10Gb Ethernet",
+      "2x Thunderbolt 4 ports (USB Type-C)",
+      "Multiple USB 3.2 Gen 2x2, Gen 2, and Gen 1 ports",
+      "ROG SupremeFX 7.1 Surround Sound audio with ESS ES9218 DAC"
+    ]
+  },
+  "power": {
+    "title": "Power Delivery",
+    "details": [
+      "20+1 power stages",
+      "90A power stages",
+      "ProCool II power connectors",
+      "Microfine alloy chokes",
+      "Premium metallic capacitors"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Is this motherboard compatible with both DDR5 and DDR4 memory?",
+    "answer": "No, the ROG Maximus Z790 Hero only supports DDR5 memory. If you require DDR4 compatibility, you should look at specific Z790 motherboard models that support DDR4."
+  },
+  {
+    "question": "Does this motherboard include WiFi?",
+    "answer": "Yes, the motherboard includes built-in Intel WiFi 6E AX211 supporting 2.4GHz, 5GHz, and 6GHz bands, as well as Bluetooth 5.3."
+  },
+  {
+    "question": "Can I install a PCIe 5.0 SSD on this motherboard?",
+    "answer": "Yes, the motherboard features a dedicated PCIe 5.0 x4 M.2 slot for next-generation SSDs, offering up to 128Gb/s of bandwidth."
+  },
+  {
+    "question": "What's included in the box with the motherboard?",
+    "answer": "The package includes SATA cables, RGB extension cables, M.2 screws, Thunderbolt header card, antenna for WiFi, Q-connector, ROG keychain, stickers, user manual, and driver DVD."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d79",
+"name": "Corsair Vengeance RGB Pro 32GB DDR4",
+"slug": "corsair-vengeance-rgb-pro-32gb-ddr4",
+"description": "Corsair Vengeance RGB Pro 32GB (2x16GB) DDR4 memory delivers premium performance and dynamic multi-zone RGB lighting for custom PC builds, with support for XMP 2.0 for easy overclocking.",
+"shortDescription": "High-performance RGB memory for gaming PCs",
+"price": 129.99,
+"compareAtPrice": 149.99,
+"discount": 13,
+"stock": 20,
+"features": [
+  "Ten-zone RGB lighting",
+  "Custom performance PCB",
+  "Aluminum heat spreader",
+  "XMP 2.0 support"
+],
+"specs": "32GB (2x16GB), DDR4-3600MHz, CL18, 1.35V",
+"rating": 4.9,
+"reviewCount": 256,
+"additionalImages": [
+  "images/ram-installed.jpg",
+  "images/ram-single.jpg",
+  "images/ram-lit.jpg"
+],
+"brand": "Corsair",
+"modelNumber": "CMW32GX4M2D3600C18",
+"sku": "CORSAIR-VRGB-32GB",
+"thumbnailUrl": "images/vengeance-rgb.jpg",
+"detailedDescription": "\n        <h4>Dynamic RGB Lighting</h4>\n        <p>The Corsair Vengeance RGB Pro features a dynamic ten-zone RGB lighting system that brings stunning, fully customizable illumination to your PC build. Each module contains multiple individually addressable LEDs that can be controlled via the powerful Corsair iCUE software, allowing you to create complex lighting patterns, synchronize with other compatible devices, or match your system's color scheme.</p>\n        \n        <h4>Premium Performance</h4>\n        <p>Engineered for high-performance overclocking, Vengeance RGB Pro modules are built with carefully screened memory chips on a custom performance PCB. With support for Intel XMP 2.0 profiles, achieving stable, high-speed memory performance is just a single BIOS setting away. The optimized design ensures compatibility with the latest Intel and AMD platforms.</p>\n        \n        <h4>Effective Thermal Management</h4>\n        <p>The anodized aluminum heat spreader not only provides an attractive, premium look but also ensures effective heat dissipation during intensive operations. The efficient thermal design helps maintain optimal operating temperatures even during extended overclocking sessions, ensuring consistent performance and long-term reliability.</p>\n        \n        <h4>Advanced Stability Testing</h4>\n        <p>Each module undergoes rigorous factory testing to guarantee stability and performance across a wide range of motherboard platforms. The comprehensive testing process includes stress tests at intended XMP speeds and verification of timing parameters, giving you confidence in your system's reliability during demanding workloads or extended gaming sessions.</p>\n        \n        <h4>Lifetime Warranty</h4>\n        <p>Corsair stands behind the quality and reliability of Vengeance RGB Pro memory with a limited lifetime warranty. This assurance of quality, combined with Corsair's renowned customer support, provides peace of mind for your investment in premium memory for your gaming PC or workstation.</p>\n        \n        <h4>Seamless Ecosystem Integration</h4>\n        <p>Through Corsair iCUE software, your memory lighting can be synchronized with other iCUE-compatible devices including fans, coolers, keyboards, and more. This enables a cohesive lighting theme throughout your entire setup, with support for advanced effects and reactive game integrations for an immersive experience.</p>\n      ",
+"detailedSpecs": {
+  "memory": {
+    "title": "Memory Specifications",
+    "details": [
+      "32GB (2x16GB) DDR4 DRAM",
+      "3600MHz rated speed",
+      "CL18 latency (18-22-22-42)",
+      "1.35V operating voltage",
+      "Unbuffered, non-ECC memory",
+      "288-pin DIMM form factor"
+    ]
+  },
+  "lighting": {
+    "title": "Lighting",
+    "details": [
+      "10-zone RGB lighting system",
+      "Individually addressable LEDs",
+      "Corsair iCUE software compatible",
+      "Multiple preset lighting effects",
+      "Customizable lighting profiles"
+    ]
+  },
+  "physical": {
+    "title": "Physical Specifications",
+    "details": [
+      "Anodized aluminum heat spreader",
+      "Custom performance PCB",
+      "Height: 51mm (2.01 inches)",
+      "Black PCB with black heat spreader"
+    ]
+  },
+  "compatibility": {
+    "title": "Compatibility",
+    "details": [
+      "Intel 300 Series, X299, Z490, Z590, Z690 (DDR4) motherboards",
+      "AMD 300, 400, 500, X570 Series motherboards",
+      "Intel XMP 2.0 certified",
+      "Compatible with most major brand motherboards"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Will this RAM work with my AMD Ryzen system?",
+    "answer": "Yes, Corsair Vengeance RGB Pro DDR4 memory is fully compatible with AMD Ryzen systems using motherboards with DDR4 DIMM slots, including X370, B450, X570, and other AM4 socket motherboards."
+  },
+  {
+    "question": "Do I need special software to control the RGB lighting?",
+    "answer": "Yes, the Corsair iCUE software is needed to customize the RGB lighting effects. For basic lighting effects, some motherboards' RGB software may control the memory through motherboard synchronization."
+  },
+  {
+    "question": "How do I enable the advertised 3600MHz speed?",
+    "answer": "You'll need to enable the XMP/DOCP profile in your motherboard's BIOS. By default, most systems will run the memory at the standard speed (typically 2133MHz or 2400MHz) until XMP is enabled."
+  },
+  {
+    "question": "Will the RGB lighting stay on when the computer is in sleep mode?",
+    "answer": "This depends on your motherboard's power settings. Most modern motherboards allow you to configure whether peripherals receive power during sleep mode. You can usually adjust this in the BIOS settings."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d7a",
+"name": "Samsung 990 PRO 2TB NVMe SSD",
+"slug": "samsung-990-pro-2tb-nvme-ssd",
+"description": "The Samsung 990 PRO 2TB NVMe SSD delivers exceptional performance for gaming and content creation with sequential read speeds up to 7,450 MB/s and nickel-coated controller for optimal thermal control.",
+"shortDescription": "Ultra-fast PCIe 4.0 NVMe SSD for gaming",
+"price": 249.99,
+"compareAtPrice": 279.99,
+"discount": 10,
+"stock": 18,
+"features": [
+  "7,450 MB/s read, 6,900 MB/s write",
+  "Samsung V-NAND technology",
+  "Samsung Magician software",
+  "Dynamic Thermal Guard"
+],
+"specs": "2TB Capacity, PCIe 4.0 x4, NVMe 2.0, M.2 2280",
+"rating": 4.9,
+"reviewCount": 187,
+"additionalImages": [
+  "images/ssd-angle.jpg",
+  "images/ssd-installed.jpg",
+  "images/ssd-box.jpg"
+],
+"brand": "Samsung",
+"modelNumber": "MZ-V9P2T0BW",
+"sku": "SAMSUNG-990PRO-2TB",
+"thumbnailUrl": "images/990pro.jpg",
+"detailedDescription": "\n        <h4>Exceptional Performance</h4>\n        <p>The Samsung 990 PRO represents the pinnacle of PCIe 4.0 SSD technology, delivering blazing-fast sequential read speeds up to 7,450 MB/s and write speeds up to 6,900 MB/s. With random read/write performance reaching 1,600K/1,550K IOPS, this drive significantly reduces loading times and accelerates file transfers for both gaming and professional workloads.</p>\n        \n        <h4>Advanced V-NAND Technology</h4>\n        <p>Powered by Samsung's 7th-generation V-NAND technology with over 176 layers, the 990 PRO provides exceptional density, speed, and energy efficiency. The innovative vertical cell structure increases capacity while improving performance and reliability compared to conventional NAND technologies.</p>\n        \n        <h4>Optimized Controller Design</h4>\n        <p>The new Samsung Pascal controller features a nickel coating that improves thermal dissipation during intensive operations. Combined with a low-power design that's 50% more efficient than previous generations, the 990 PRO maintains optimal performance even during extended heavy workloads without throttling.</p>\n        \n        <h4>Dynamic Thermal Guard</h4>\n        <p>Samsung's Dynamic Thermal Guard technology prevents overheating by automatically monitoring and maintaining the drive's optimal operating temperature. This intelligent thermal management adjusts performance when necessary to prevent heat-related damage and ensure consistent long-term performance.</p>\n        \n        <h4>Samsung Magician Software</h4>\n        <p>The included Samsung Magician software provides an intuitive dashboard for drive management, performance optimization, and health monitoring. Features include firmware updates, benchmark testing, over-provisioning adjustments, drive encryption, and the ability to secure erase data when necessary.</p>\n        \n        <h4>Built for Gaming and Creating</h4>\n        <p>Specifically designed to meet the demands of modern gaming and content creation, the 990 PRO reduces level load times, enables seamless open-world game environments, and accelerates rendering, compilation, and export times for creative applications. The drive's performance consistency ensures reliable operation even during the most intensive tasks.</p>\n      ",
+"detailedSpecs": {
+  "performance": {
+    "title": "Performance",
+    "details": [
+      "Sequential Read: Up to 7,450 MB/s",
+      "Sequential Write: Up to 6,900 MB/s",
+      "Random Read (QD32): Up to 1,600K IOPS",
+      "Random Write (QD32): Up to 1,550K IOPS",
+      "Total Bytes Written (TBW): 1,200 TB"
+    ]
+  },
+  "general": {
+    "title": "General Specifications",
+    "details": [
+      "Capacity: 2TB",
+      "Form Factor: M.2 2280",
+      "Interface: PCIe Gen 4.0 x4, NVMe 2.0",
+      "Controller: Samsung Pascal Controller",
+      "NAND Flash Memory: Samsung 7th Gen V-NAND"
+    ]
+  },
+  "power": {
+    "title": "Power",
+    "details": [
+      "Average Power Consumption: 5.0W",
+      "Max Power Consumption: 8.2W",
+      "Idle Power: 50mW",
+      "L1.2 Power Saving Mode Support"
+    ]
+  },
+  "reliability": {
+    "title": "Reliability",
+    "details": [
+      "MTBF: 1.5 million hours",
+      "5-year limited warranty or 1,200 TBW (Terabytes Written)",
+      "Uncorrectable Bit Error Rate (UBER): 1 sector per 10^17 bits read"
+    ]
+  },
+  "physical": {
+    "title": "Physical",
+    "details": [
+      "Dimensions: 80.0 x 22.0 x 2.3 mm (3.15 x 0.87 x 0.09 inches)",
+      "Weight: 9 grams",
+      "Color: Black with gold highlights"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Is a heatsink required for this SSD?",
+    "answer": "While the 990 PRO can operate without a dedicated heatsink thanks to its efficient thermal design, using a motherboard with a built-in M.2 heatsink or adding an aftermarket heatsink can help maintain maximum performance during extended intensive workloads."
+  },
+  {
+    "question": "Is this SSD compatible with PlayStation 5?",
+    "answer": "Yes, the Samsung 990 PRO meets and exceeds the requirements for PlayStation 5 storage expansion, providing excellent performance for console gaming. You'll need to use it with a heatsink for PS5 installation."
+  },
+  {
+    "question": "What's the difference between PCIe 4.0 and PCIe 5.0 SSDs?",
+    "answer": "PCIe 5.0 offers double the theoretical bandwidth of PCIe 4.0. However, the 990 PRO is a PCIe 4.0 drive that already approaches the practical limits of what most current applications can utilize. It remains compatible with PCIe 5.0 motherboards but will operate at PCIe 4.0 speeds."
+  },
+  {
+    "question": "What's the expected lifespan of this drive?",
+    "answer": "The 2TB model is rated for 1,200 Terabytes Written (TBW), which equates to writing about 650GB per day for 5 years. For typical consumer use, this far exceeds what most users will write in the drive's lifetime, making it highly durable for normal usage patterns."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d7b",
+"name": "TechStore Titan X",
+"slug": "techstore-titan-x",
+"description": "The TechStore Titan X is our flagship gaming PC featuring the latest NVIDIA RTX 4090 graphics card, Intel Core i9-13900K processor, 64GB DDR5 RAM, and advanced liquid cooling in a premium case with extensive RGB lighting.",
+"shortDescription": "Ultimate gaming PC with RTX 4090 and i9-13900K",
+"price": 3999.99,
+"compareAtPrice": 4299.99,
+"discount": 7,
+"stock": 5,
+"features": [
+  "Custom RGB liquid cooling",
+  "Premium tempered glass case",
+  "WiFi 6E connectivity",
+  "1200W Platinum PSU"
+],
+"specs": "Intel Core i9-13900K, RTX 4090 24GB, 64GB DDR5-6000, 2TB NVMe SSD + 4TB HDD",
+"rating": 5.0,
+"reviewCount": 42,
+"additionalImages": [
+  "images/titan-front.jpg",
+  "images/titan-interior.jpg",
+  "images/titan-side.jpg"
+],
+"brand": "TechStore",
+"modelNumber": "TS-TITAN-X-2023",
+"sku": "TS-TITAN-X-4090",
+"thumbnailUrl": "images/titan-x.jpg",
+"detailedDescription": "\n        <h4>Uncompromising Performance</h4>\n        <p>The TechStore Titan X represents the absolute pinnacle of gaming performance, featuring the revolutionary Intel Core i9-13900K processor with 24 cores and the NVIDIA GeForce RTX 4090 with 24GB of GDDR6X memory. This powerhouse combination delivers unprecedented frame rates at 4K resolution with ray tracing enabled, while crushing even the most demanding creative workloads like 3D rendering and video editing.</p>\n        \n        <h4>State-of-the-Art Cooling</h4>\n        <p>A custom-designed 360mm RGB liquid cooling system keeps the Intel Core i9-13900K running at optimal temperatures even during intensive overclocking, while seven strategically positioned 120mm RGB fans create positive pressure airflow to cool all components effectively. The thermal design ensures maximum performance sustainability during extended gaming sessions or rendering workloads.</p>\n        \n        <h4>Premium Memory and Storage Configuration</h4>\n        <p>With 64GB of DDR5-6000MHz RGB memory in a quad-channel configuration, the Titan X handles multitasking with ease. The storage solution combines a lightning-fast 2TB PCIe Gen 4 NVMe SSD for your operating system and frequently used applications with a massive 4TB 7200RPM HDD for your extensive game library and media collection.</p>\n        \n        <h4>Precision Crafted Build</h4>\n        <p>Each Titan X is meticulously hand-built by our expert technicians with premium cable management using custom sleeved cables. The build undergoes extensive stress testing and quality control to ensure flawless operation and stability. The careful attention to detail extends to the synchronized RGB lighting across all compatible components, creating a cohesive aesthetic.</p>\n        \n        <h4>Connectivity and Expansion</h4>\n        <p>The Titan X features comprehensive connectivity with WiFi 6E, 2.5G Ethernet, front and rear USB-C ports, multiple USB 3.2 Gen 2 connections, and a premium sound solution. The system design accommodates future expansion with additional drive bays and accessible PCIe slots for upgrades as technology evolves.</p>\n        \n        <h4>Premium Showcase Design</h4>\n        <p>Housed in a premium case with tempered glass panels on three sides, the Titan X is designed to showcase its premium components and customizable RGB lighting system. The striking aesthetics complement the extraordinary performance, creating a system that's as impressive to look at as it is to use.</p>\n      ",
+"detailedSpecs": {
+  "processor": {
+    "title": "Processor",
+    "details": [
+      "Intel Core i9-13900K",
+      "24 cores (8P + 16E), 32 threads",
+      "Up to 5.8GHz max turbo frequency",
+      "36MB Intel Smart Cache",
+      "Custom all-core overclocking profile"
+    ]
+  },
+  // continuing from previous code
+
+  "graphics": {
+    "title": "Graphics",
+    "details": [
+      "NVIDIA GeForce RTX 4090",
+      "24GB GDDR6X memory",
+      "16384 CUDA cores",
+      "3rd generation ray tracing cores",
+      "4th generation Tensor cores",
+      "HDMI 2.1, DisplayPort 1.4a"
+    ]
+  },
+  "memory": {
+    "title": "Memory",
+    "details": [
+      "64GB DDR5-6000MHz (4x16GB)",
+      "RGB lighting",
+      "Quad channel configuration",
+      "CL36 timing",
+      "XMP 3.0 profile enabled"
+    ]
+  },
+  "storage": {
+    "title": "Storage",
+    "details": [
+      "2TB NVMe PCIe Gen 4 SSD (OS drive)",
+      "4TB 7200RPM HDD (Data drive)",
+      "Read speeds up to 7000MB/s (SSD)",
+      "Available expansion: 2x M.2 slots, 2x 2.5\" bays"
+    ]
+  },
+  "cooling": {
+    "title": "Cooling",
+    "details": [
+      "360mm RGB liquid cooler for CPU",
+      "7x 120mm RGB fans",
+      "Custom fan curve optimization",
+      "Positive pressure airflow design",
+      "Thermal paste: Thermal Grizzly Kryonaut"
+    ]
+  },
+  "power": {
+    "title": "Power Supply",
+    "details": [
+      "1200W 80+ Platinum certified",
+      "Fully modular design",
+      "Japanese capacitors",
+      "Custom sleeved cables",
+      "Over-temperature and short circuit protection"
+    ]
+  },
+  "motherboard": {
+    "title": "Motherboard",
+    "details": [
+      "ASUS ROG Z790 chipset",
+      "ATX form factor",
+      "WiFi 6E and Bluetooth 5.2",
+      "2.5G Ethernet port",
+      "RGB lighting with Aura Sync"
+    ]
+  },
+  "case": {
+    "title": "Case",
+    "details": [
+      "Premium mid-tower design",
+      "Tempered glass panels on three sides",
+      "Magnetic dust filters",
+      "Front panel: 2x USB 3.2 Gen 2 Type-A, 1x USB 3.2 Gen 2x2 Type-C, audio jacks",
+      "RGB front panel with addressable lighting"
+    ]
+  },
+  "operatingSystem": {
+    "title": "Operating System",
+    "details": [
+      "Windows 11 Pro",
+      "No bloatware",
+      "Latest updates and drivers installed"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Can I upgrade components in this PC later?",
+    "answer": "Yes, the Titan X is built with standard components and designed with future upgradeability in mind. The case provides ample space and the 1200W power supply offers headroom for even more powerful future components."
+  },
+  {
+    "question": "What kind of warranty is included?",
+    "answer": "The Titan X comes with our premium 3-year warranty covering parts and labor. The first year includes on-site service for hardware issues, and we offer lifetime technical support for your system."
+  },
+  {
+    "question": "What temperatures can I expect during intensive gaming?",
+    "answer": "Under full gaming load, the CPU typically maintains temperatures between 65-75°C, while the GPU runs between 70-80°C. The advanced cooling system ensures that even during extended sessions, thermal throttling does not occur."
+  },
+  {
+    "question": "Does this PC support virtual reality?",
+    "answer": "Absolutely! The Titan X exceeds all requirements for premium VR experiences with the latest headsets. The powerful CPU and RTX 4090 GPU ensure smooth frame rates even in the most demanding VR applications and games."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d7d",
+"name": "TechStore Scout",
+"slug": "techstore-scout",
+"description": "The TechStore Scout provides excellent entry-level gaming performance with the Intel Core i5-13600K processor, NVIDIA RTX 4060 graphics card, and 16GB of DDR5 memory at a budget-friendly price point.",
+"shortDescription": "Affordable gaming PC with RTX 4060",
+"price": 1299.99,
+"compareAtPrice": 1399.99,
+"discount": 7,
+"stock": 12,
+"features": [
+  "Air cooling with RGB",
+  "Compact case design",
+  "WiFi 6 support",
+  "650W Bronze PSU"
+],
+"specs": "Intel Core i5-13600K, RTX 4060 8GB, 16GB DDR5-4800, 1TB NVMe SSD",
+"rating": 4.7,
+"reviewCount": 86,
+"additionalImages": [
+  "images/scout-front.jpg",
+  "images/scout-interior.jpg",
+  "images/scout-ports.jpg"
+],
+"brand": "TechStore",
+"modelNumber": "TS-SCOUT-2023",
+"sku": "TS-SCOUT-4060",
+"thumbnailUrl": "images/scout.jpg",
+"detailedDescription": "\n        <h4>Balanced Gaming Performance</h4>\n        <p>The TechStore Scout delivers impressive gaming performance at a price that won't break the bank. Powered by the Intel Core i5-13600K processor with 14 cores and the NVIDIA RTX 4060 with 8GB GDDR6 memory, this system handles modern titles at 1080p with high frame rates and can comfortably manage 1440p gaming with optimized settings.</p>\n        \n        <h4>Efficient Cooling Solution</h4>\n        <p>A premium RGB air cooler keeps the Intel Core i5-13600K running at optimal temperatures during intense gaming sessions, while the strategically positioned case fans ensure effective airflow throughout the system. The thoughtful thermal design allows for sustained performance without excessive noise, creating a comfortable gaming environment.</p>\n        \n        <h4>Fast Memory and Storage</h4>\n        <p>With 16GB of DDR5-4800MHz memory in dual-channel configuration, the Scout handles modern games and multitasking with ease. The 1TB PCIe Gen 4 NVMe SSD provides ample space for your operating system and favorite games with quick loading times and snappy system response.</p>\n        \n        <h4>Compact Yet Expandable</h4>\n        <p>Housed in a compact mid-tower case with a tempered glass side panel, the Scout balances a space-efficient design with good expandability options. Additional drive bays and accessible memory slots make future upgrades straightforward when your needs evolve or your budget allows for enhancements.</p>\n        \n        <h4>Modern Connectivity</h4>\n        <p>The Scout features comprehensive connectivity with WiFi 6, Gigabit Ethernet, USB 3.2 Gen 2 ports including Type-C, and a standard audio solution. These connections ensure compatibility with modern peripherals and provide reliable networking performance for online gaming.</p>\n        \n        <h4>Clean Aesthetic</h4>\n        <p>With tasteful RGB lighting on the CPU cooler and case fans, the Scout offers visual appeal without being ostentatious. The clean cable management and well-organized interior create a polished look that's visible through the tempered glass side panel, reflecting the care that goes into every TechStore build.</p>\n      ",
+"detailedSpecs": {
+  "processor": {
+    "title": "Processor",
+    "details": [
+      "Intel Core i5-13600K",
+      "14 cores (6P + 8E), 20 threads",
+      "Up to 5.1GHz max turbo frequency",
+      "24MB Intel Smart Cache"
+    ]
+  },
+  "graphics": {
+    "title": "Graphics",
+    "details": [
+      "NVIDIA GeForce RTX 4060",
+      "8GB GDDR6 memory",
+      "3rd generation ray tracing cores",
+      "4th generation Tensor cores",
+      "HDMI 2.1, 3x DisplayPort 1.4a"
+    ]
+  },
+  "memory": {
+    "title": "Memory",
+    "details": [
+      "16GB DDR5-4800MHz (2x8GB)",
+      "Dual channel configuration",
+      "XMP profile enabled",
+      "Expandable to 64GB"
+    ]
+  },
+  "storage": {
+    "title": "Storage",
+    "details": [
+      "1TB NVMe PCIe Gen 4 SSD",
+      "Read speeds up to 5000MB/s",
+      "Available expansion: 1x M.2 slot, 2x 2.5\" bays, 2x 3.5\" bays"
+    ]
+  },
+  "cooling": {
+    "title": "Cooling",
+    "details": [
+      "RGB air cooler for CPU",
+      "3x 120mm RGB case fans",
+      "Custom fan curve optimization"
+    ]
+  },
+  "power": {
+    "title": "Power Supply",
+    "details": [
+      "650W 80+ Bronze certified",
+      "Semi-modular design",
+      "Protective safeguards: OVP, UVP, OPP, SCP"
+    ]
+  },
+  "motherboard": {
+    "title": "Motherboard",
+    "details": [
+      "Intel B760 chipset",
+      "ATX form factor",
+      "WiFi 6 and Bluetooth 5.1",
+      "Gigabit Ethernet port",
+      "RGB headers for expansion"
+    ]
+  },
+  "case": {
+    "title": "Case",
+    "details": [
+      "Compact mid-tower design",
+      "Tempered glass side panel",
+      "Mesh front panel for optimal airflow",
+      "Front I/O: 2x USB 3.2 Gen 1 Type-A, 1x USB 3.2 Gen 2 Type-C, audio jacks"
+    ]
+  },
+  "operatingSystem": {
+    "title": "Operating System",
+    "details": [
+      "Windows 11 Home",
+      "No bloatware",
+      "Latest updates and drivers installed"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Can this PC run the latest AAA games?",
+    "answer": "Yes, the Scout is designed to run modern AAA titles at 1080p with high to ultra settings, typically achieving 60+ FPS. For 1440p gaming, you can expect good performance with medium to high settings depending on the specific game."
+  },
+  {
+    "question": "Is the system noisy during gaming?",
+    "answer": "The Scout features a balanced cooling solution that maintains moderate noise levels. During regular use, it's very quiet, and while gaming, the noise remains at a comfortable level that won't interfere with your experience, especially when wearing headphones."
+  },
+  {
+    "question": "Can I upgrade the graphics card in the future?",
+    "answer": "Yes, the Scout uses standard components and the 650W power supply can support up to an RTX 4070 level card. The case provides adequate clearance for larger graphics cards as well."
+  },
+  {
+    "question": "What warranty is included?",
+    "answer": "The Scout comes with our standard 2-year warranty covering parts and labor. We also offer lifetime technical support for your system."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d7e",
+"name": "TechStore Custom Creator PC",
+"slug": "techstore-custom-creator-pc",
+"description": "The TechStore Custom Creator PC is optimized for content creation, video editing, and 3D rendering with powerful components that can be customized to your specific needs and workflow requirements.",
+"shortDescription": "Customizable workstation for content creators",
+"price": 2599.99,
+"compareAtPrice": 2799.99,
+"discount": 7,
+"stock": 3,
+"features": [
+  "Customizable components",
+  "Professional-grade cooling",
+  "Clean professional aesthetic",
+  "Optional upgrades available"
+],
+"specs": "Customizable, base config: Intel Core i9-13900K, RTX 4080 16GB, 64GB DDR5-5600, 2TB NVMe SSD",
+"rating": 4.9,
+"reviewCount": 28,
+"additionalImages": [
+  "images/creator-front.jpg",
+  "images/creator-interior.jpg",
+  "images/creator-bench.jpg"
+],
+"brand": "TechStore",
+"modelNumber": "TS-CREATOR-2023",
+"sku": "TS-CREATOR-PRO",
+"thumbnailUrl": "images/creator-pc.jpg",
+"detailedDescription": "\n        <h4>Tailored for Creative Professionals</h4>\n        <p>The TechStore Custom Creator PC is specifically designed for content creators, video editors, 3D artists, and other creative professionals. Unlike off-the-shelf systems, each Creator PC is custom-configured based on your specific workflow requirements, software preferences, and budget considerations. Our expert team works with you to optimize the build for your particular creative applications.</p>\n        \n        <h4>Professional-Grade Performance</h4>\n        <p>Starting with a base configuration featuring the Intel Core i9-13900K processor and NVIDIA RTX 4080 graphics card, the Creator PC delivers exceptional performance for demanding creative tasks. The system excels at multi-threaded workloads like video rendering, 3D modeling, animation, and complex simulations, significantly reducing wait times and increasing productivity.</p>\n        \n        <h4>Optimized for Your Software Suite</h4>\n        <p>Whether you work primarily with Adobe Creative Cloud, DaVinci Resolve, Autodesk suite, Cinema 4D, Blender, or other professional applications, we configure your system to maximize performance with those specific tools. From driver optimization to component selection, every aspect is tailored to provide the best experience with your preferred software.</p>\n        \n        <h4>Reliable Stability</h4>\n        <p>Creative work demands system stability above all else. The Creator PC undergoes extensive stress testing with professional workloads, ensuring that it can handle extended rendering sessions and complex projects without issues. The professional-grade cooling solution maintains optimal temperatures even during CPU and GPU-intensive tasks, ensuring consistent performance for time-sensitive projects.</p>\n        \n        <h4>Thoughtful Expansion Options</h4>\n        <p>The Creator PC is designed with future upgrades in mind, featuring easily accessible drive bays, PCIe slots, and memory slots. The high-capacity power supply provides headroom for additional components or more powerful upgrades, while the spacious case accommodates extensive storage arrays or specialized cards for your evolving needs.</p>\n        \n        <h4>Professional Aesthetic</h4>\n        <p>With a clean, professional appearance, the Creator PC is designed to fit into a studio or office environment. RGB lighting is optional and can be configured to provide subtle task lighting or status indicators rather than flashy effects. The priority is on function and reliability with an understated elegance that reflects the professional nature of the system.</p>\n      ",
+"detailedSpecs": {
+  "processor": {
+    "title": "Processor Options",
+    "details": [
+      "Base: Intel Core i9-13900K (24 cores, 32 threads)",
+      "Options: Intel Core i7-13700K, AMD Ryzen 9 7950X",
+      "Advanced cooling solution included",
+      "Factory-tuned performance profile"
+    ]
+  },
+  "graphics": {
+    "title": "Graphics Options",
+    "details": [
+      "Base: NVIDIA RTX 4080 (16GB GDDR6X)",
+      "Options: RTX 4090, RTX 4070, RTX A4000, RTX A5000",
+      "Studio drivers pre-installed",
+      "Multiple GPU configurations available for select workflows"
+    ]
+  },
+  "memory": {
+    "title": "Memory Options",
+    "details": [
+      "Base: 64GB DDR5-5600MHz (4x16GB)",
+      "Options: 32GB to 128GB configurations",
+      "ECC options available for mission-critical work",
+      "Optimized for multi-channel performance"
+    ]
+  },
+  "storage": {
+    "title": "Storage Options",
+    "details": [
+      "Base: 2TB NVMe PCIe Gen 4 SSD (System drive)",
+      "Optional secondary SSDs for scratch/cache",
+      "Optional large capacity HDDs for media storage",
+      "RAID configurations available for data protection"
+    ]
+  },
+  "cooling": {
+    "title": "Cooling System",
+    "details": [
+      "Custom cooling solution based on selected components",
+      "Low-noise fan configuration",
+      "Optional liquid cooling",
+      "Thermal focus on sustained workloads rather than short bursts"
+    ]
+  },
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "10Gb Ethernet option",
+      "WiFi 6E",
+      "Thunderbolt 4 ports (Intel platforms)",
+      "USB 3.2 Gen 2x2 Type-C",
+      "Multiple USB 3.2 Gen 2 Type-A ports"
+    ]
+  },
+  "expandability": {
+    "title": "Expandability",
+    "details": [
+      "Multiple PCIe slots for expansion cards",
+      "Drive bays for additional storage",
+      "Front and rear USB ports for peripherals",
+      "Card reader options available"
+    ]
+  },
+  "operatingSystem": {
+    "title": "Operating System",
+    "details": [
+      "Windows 11 Pro",
+      "Optional Windows 10 Pro (for software compatibility)",
+      "Dual-boot options available",
+      "Clean installation without bloatware"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "How do I choose the right configuration for my needs?",
+    "answer": "Our team of specialists will consult with you to understand your workflow, the applications you use, and your typical projects. Based on this information, we'll recommend a configuration optimized for your specific requirements and budget."
+  },
+  {
+    "question": "Can you install my creative software suite?",
+    "answer": "We can pre-install the operating system and drivers, but creative software typically requires personal licenses. We can prepare the system for your software installation and provide guidance on optimal settings for your specific applications."
+  },
+  {
+    "question": "Do you offer financing options for professional purchases?",
+    "answer": "Yes, we offer financing options for business customers as well as lease options that may be advantageous for tax purposes. Our business team can provide details on the available plans and help determine which option best suits your situation."
+  },
+  {
+    "question": "What kind of after-sales support is available for professional systems?",
+    "answer": "Creator PCs come with our premium 3-year warranty with priority support. We offer next-business-day on-site service, advance replacement for critical components, and dedicated technical support from specialists familiar with professional creative applications."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d7f",
+"name": "ASUS ROG Swift 360Hz PG259QN",
+"slug": "asus-rog-swift-360hz-pg259qn",
+"description": "The ASUS ROG Swift PG259QN features a 24.5\" Full HD IPS panel with a 360Hz refresh rate, 1ms response time, and NVIDIA G-SYNC technology, designed for competitive gamers who need the absolute fastest display.",
+"shortDescription": "Ultra-fast 360Hz gaming monitor for esports",
+"price": 699.99,
+"compareAtPrice": 799.99,
+"discount": 12,
+"stock": 10,
+"features": [
+  "360Hz refresh rate",
+  "NVIDIA Reflex Latency Analyzer",
+  "ASUS Fast IPS technology",
+  "NVIDIA G-SYNC processor"
+],
+"specs": "24.5\" IPS, 1920x1080, 360Hz, 1ms GTG, G-SYNC, DisplayHDR 400",
+"rating": 4.8,
+"reviewCount": 86,
+"additionalImages": [
+  "images/pg259qn-side.jpg",
+  "images/pg259qn-back.jpg",
+  "images/pg259qn-ports.jpg"
+],
+"brand": "ASUS",
+"modelNumber": "PG259QN",
+"sku": "ASUS-PG259QN",
+"thumbnailUrl": "images/pg259qn.jpg",
+"detailedDescription": "\n        <h4>Unrivaled Speed and Fluidity</h4>\n        <p>The ASUS ROG Swift PG259QN revolutionizes competitive gaming with its incredible 360Hz refresh rate—delivering frame updates every 2.8ms. This ultra-fast refresh rate provides the smoothest motion clarity available, giving competitive gamers a significant advantage in fast-paced esports titles where split-second reactions determine victory or defeat.</p>\n        \n        <h4>Fast IPS Technology</h4>\n        <p>Unlike traditional TN panels found in many high-refresh monitors, the PG259QN uses ASUS Fast IPS technology that combines the speed of TN with the superior color performance and viewing angles of IPS. With a true 1ms gray-to-gray response time, this monitor delivers crisp, clear images during fast motion sequences without sacrificing color accuracy or viewing angles.</p>\n        \n        <h4>NVIDIA G-SYNC with Reflex Latency Analyzer</h4>\n        <p>The built-in NVIDIA G-SYNC processor eliminates screen tearing and minimizes display stutter for seamless gameplay. Additionally, the integrated NVIDIA Reflex Latency Analyzer allows players to measure and optimize system latency, helping to identify and reduce input lag. This feature provides valuable insights for competitive gamers looking to maximize their performance.</p>\n        \n        <h4>Optimized for Competitive Gaming</h4>\n        <p>The 24.5\" Full HD (1920x1080) resolution is ideal for competitive gaming, providing the perfect balance between visual clarity and performance. This resolution allows even mid-range systems to achieve the extraordinarily high frame rates needed to take advantage of the 360Hz refresh rate, making this monitor perfect for esports titles like Counter-Strike, Valorant, and Overwatch.</p>\n        \n        <h4>Ergonomic Design</h4>\n        <p>The ROG Swift features a fully adjustable stand with tilt, swivel, pivot, and height adjustments, allowing you to find the optimal viewing position for comfortable extended gaming sessions. The monitor also includes VESA mounting compatibility for alternative mounting solutions like monitor arms or wall mounts.</p>\n        \n        <h4>Premium Gaming Features</h4>\n        <p>Enhanced gaming features include ASUS GamePlus (crosshair, timer, FPS counter), GameVisual (pre-calibrated picture modes), and Shadow Boost (improves visibility in dark areas without overexposing bright areas). The monitor also supports DisplayHDR 400 for improved contrast and color vibrancy in HDR-compatible games and content.</p>\n      ",
+"detailedSpecs": {
+  "display": {
+    "title": "Display",
+    "details": [
+      "24.5\" Full HD (1920 x 1080) Fast IPS panel",
+      "360Hz refresh rate",
+      "1ms (GTG) response time",
+      "NVIDIA G-SYNC processor",
+      "VESA DisplayHDR 400 certified",
+      "Contrast ratio: 1000:1",
+      "Brightness: 400 cd/m²",
+      "178° viewing angles (H/V)"
+    ]
+  },
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "1x DisplayPort 1.4",
+      "1x HDMI 2.0",
+      "2x USB 3.0 ports",
+      "1x 3.5mm headphone jack",
+      "NVIDIA Reflex Latency Analyzer USB port"
+    ]
+  },
+  "features": {
+    "title": "Gaming Features",
+    "details": [
+      "NVIDIA Reflex Latency Analyzer",
+      "NVIDIA G-SYNC processor",
+      "ASUS GamePlus (Crosshair, Timer, FPS Counter, Display Alignment)",
+      "ASUS GameVisual (pre-calibrated picture modes)",
+      "ASUS Dynamic Shadow Boost",
+      "Ultra-Low Blue Light technology",
+      "Flicker-free technology"
+    ]
+  },
+  "physical": {
+    "title": "Physical",
+    "details": [
+      "Stand adjustments: Tilt (+20° ~ -5°), Swivel (±25°), Pivot (0~90°), Height (0~120mm)",
+      "VESA wall mounting (100 x 100mm)",
+      "Kensington lock",
+      "Dimensions with stand: 557 x 394 x 215 mm (21.9 x 15.5 x 8.5 inches)",
+      "Weight: 7.1 kg (15.65 lbs)"
+    ]
+  },
+  "power": {
+    "title": "Power",
+    "details": [
+      "Power consumption: <27W (typical), <0.5W (standby)",
+      "Power supply: Internal"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Can I actually see the difference between 240Hz and 360Hz?",
+    "answer": "Yes, though the difference is more subtle than the jump from 144Hz to 240Hz. The improvement is most noticeable in fast-paced competitive games where you're tracking moving targets. Professional players and serious competitors benefit most from the reduced motion blur and improved clarity."
+  },
+  {
+    "question": "What PC specs do I need to reach 360 FPS?",
+    "answer": "To fully utilize a 360Hz monitor, you'll need a high-end system. For competitive esports titles at optimized settings, we recommend at least an Intel Core i7/AMD Ryzen 7 processor and an NVIDIA RTX 3070 or better. More demanding games may require even higher-end components to reach 360 FPS consistently."
+  },
+  {
+    "question": "Does this monitor work with AMD graphics cards?",
+    "answer": "Yes, the monitor will work with AMD graphics cards, but certain features like G-SYNC and the Reflex Latency Analyzer require an NVIDIA GPU to function. With an AMD card, you'll still get the benefit of the 360Hz refresh rate but without the variable refresh rate technology."
+  },
+  {
+    "question": "Is 1080p resolution sufficient for a gaming monitor in 2023?",
+    "answer": "For competitive gaming, 1080p remains the preferred resolution due to the higher frame rates it allows. The 24.5\" size provides a good pixel density for this resolution. For content creation or more immersive single-player experiences, you might prefer a higher resolution display."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d80",
+"name": "Samsung Odyssey G9 Neo",
+"slug": "samsung-odyssey-g9-neo",
+"description": "The Samsung Odyssey G9 Neo features a massive 49\" 1000R curved screen with Quantum Mini LED technology, 240Hz refresh rate, and 1ms response time, creating an incredibly immersive gaming experience.",
+"shortDescription": "Massive 49\" curved gaming monitor with mini-LED",
+"price": 1799.99,
+"compareAtPrice": 1999.99,
+"discount": 10,
+"stock": 5,
+"features": [
+  "1000R curved screen",
+  "Quantum Mini LED backlighting",
+  "CoreSync ambient lighting",
+  "Picture-by-Picture"
+],
+"specs": "49\" VA, 5120x1440 (32:9), 240Hz, 1ms, Quantum Mini LED, HDR2000",
+"rating": 4.9,
+"reviewCount": 48,
+"additionalImages": [
+  "images/g9-side.jpg",
+  "images/g9-rear.jpg",
+  "images/g9-curve.jpg"
+],
+"brand": "Samsung",
+"modelNumber": "LS49AG952NNXZA",
+"sku": "SAMSUNG-G9-NEO",
+"thumbnailUrl": "images/g9-neo.jpg",
+"detailedDescription": "\n        <h4>Immersive 1000R Curved Display</h4>\n        <p>The Samsung Odyssey G9 Neo features an enormous 49-inch display with an aggressive 1000R curvature that matches the natural curve of the human eye. This super ultra-wide screen with a 32:9 aspect ratio creates a panoramic viewing experience that wraps around your field of vision, providing unparalleled immersion in games and a tremendously productive workspace for multitasking.</p>\n        \n        <h4>Quantum Mini LED Backlight Technology</h4>\n        <p>Using the same technology found in Samsung's flagship televisions, the Quantum Mini LED backlight system provides vastly superior contrast compared to conventional LED monitors. With 2,048 local dimming zones, the display delivers deep, inky blacks alongside brilliant highlights, achieving a stunning HDR2000 certification with peak brightness up to 2000 nits for the most realistic HDR experience available in a gaming monitor.</p>\n        \n        <h4>Exceptional Gaming Performance</h4>\n        <p>With a 240Hz refresh rate and 1ms response time, the G9 Neo eliminates motion blur and provides crystal clear images even during fast-paced action sequences. Supporting both NVIDIA G-SYNC Compatible and AMD FreeSync Premium Pro technologies, this monitor ensures tear-free, smooth gaming regardless of your graphics card choice. The combination of high refresh rate and adaptive sync creates a seamless visual experience in even the most demanding competitive games.</p>\n        \n        <h4>Dual QHD Resolution</h4>\n        <p>The 5120x1440 resolution (equivalent to two 27\" 1440p monitors side by side) provides sharp image quality and plenty of screen real estate. This resolution strikes the perfect balance between visual clarity and performance, allowing high-end systems to achieve excellent frame rates even in demanding titles.</p>\n        \n        <h4>Advanced Gaming Features</h4>\n        <p>The G9 Neo includes specialized gaming features such as Virtual Aim Point for improved accuracy in FPS games, Auto Source Switch+ for instant detection when connecting new devices, and Black Equalizer technology that reveals hidden enemies in dark areas without overexposing bright scenes. The CoreSync lighting system on the rear of the monitor dynamically reacts to on-screen content, extending the visual experience beyond the screen.</p>\n        \n        <h4>Productivity Powerhouse</h4>\n        <p>Beyond gaming, the G9 Neo excels as a productivity tool with Picture-by-Picture functionality that allows you to display two different input sources simultaneously, essentially functioning as two independent monitors. The included Easy Setting Box software enables effortless window management, helping you create the perfect multi-window layout for your workflow.</p>\n      ",
+"detailedSpecs": {
+  "display": {
+    "title": "Display",
+    "details": [
+      "49\" Quantum Mini LED VA Panel",
+      "32:9 Super Ultra-Wide",
+      "5120 x 1440 (Dual QHD) resolution",
+      "1000R curved screen",
+      "240Hz refresh rate",
+      "1ms (GTG) response time",
+      "HDR2000 certified (2000 nits peak brightness)",
+      "2,048 local dimming zones",
+      "Contrast ratio: 1,000,000:1 (static)",
+      "178° viewing angles (H/V)",
+      "95% DCI-P3 color gamut"
+    ]
+  },
+  // continuing from previous code
+
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "2x HDMI 2.1",
+      "1x DisplayPort 1.4",
+      "2x USB 3.0 ports",
+      "1x 3.5mm headphone jack",
+      "Power supply: Internal"
+    ]
+  },
+  "features": {
+    "title": "Features",
+    "details": [
+      "AMD FreeSync Premium Pro",
+      "NVIDIA G-SYNC Compatible",
+      "CoreSync Lighting",
+      "Picture-by-Picture (PBP)",
+      "Picture-in-Picture (PIP)",
+      "Virtual Aim Point",
+      "Auto Source Switch+",
+      "Black Equalizer",
+      "Low Input Lag Mode",
+      "Refresh Rate Optimizer",
+      "Super Arena Gaming UX"
+    ]
+  },
+  "physical": {
+    "title": "Physical",
+    "details": [
+      "Stand adjustments: Height, Tilt, Swivel",
+      "VESA mount compatible (100 x 100mm)",
+      "Dimensions with stand: 1149.5 x 537.2 x 418.3 mm (45.26 x 21.15 x 16.47 inches)",
+      "Weight: 16.7 kg (36.82 lbs)",
+      "Glacial White design"
+    ]
+  },
+  "power": {
+    "title": "Power",
+    "details": [
+      "Power consumption (typical): 100W",
+      "Power consumption (max): 250W",
+      "Power consumption (standby): <0.5W",
+      "Power supply: AC 100-240V"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "What kind of PC do I need to get the most out of this monitor?",
+    "answer": "To drive the G9 Neo at its full 5120x1440 resolution at 240Hz, you'll need a high-end gaming PC. We recommend at least an NVIDIA RTX 3080 or AMD Radeon RX 6800 XT, paired with a current-generation Intel Core i7/i9 or AMD Ryzen 7/9 processor. For optimal HDR performance, an RTX 4080/4090 or RX 7900 series card is ideal."
+  },
+  {
+    "question": "Can I mount this monitor on a standard VESA mount?",
+    "answer": "Yes, the G9 Neo supports the standard 100x100mm VESA mounting pattern. However, due to its size and weight (approx. 16.7kg/37lbs), ensure your monitor arm or wall mount is rated for this weight class. Many users opt for heavy-duty monitor arms specifically designed for super ultrawide monitors."
+  },
+  {
+    "question": "Does this monitor work well for productivity and content creation?",
+    "answer": "Absolutely. The expansive 49\" screen with 5120x1440 resolution provides substantial desktop space equivalent to two 27\" 1440p monitors without the center bezel. The Picture-by-Picture mode allows connecting two computers simultaneously. For content creation, the 95% DCI-P3 coverage and excellent contrast make it suitable for photo and video editing."
+  },
+  {
+    "question": "How noticeable is the 1000R curve in daily use?",
+    "answer": "The 1000R curve is quite aggressive and noticeable at first. Most users adjust to it within a few days and find it provides a more immersive experience for gaming and reduces eye movement when viewing the entire screen. For productivity, the curve helps keep the outer edges of the ultra-wide display within your field of vision."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d82",
+"name": "Dell UltraSharp U2720Q",
+"slug": "dell-ultrasharp-u2720q",
+"description": "The Dell UltraSharp U2720Q is a 27\" 4K monitor designed for professional work with excellent color accuracy, USB-C connectivity, and VESA DisplayHDR 400 certification for content creators.",
+"shortDescription": "4K monitor for professional content creation",
+"price": 649.99,
+"compareAtPrice": 699.99,
+"discount": 7,
+"stock": 12,
+"features": [
+  "USB-C with 90W power delivery",
+  "Factory calibrated",
+  "VESA DisplayHDR 400",
+  "InfinityEdge design"
+],
+"specs": "27\" IPS, 3840x2160, 60Hz, 5ms, 100% sRGB, 95% DCI-P3",
+"rating": 4.8,
+"reviewCount": 104,
+"additionalImages": [
+  "images/u2720q-side.jpg",
+  "images/u2720q-back.jpg",
+  "images/u2720q-ports.jpg"
+],
+"brand": "Dell",
+"modelNumber": "U2720Q",
+"sku": "DELL-U2720Q",
+"thumbnailUrl": "images/u2720q.jpg",
+"detailedDescription": "\n        <h4>Professional-Grade Color Accuracy</h4>\n        <p>The Dell UltraSharp U2720Q delivers exceptional color precision with 100% sRGB, 95% DCI-P3, and 99% Rec. 709 color coverage. Each monitor comes individually factory calibrated with a calibration report certifying a Delta E less than 2, ensuring color accuracy right out of the box. This level of color fidelity makes the monitor ideal for photo editing, graphic design, video production, and other color-critical professional work.</p>\n        \n        <h4>Stunning 4K Clarity</h4>\n        <p>With a 4K UHD (3840 x 2160) resolution on a 27-inch screen, the U2720Q provides exceptional pixel density at 163 PPI, delivering razor-sharp text and images. The IPS panel technology ensures consistent colors and image clarity from virtually any viewing angle, making this monitor perfect for collaborative work environments where screen content may be viewed from different positions.</p>\n        \n        <h4>Modern Connectivity</h4>\n        <p>The monitor features a versatile USB-C port with 90W power delivery, allowing you to connect and charge your laptop with a single cable while simultaneously transferring display signal, data, and power. This simplified connectivity reduces desktop clutter and streamlines your workspace. Additional ports include DisplayPort, HDMI, and a built-in USB hub for connecting peripherals.</p>\n        \n        <h4>Sleek InfinityEdge Design</h4>\n        <p>The virtually borderless InfinityEdge design maximizes screen space while minimizing distractions. The thin bezels on all four sides create a more immersive viewing experience and allow for nearly seamless multi-monitor setups. The modern aesthetic combines with premium materials and build quality to create a monitor that looks as good as it performs.</p>\n        \n        <h4>Ergonomic Excellence</h4>\n        <p>The fully adjustable stand allows for precise positioning with height adjustment, tilt, swivel, and pivot capabilities, ensuring you can find the most comfortable viewing position for extended work sessions. The monitor supports both landscape and portrait orientations, providing flexibility for different types of content and workflows. VESA mount compatibility offers alternative mounting options.</p>\n        \n        <h4>Environmentally Conscious</h4>\n        <p>The U2720Q is designed with sustainability in mind, featuring arsenic-free glass, mercury-free LED backlighting, and reduced use of harmful materials. The monitor meets ENERGY STAR and EPEAT Gold standards, demonstrating Dell's commitment to environmental responsibility. The packaging utilizes recycled materials, further reducing the ecological footprint.</p>\n      ",
+"detailedSpecs": {
+  "display": {
+    "title": "Display",
+    "details": [
+      "27\" IPS panel",
+      "4K UHD (3840 x 2160) resolution",
+      "16:9 aspect ratio",
+      "60Hz refresh rate",
+      "5ms (Fast) response time, 8ms (Normal)",
+      "350 cd/m² typical brightness (400 cd/m² peak)",
+      "1300:1 contrast ratio",
+      "178°/178° viewing angles (H/V)",
+      "Pixel pitch: 0.1554mm",
+      "VESA DisplayHDR 400 certified",
+      "Anti-glare coating with 3H hardness"
+    ]
+  },
+  "color": {
+    "title": "Color Performance",
+    "details": [
+      "100% sRGB coverage",
+      "95% DCI-P3 coverage",
+      "99% Rec. 709 coverage",
+      "Factory calibrated",
+      "Delta E < 2",
+      "1.07 billion colors (10-bit via FRC)",
+      "Color depth: 1.07 billion colors"
+    ]
+  },
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "1x HDMI 2.0",
+      "1x DisplayPort 1.4",
+      "1x USB Type-C (Alt mode DP 1.4, Power Delivery up to 90W)",
+      "2x USB 3.0 downstream ports",
+      "1x USB 3.0 downstream port with BC1.2 charging",
+      "1x USB 3.0 upstream port",
+      "1x Audio line-out"
+    ]
+  },
+  "power": {
+    "title": "Power",
+    "details": [
+      "Power consumption (operational): 38W (typical), 180W (maximum)",
+      "Power consumption (standby): Less than 0.3W",
+      "Built-in power supply"
+    ]
+  },
+  "physical": {
+    "title": "Physical",
+    "details": [
+      "Height adjustable stand (0-130mm)",
+      "Tilt (-5° to 21°)",
+      "Swivel (-45° to 45°)",
+      "Pivot (-90° to 90°)",
+      "VESA mount compatible (100 x 100mm)",
+      "Dimensions with stand: 611.3 x 395.0-525.0 x 185.0 mm",
+      "Weight: 4.3 kg (without stand), 6.24 kg (with stand)"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "Can I connect my MacBook Pro to this monitor with a single cable?",
+    "answer": "Yes, you can connect a MacBook Pro (or any USB-C enabled laptop) using a single USB-C cable. This will transmit video signal, data for the USB hub, and power up to 90W to charge your laptop simultaneously. This is ideal for a clean setup with minimal cable clutter."
+  },
+  {
+    "question": "Is this monitor suitable for photo editing and design work?",
+    "answer": "Absolutely. The Dell UltraSharp U2720Q is excellent for photo editing and design work due to its factory calibration, 100% sRGB coverage, 95% DCI-P3 coverage, and Delta E less than 2. These specifications ensure accurate color reproduction critical for professional creative work."
+  },
+  {
+    "question": "What's the difference between this and a gaming monitor with the same resolution?",
+    "answer": "While both offer 4K resolution, the U2720Q prioritizes color accuracy, color gamut coverage, and connectivity features for professional work. Gaming monitors typically offer higher refresh rates (120Hz+) and lower response times but may sacrifice color accuracy. This monitor's 60Hz refresh rate is ideal for professional work but not optimized for competitive gaming."
+  },
+  {
+    "question": "Can I use this with a desktop PC that doesn't have USB-C?",
+    "answer": "Yes, you can use the DisplayPort or HDMI connections with any desktop PC. While you won't get the single-cable convenience offered by USB-C, all display functionality will work perfectly. You can also connect the USB upstream port to your PC to use the monitor's built-in USB hub."
+  }
+]
+},
+{
+"_id": "681e3143bf1727e8bb3a3d83",
+"name": "MSI MPG ARTYMIS 343CQR",
+"slug": "msi-mpg-artymis-343cqr",
+"description": "The MSI MPG ARTYMIS 343CQR features an aggressive 1000R curvature on a 34\" ultrawide panel with 165Hz refresh rate, 1ms response time, and AI-powered optimization for an incredibly immersive gaming experience.",
+"shortDescription": "34\" ultra-curved gaming monitor",
+"price": 899.99,
+"compareAtPrice": 999.99,
+"discount": 10,
+"stock": 8,
+"features": [
+  "1000R super-curved panel",
+  "Gaming Intelligence AI",
+  "KVM built-in",
+  "Mystic Light RGB"
+],
+"specs": "34\" VA, 3440x1440, 165Hz, 1ms, HDR400, 1000R Curve",
+"rating": 4.7,
+"reviewCount": 56,
+"additionalImages": [
+  "images/artymis-side.jpg",
+  "images/artymis-rear.jpg",
+  "images/artymis-ports.jpg"
+],
+"brand": "MSI",
+"modelNumber": "MPG ARTYMIS 343CQR",
+"sku": "MSI-ARTYMIS-343CQR",
+"thumbnailUrl": "images/artymis.jpg",
+"detailedDescription": "\n        <h4>Super-Curved Immersion</h4>\n        <p>The MSI MPG ARTYMIS 343CQR features an extreme 1000R curvature that matches the natural curvature of the human eye, creating a truly immersive viewing experience. This aggressive curve on the 34-inch ultrawide panel wraps around your field of vision, enhancing depth perception in games and reducing eye strain during extended gaming sessions by maintaining consistent viewing distances across the entire screen.</p>\n        \n        <h4>Ultrawide Gaming Excellence</h4>\n        <p>With a 21:9 aspect ratio and 3440x1440 UWQHD resolution, the ARTYMIS 343CQR provides a panoramic gaming experience that reveals more horizontal gameplay in compatible titles. The ultrawide format is particularly beneficial in racing games, flight simulators, and strategy games where peripheral awareness gives you a competitive advantage, while also providing cinematic experiences in single-player adventures.</p>\n        \n        <h4>Responsive Gaming Performance</h4>\n        <p>Featuring a 165Hz refresh rate and 1ms MPRT response time, this monitor delivers smooth, blur-free gaming performance ideal for fast-paced competitive titles. The high refresh rate ensures fluid motion rendering, while Adaptive-Sync technology (compatible with both AMD FreeSync Premium and NVIDIA G-SYNC) eliminates screen tearing and stuttering for a seamless visual experience regardless of your graphics card choice.</p>\n        \n        <h4>AI-Enhanced Gaming</h4>\n        <p>MSI's exclusive Gaming Intelligence AI technology analyzes on-screen content in real-time to optimize your gaming experience. Smart features include Night Vision AI (intelligently enhances visibility in dark scenes), Smart Crosshair (changes color based on background for better visibility), and Optix Scope (provides zoom functionality for precision targeting in FPS games). These AI-driven enhancements adapt to your gameplay for maximum competitive advantage.</p>\n        \n        <h4>Console Mode with KVM</h4>\n        <p>The built-in KVM switch allows you to control multiple devices with a single keyboard and mouse setup, seamlessly transitioning between your gaming PC and work laptop. The dedicated Console Mode optimizes display settings for PlayStation and Xbox consoles, providing the best visual experience when gaming on multiple platforms with perfect 4K signal compression to display console content optimally on the ultrawide screen.</p>\n        \n        <h4>Premium Gaming Aesthetics</h4>\n        <p>The sleek design features Mystic Light RGB illumination on the rear of the monitor that can synchronize with other MSI RGB components and peripherals. The virtually borderless design minimizes distractions, while the ergonomic stand provides height, tilt, and swivel adjustments to find your perfect viewing position. For streamers and content creators, the integrated mounting points make attaching accessories like webcams or microphones simple and clean.</p>\n      ",
+"detailedSpecs": {
+  "display": {
+    "title": "Display",
+    "details": [
+      "34\" VA Panel",
+      "21:9 Ultrawide Aspect Ratio",
+      "3440 x 1440 (UWQHD) Resolution",
+      "1000R Super Curved Screen",
+      "165Hz Refresh Rate",
+      "1ms MPRT Response Time",
+      "VESA DisplayHDR 400 Certified",
+      "3000:1 Contrast Ratio",
+      "550 nits Peak Brightness (400 nits Typical)",
+      "178° Viewing Angles (H/V)",
+      "92.2% DCI-P3, 121.7% sRGB Color Coverage",
+      "Anti-Glare Treatment"
+    ]
+  },
+  "connectivity": {
+    "title": "Connectivity",
+    "details": [
+      "1x DisplayPort 1.4a",
+      "2x HDMI 2.0b",
+      "1x USB Type-C (DP Alt Mode, 15W Power Delivery)",
+      "1x USB Type-B (Upstream)",
+      "2x USB 2.0 Type-A (Downstream)",
+      "1x 3.5mm Audio Jack"
+    ]
+  },
+  "features": {
+    "title": "Gaming Features",
+    "details": [
+      "Adaptive-Sync (AMD FreeSync Premium, NVIDIA G-SYNC Compatible)",
+      "Gaming Intelligence AI",
+      "Night Vision AI",
+      "Smart Crosshair",
+      "Optix Scope",
+      "KVM Switch",
+      "Console Mode",
+      "Mystic Light RGB Sync",
+      "Gaming OSD App",
+      "6 Gaming Modes (FPS, Racing, RTS, RPG, etc.)",
+      "Screen Assistance"
+    ]
+  },
+  "physical": {
+    "title": "Physical",
+    "details": [
+      "Stand Adjustments: Height (0-100mm), Tilt (-5° to 20°), Swivel (-30° to 30°)",
+      "VESA Mount: 100 x 100mm",
+      "Dimensions with Stand: 808.8 x 505.7 x 265.0mm",
+      "Weight: 8.5kg (with stand)"
+    ]
+  },
+  "power": {
+    "title": "Power",
+    "details": [
+      "Power Consumption (Typical): 55W",
+      "Power Consumption (Maximum): 85W",
+      "Power Consumption (Standby): <0.5W",
+      "External Power Adapter"
+    ]
+  }
+},
+"faqs": [
+  {
+    "question": "How does the 1000R curve compare to less curved ultrawide monitors?",
+    "answer": "The 1000R curve is more aggressive than the 1800R or 1500R curves found on many other ultrawide monitors. This extreme curve provides a more immersive experience by wrapping further into your peripheral vision. While it may take a day or two to adjust to, most users find it creates a more natural viewing experience for gaming as it matches the curvature of the human eye."
+  },
+  {
+    "question": "What is Gaming Intelligence AI and how does it work?",
+    "answer": "Gaming Intelligence AI analyzes on-screen content in real-time to optimize various display aspects. For example, Night Vision AI intelligently brightens dark areas without overexposing bright areas, helping you spot enemies hiding in shadows. The Smart Crosshair changes color based on the background to ensure it remains visible regardless of the scene. These AI features adapt to different game scenarios automatically."
+  },
+  {
+    "question": "Is this monitor good for both PC and console gaming?",
+    "answer": "Yes, the monitor includes a dedicated Console Mode that optimizes display settings when connected to PlayStation or Xbox consoles. While consoles output in 16:9, the monitor intelligently scales the image to provide the best experience on the 21:9 display. The 120Hz support via HDMI is perfect for PS5 and Xbox Series X/S games that support high refresh rates."
+  },
+  {
+    "question": "What is the KVM feature and how is it useful?",
+    "answer": "The built-in KVM (Keyboard, Video, Mouse) switch allows you to control multiple computers with a single keyboard and mouse set. Connect two computers to the monitor, plug your keyboard and mouse into the monitor's USB ports, and you can switch between controlling both systems without disconnecting/reconnecting peripherals. This is particularly useful if you have both a gaming PC and a work laptop."
+  }
+]
+}
+];
 
 async function seedProducts() {
-  try {
-    // Get all categories first
-    const allCategories = await Category.find();
-    if (allCategories.length === 0) {
-      console.error('No categories found. Please run seedCategories.js first.');
-      process.exit(1);
-    }
+let client;
 
-    console.log(`Found ${allCategories.length} categories`);
+try {
+// Connect to the MongoDB client
+client = new MongoClient(MONGODB_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+});
 
-    // Create maps for easier lookup
-    const categoryMap = {};
-    const subcategoryMap = {};
+await client.connect();
+console.log('Connected to MongoDB successfully');
 
-    // Map for parent categories (main categories)
-    allCategories.filter(cat => cat.level === 0).forEach(cat => {
-      categoryMap[cat.slug] = cat._id;
-    });
+// Get database and collection
+const db = client.db();
+const productsCollection = db.collection('products');
 
-    // Map for subcategories
-    allCategories.filter(cat => cat.level === 1).forEach(cat => {
-      subcategoryMap[cat.slug] = {
-        id: cat._id,
-        parentId: cat.parent
-      };
-    });
+// Process each product
+for (const product of productDetailsData) {
+  // Convert string _id to ObjectId if necessary
+  const productId = typeof product._id === 'string' 
+    ? new ObjectId(product._id) 
+    : product._id;
 
-    console.log('Category mapping completed');
-    console.log('Main categories:', Object.keys(categoryMap));
-    console.log('Subcategories:', Object.keys(subcategoryMap));
+  // Prepare update data (without _id to avoid errors)
+  const { _id, ...updateData } = product;
 
-    // Delete existing products
-    await Product.deleteMany({});
-    console.log('Cleared existing products');
+  // Update the product in the database
+  const result = await productsCollection.updateOne(
+    { _id: productId },
+    { $set: updateData },
+    { upsert: true } // Create if doesn't exist
+  );
 
-    // Define products with all required fields based on the schema
-    const products = [
-      // LAPTOP PRODUCTS
-      // Gaming Laptop
-      {
-        name: 'Acer Predator Helios 300',
-        slug: 'acer-predator-helios-300',
-        description: 'The Acer Predator Helios 300 features a 15.6" Full HD IPS display with 144Hz refresh rate, Intel Core i7-11800H processor, 16GB DDR4 RAM, 512GB NVMe SSD, and NVIDIA GeForce RTX 3060 graphics.',
-        shortDescription: 'Powerful gaming laptop with RTX 3060 graphics',
-        price: 1299.99,
-        compareAtPrice: 1499.99,
-        category: categoryMap['laptops'],
-        subCategory: subcategoryMap['gaming-laptops'].id,
-        stock: 15,
-        specs: 'Intel Core i7-11800H, 16GB RAM, 512GB SSD, RTX 3060, 15.6" FHD 144Hz',
-        features: ['144Hz Refresh Rate', 'RGB Backlit Keyboard', 'DTS:X Ultra Audio', 'PredatorSense Software'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 13,
-        rating: 4.7,
-        reviewCount: 128,
-        tags: ['gaming', 'laptops', 'nvidia', 'rtx3060', 'acer', 'predator']
-      },
-      
-      // Business Laptop
-      {
-        name: 'Lenovo ThinkPad X1 Carbon',
-        slug: 'lenovo-thinkpad-x1-carbon',
-        description: 'The Lenovo ThinkPad X1 Carbon is a premium business ultrabook designed for professionals. It features a 14" WQHD display, Intel Core i7 processor, 16GB RAM, and military-grade durability.',
-        shortDescription: 'Premium business ultrabook with long battery life',
-        price: 1699.99,
-        compareAtPrice: 1899.99,
-        category: categoryMap['laptops'],
-        subCategory: subcategoryMap['business-laptops'].id,
-        stock: 12,
-        specs: 'Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14" WQHD, Windows 11 Pro',
-        features: ['Fingerprint reader', 'ThinkShutter camera cover', 'Military-grade durability', 'Rapid charge technology'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 10,
-        rating: 4.8,
-        reviewCount: 92,
-        tags: ['business', 'laptops', 'thinkpad', 'lenovo', 'ultrabook']
-      },
-      
-      // Ultrabook
-      {
-        name: 'Dell XPS 13',
-        slug: 'dell-xps-13',
-        description: 'The Dell XPS 13 features a stunning 13.4" InfinityEdge display with virtually no bezels, 11th Gen Intel processors, and a compact design thats both powerful and portable.',
-        shortDescription: 'Premium ultrabook with InfinityEdge display',
-        price: 1299.99,
-        compareAtPrice: 1399.99,
-        category: categoryMap['laptops'],
-        subCategory: subcategoryMap['ultrabooks'].id,
-        stock: 14,
-        specs: 'Intel Core i7-1185G7, 16GB RAM, 512GB SSD, 13.4" UHD+ Touch Display',
-        features: ['InfinityEdge display', 'CNC machined aluminum chassis', 'Dolby Vision support', 'Thunderbolt 4 connectivity'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.9,
-        reviewCount: 156,
-        tags: ['ultrabook', 'laptops', 'dell', 'xps', 'premium']
-      },
-      
-      // 2-in-1 Laptop
-      {
-        name: 'HP Spectre x360',
-        slug: 'hp-spectre-x360',
-        description: 'The HP Spectre x360 is a versatile convertible laptop with a stunning OLED display, gem-cut design, and powerful performance for creators and professionals.',
-        shortDescription: 'Premium 2-in-1 convertible with OLED display',
-        price: 1399.99,
-        compareAtPrice: 1599.99,
-        category: categoryMap['laptops'],
-        subCategory: subcategoryMap['2-in-1-laptops'].id,
-        stock: 9,
-        specs: 'Intel Core i7-1165G7, 16GB RAM, 1TB SSD, 13.5" 3K2K OLED Touch Display',
-        features: ['360° hinge design', 'HP MPP 2.0 Tilt Pen support', 'Bang & Olufsen audio', 'Webcam kill switch'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 12,
-        rating: 4.7,
-        reviewCount: 108,
-        tags: ['2-in-1', 'convertible', 'laptops', 'hp', 'spectre', 'oled']
-      },
-      
-      // Chromebook
-      {
-        name: 'Google Pixelbook Go',
-        slug: 'google-pixelbook-go',
-        description: 'The Google Pixelbook Go is a premium Chromebook featuring a 13.3" touchscreen display, up to 12 hours of battery life, and a lightweight, portable design perfect for on-the-go productivity.',
-        shortDescription: 'Premium Chromebook with 12-hour battery life',
-        price: 649.99,
-        compareAtPrice: 699.99,
-        category: categoryMap['laptops'],
-        subCategory: subcategoryMap['chromebooks'].id,
-        stock: 15,
-        specs: 'Intel Core i5, 8GB RAM, 128GB SSD, 13.3" Full HD Touchscreen',
-        features: ['Hush Keys for quiet typing', 'Titan C security chip', 'Quick Charge technology', 'HD webcam'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.6,
-        reviewCount: 87,
-        tags: ['chromebook', 'laptops', 'google', 'pixelbook', 'chrome os']
-      },
-      
-      // COMPONENT PRODUCTS
-      // Graphics Card
-      {
-        name: 'NVIDIA GeForce RTX 4080',
-        slug: 'nvidia-geforce-rtx-4080',
-        description: 'The NVIDIA GeForce RTX 4080 delivers extreme gaming performance with 16GB of high-speed GDDR6X memory, DLSS 3 with AI frame generation, and advanced ray tracing capabilities.',
-        shortDescription: 'High-end gaming graphics card with 16GB GDDR6X',
-        price: 1199.99,
-        compareAtPrice: 1299.99,
-        category: categoryMap['components'],
-        subCategory: subcategoryMap['graphics-cards'].id,
-        stock: 8,
-        specs: '16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design',
-        features: ['DLSS 3 with frame generation', 'Ray tracing cores', 'NVIDIA Reflex low latency', 'AV1 encode & decode'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.9,
-        reviewCount: 94,
-        tags: ['graphics card', 'gpu', 'nvidia', 'rtx', 'gaming']
-      },
-      
-      // Processor
-      {
-        name: 'Intel Core i9-13900K',
-        slug: 'intel-core-i9-13900k',
-        description: 'The Intel Core i9-13900K is a high-performance desktop processor featuring 24 cores (8 P-cores + 16 E-cores), 32 threads, up to 5.8GHz boost clock, and support for DDR5 memory and PCIe 5.0.',
-        shortDescription: 'Flagship desktop processor with 24 cores',
-        price: 599.99,
-        compareAtPrice: 649.99,
-        category: categoryMap['components'],
-        subCategory: subcategoryMap['processors'].id,
-        stock: 10,
-        specs: '24 Cores (8P+16E), 32 Threads, 5.8GHz Max Turbo, 36MB Cache, LGA 1700',
-        features: ['Hybrid architecture', 'Intel Thermal Velocity Boost', 'Intel Thread Director', 'Integrated Intel UHD 770 graphics'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.9,
-        reviewCount: 128,
-        tags: ['processor', 'cpu', 'intel', 'core i9', 'desktop']
-      },
-      
-      // Motherboard
-      {
-        name: 'ASUS ROG Maximus Z790 Hero',
-        slug: 'asus-rog-maximus-z790-hero',
-        description: 'The ASUS ROG Maximus Z790 Hero motherboard offers premium features for Intel 12th and 13th Gen processors, including advanced power delivery, high-speed connectivity, and extensive RGB lighting and customization options.',
-        shortDescription: 'Premium Intel Z790 motherboard for enthusiasts',
-        price: 599.99,
-        compareAtPrice: 649.99,
-        category: categoryMap['components'],
-        subCategory: subcategoryMap['motherboards'].id,
-        stock: 7,
-        specs: 'Intel Z790 Chipset, ATX Form Factor, DDR5 Memory, LGA 1700 Socket',
-        features: ['20+1 power stages', 'PCIe 5.0 support', 'Thunderbolt 4 connectivity', 'Aura Sync RGB lighting'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.8,
-        reviewCount: 64,
-        tags: ['motherboard', 'intel', 'z790', 'asus', 'rog']
-      },
-      
-      // RAM
-      {
-        name: 'Corsair Vengeance RGB Pro 32GB DDR4',
-        slug: 'corsair-vengeance-rgb-pro-32gb-ddr4',
-        description: 'Corsair Vengeance RGB Pro 32GB (2x16GB) DDR4 memory delivers premium performance and dynamic multi-zone RGB lighting for custom PC builds, with support for XMP 2.0 for easy overclocking.',
-        shortDescription: 'High-performance RGB memory for gaming PCs',
-        price: 129.99,
-        compareAtPrice: 149.99,
-        category: categoryMap['components'],
-        subCategory: subcategoryMap['memory-ram'].id,
-        stock: 20,
-        specs: '32GB (2x16GB), DDR4-3600MHz, CL18, 1.35V',
-        features: ['Ten-zone RGB lighting', 'Custom performance PCB', 'Aluminum heat spreader', 'XMP 2.0 support'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 13,
-        rating: 4.9,
-        reviewCount: 256,
-        tags: ['memory', 'ram', 'ddr4', 'corsair', 'rgb']
-      },
-      
-      // Storage
-      {
-        name: 'Samsung 990 PRO 2TB NVMe SSD',
-        slug: 'samsung-990-pro-2tb-nvme-ssd',
-        description: 'The Samsung 990 PRO 2TB NVMe SSD delivers exceptional performance for gaming and content creation with sequential read speeds up to 7,450 MB/s and nickel-coated controller for optimal thermal control.',
-        shortDescription: 'Ultra-fast PCIe 4.0 NVMe SSD for gaming',
-        price: 249.99,
-        compareAtPrice: 279.99,
-        category: categoryMap['components'],
-        subCategory: subcategoryMap['storage'].id,
-        stock: 18,
-        specs: '2TB Capacity, PCIe 4.0 x4, NVMe 2.0, M.2 2280',
-        features: ['7,450 MB/s read, 6,900 MB/s write', 'Samsung V-NAND technology', 'Samsung Magician software', 'Dynamic Thermal Guard'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 10,
-        rating: 4.9,
-        reviewCount: 187,
-        tags: ['storage', 'ssd', 'nvme', 'samsung', 'm.2']
-      },
-      
-      // GAMING PC PRODUCTS
-      // High-End Gaming PC
-      {
-        name: 'TechStore Titan X',
-        slug: 'techstore-titan-x',
-        description: 'The TechStore Titan X is our flagship gaming PC featuring the latest NVIDIA RTX 4090 graphics card, Intel Core i9-13900K processor, 64GB DDR5 RAM, and advanced liquid cooling in a premium case with extensive RGB lighting.',
-        shortDescription: 'Ultimate gaming PC with RTX 4090 and i9-13900K',
-        price: 3999.99,
-        compareAtPrice: 4299.99,
-        category: categoryMap['gaming-pcs'],
-        subCategory: subcategoryMap['high-end-gaming-pcs'].id,
-        stock: 5,
-        specs: 'Intel Core i9-13900K, RTX 4090 24GB, 64GB DDR5-6000, 2TB NVMe SSD + 4TB HDD',
-        features: ['Custom RGB liquid cooling', 'Premium tempered glass case', 'WiFi 6E connectivity', '1200W Platinum PSU'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 5.0,
-        reviewCount: 42,
-        tags: ['gaming pc', 'high-end', 'custom pc', 'rtx 4090', 'intel', 'liquid cooling']
-      },
-      
-      // Mid-Range Gaming PC
-      {
-        name: 'TechStore Voyager',
-        slug: 'techstore-voyager',
-        description: 'The TechStore Voyager delivers exceptional gaming performance at a reasonable price, featuring the Intel Core i7-13700K processor, NVIDIA RTX 4070 graphics, and 32GB of DDR5 memory in a stylish mid-tower case.',
-        shortDescription: 'Balanced gaming PC with RTX 4070 and i7',
-        price: 2299.99,
-        compareAtPrice: 2499.99,
-        category: categoryMap['gaming-pcs'],
-        subCategory: subcategoryMap['mid-range-gaming-pcs'].id,
-        stock: 8,
-        specs: 'Intel Core i7-13700K, RTX 4070 12GB, 32GB DDR5-5200, 1TB NVMe SSD + 2TB HDD',
-        features: ['240mm AIO liquid cooling', 'RGB lighting system', 'WiFi 6 and Bluetooth 5.2', '850W Gold PSU'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 8,
-        rating: 4.8,
-        reviewCount: 64,
-        tags: ['gaming pc', 'mid-range', 'custom pc', 'rtx 4070', 'intel']
-      },
-      
-      // Entry-Level Gaming PC
-      {
-        name: 'TechStore Scout',
-        slug: 'techstore-scout',
-        description: 'The TechStore Scout provides excellent entry-level gaming performance with the Intel Core i5-13600K processor, NVIDIA RTX 4060 graphics card, and 16GB of DDR5 memory at a budget-friendly price point.',
-        shortDescription: 'Affordable gaming PC with RTX 4060',
-        price: 1299.99,
-        compareAtPrice: 1399.99,
-        category: categoryMap['gaming-pcs'],
-        subCategory: subcategoryMap['entry-level-gaming-pcs'].id,
-        stock: 12,
-        specs: 'Intel Core i5-13600K, RTX 4060 8GB, 16GB DDR5-4800, 1TB NVMe SSD',
-        features: ['Air cooling with RGB', 'Compact case design', 'WiFi 6 support', '650W Bronze PSU'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.7,
-        reviewCount: 86,
-        tags: ['gaming pc', 'entry-level', 'budget pc', 'rtx 4060', 'intel']
-      },
-      
-      // Custom Build PC
-      {
-        name: 'TechStore Custom Creator PC',
-        slug: 'techstore-custom-creator-pc',
-        description: 'The TechStore Custom Creator PC is optimized for content creation, video editing, and 3D rendering with powerful components that can be customized to your specific needs and workflow requirements.',
-        shortDescription: 'Customizable workstation for content creators',
-        price: 2599.99,
-        compareAtPrice: 2799.99,
-        category: categoryMap['gaming-pcs'],
-        subCategory: subcategoryMap['custom-build-pcs'].id,
-        stock: 3,
-        specs: 'Customizable, base config: Intel Core i9-13900K, RTX 4080 16GB, 64GB DDR5-5600, 2TB NVMe SSD',
-        features: ['Customizable components', 'Professional-grade cooling', 'Clean professional aesthetic', 'Optional upgrades available'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.9,
-        reviewCount: 28,
-        tags: ['custom pc', 'workstation', 'content creation', 'video editing', 'professional']
-      },
-      
-      // MONITOR PRODUCTS
-      // Gaming Monitor
-      {
-        name: 'ASUS ROG Swift 360Hz PG259QN',
-        slug: 'asus-rog-swift-360hz-pg259qn',
-        description: 'The ASUS ROG Swift PG259QN features a 24.5" Full HD IPS panel with a 360Hz refresh rate, 1ms response time, and NVIDIA G-SYNC technology, designed for competitive gamers who need the absolute fastest display.',
-        shortDescription: 'Ultra-fast 360Hz gaming monitor for esports',
-        price: 699.99,
-        compareAtPrice: 799.99,
-        category: categoryMap['monitors'],
-        subCategory: subcategoryMap['gaming-monitors'].id,
-        stock: 10,
-        specs: '24.5" IPS, 1920x1080, 360Hz, 1ms GTG, G-SYNC, DisplayHDR 400',
-        features: ['360Hz refresh rate', 'NVIDIA Reflex Latency Analyzer', 'ASUS Fast IPS technology', 'NVIDIA G-SYNC processor'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 12,
-        rating: 4.8,
-        reviewCount: 86,
-        tags: ['monitor', 'gaming', 'high refresh rate', 'esports', 'asus']
-      },
-      
-      // Ultrawide Monitor
-      {
-        name: 'Samsung Odyssey G9 Neo',
-        slug: 'samsung-odyssey-g9-neo',
-        description: 'The Samsung Odyssey G9 Neo features a massive 49" 1000R curved screen with Quantum Mini LED technology, 240Hz refresh rate, and 1ms response time, creating an incredibly immersive gaming experience.',
-        shortDescription: 'Massive 49" curved gaming monitor with mini-LED',
-        price: 1799.99,
-        compareAtPrice: 1999.99,
-        category: categoryMap['monitors'],
-        subCategory: subcategoryMap['ultrawide-monitors'].id,
-        stock: 5,
-        specs: '49" VA, 5120x1440 (32:9), 240Hz, 1ms, Quantum Mini LED, HDR2000',
-        features: ['1000R curved screen', 'Quantum Mini LED backlighting', 'CoreSync ambient lighting', 'Picture-by-Picture'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 10,
-        rating: 4.9,
-        reviewCount: 48,
-        tags: ['monitor', 'ultrawide', 'curved', 'gaming', 'samsung']
-      },
-      
-      // 4K Monitor
-      {
-        name: 'LG 27GN950-B UltraGear',
-        slug: 'lg-27gn950-b-ultragear',
-        description: 'The LG 27GN950-B UltraGear is a 27" 4K gaming monitor with 144Hz refresh rate, 1ms response time, and outstanding color performance with VESA DisplayHDR 600 certification and 98% DCI-P3 color gamut.',
-        shortDescription: '4K gaming monitor with 144Hz refresh rate',
-        price: 799.99,
-        compareAtPrice: 899.99,
-        category: categoryMap['monitors'],
-        subCategory: subcategoryMap['4k-monitors'].id,
-        stock: 9,
-        specs: '27" Nano IPS, 3840x2160, 144Hz, 1ms, HDR600, DCI-P3 98%',
-        features: ['Sphere Lighting 2.0', 'VESA DisplayHDR 600', 'G-Sync Compatible', 'AMD FreeSync Premium Pro'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 11,
-        rating: 4.8,
-        reviewCount: 92,
-        tags: ['monitor', '4k', 'gaming', 'hdr', 'lg']
-      },
-      
-      // Professional Monitor
-      {
-        name: 'Dell UltraSharp U2720Q',
-        slug: 'dell-ultrasharp-u2720q',
-        description: 'The Dell UltraSharp U2720Q is a 27" 4K monitor designed for professional work with excellent color accuracy, USB-C connectivity, and VESA DisplayHDR 400 certification for content creators.',
-        shortDescription: '4K monitor for professional content creation',
-        price: 649.99,
-        compareAtPrice: 699.99,
-        category: categoryMap['monitors'],
-        subCategory: subcategoryMap['professional-monitors'].id,
-        stock: 12,
-        specs: '27" IPS, 3840x2160, 60Hz, 5ms, 100% sRGB, 95% DCI-P3',
-        features: ['USB-C with 90W power delivery', 'Factory calibrated', 'VESA DisplayHDR 400', 'InfinityEdge design'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 7,
-        rating: 4.8,
-        reviewCount: 104,
-        tags: ['monitor', 'professional', '4k', 'content creation', 'dell']
-      },
-      
-      // Curved Monitor
-      {
-        name: 'MSI MPG ARTYMIS 343CQR',
-        slug: 'msi-mpg-artymis-343cqr',
-        description: 'The MSI MPG ARTYMIS 343CQR features an aggressive 1000R curvature on a 34" ultrawide panel with 165Hz refresh rate, 1ms response time, and AI-powered optimization for an incredibly immersive gaming experience.',
-        shortDescription: '34" ultra-curved gaming monitor',
-        price: 899.99,
-        compareAtPrice: 999.99,
-        category: categoryMap['monitors'],
-        subCategory: subcategoryMap['curved-monitors'].id,
-        stock: 8,
-        specs: '34" VA, 3440x1440, 165Hz, 1ms, HDR400, 1000R Curve',
-        features: ['1000R super-curved panel', 'Gaming Intelligence AI', 'KVM built-in', 'Mystic Light RGB'],
-        isActive: true,
-        isFeatured: true,
-        isOnSale: true,
-        discount: 10,
-        rating: 4.7,
-        reviewCount: 56,
-        tags: ['monitor', 'curved', 'gaming', 'ultrawide', 'msi']
-      }
-    ];
-
-    // Insert all products
-    const insertedProducts = await Product.insertMany(products);
-    console.log(`Successfully inserted ${insertedProducts.length} products`);
-
-    console.log('Products by category:');
-    const laptopCount = products.filter(p => p.category.equals(categoryMap['laptops'])).length;
-    const componentCount = products.filter(p => p.category.equals(categoryMap['components'])).length;
-    const pcCount = products.filter(p => p.category.equals(categoryMap['gaming-pcs'])).length;
-    const monitorCount = products.filter(p => p.category.equals(categoryMap['monitors'])).length;
-    
-    console.log(`- Laptops: ${laptopCount}`);
-    console.log(`- Components: ${componentCount}`);
-    console.log(`- Gaming PCs: ${pcCount}`);
-    console.log(`- Monitors: ${monitorCount}`);
-
-  } catch (error) {
-    console.error('Error seeding products:', error);
-    if (error.errors) {
-      console.error('Validation errors:');
-      Object.keys(error.errors).forEach(key => {
-        console.error(`- ${key}: ${error.errors[key].message}`);
-      });
-    }
-  } finally {
-    // Close the database connection
-    mongoose.connection.close();
-    console.log('Database connection closed');
+  if (result.matchedCount) {
+    console.log(`Updated product: ${product.name}`);
+  } else if (result.upsertedCount) {
+    console.log(`Created product: ${product.name}`);
   }
 }
 
-// Run the seeding function
-seedProducts();
+console.log('Product seeding completed successfully');
+} catch (error) {
+console.error('Error seeding products:', error);
+} finally {
+// Close the connection
+if (client) {
+  await client.close();
+  console.log('MongoDB connection closed');
+}
+}
+}
+
+// Run the seed function
+seedProducts().catch(console.error);

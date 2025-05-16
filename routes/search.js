@@ -33,15 +33,24 @@ router.get('/products/search', async (req, res) => {
         { "tags": searchRegex }
       ]
     })
-    .select('name price compareAtPrice thumbnailUrl specs brand') // Select only needed fields
+    .select('_id name slug price compareAtPrice thumbnailUrl specs brand discount') // Include _id and slug fields
     .limit(10) // Limit to 10 results
     .lean(); // Convert to plain JS objects for faster response
+    
+    // Format prices to match frontend expectations - ensure they're numbers, not strings
+    const formattedProducts = products.map(product => {
+      return {
+        ...product,
+        price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
+        compareAtPrice: typeof product.compareAtPrice === 'string' ? parseFloat(product.compareAtPrice) : product.compareAtPrice
+      };
+    });
     
     // Return the results
     res.json({
       success: true,
-      products: products,
-      count: products.length,
+      products: formattedProducts,
+      count: formattedProducts.length,
       query: query
     });
     
@@ -81,15 +90,24 @@ router.get('/search', async (req, res) => {
         { "tags": searchRegex }
       ]
     })
-    .select('name price compareAtPrice thumbnailUrl specs brand') // Select only needed fields
+    .select('_id name slug price compareAtPrice thumbnailUrl specs brand discount') // Include _id and slug fields
     .limit(10) // Limit to 10 results
     .lean(); // Convert to plain JS objects for faster response
+    
+    // Format prices to match frontend expectations - ensure they're numbers, not strings
+    const formattedProducts = products.map(product => {
+      return {
+        ...product,
+        price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
+        compareAtPrice: typeof product.compareAtPrice === 'string' ? parseFloat(product.compareAtPrice) : product.compareAtPrice
+      };
+    });
     
     // Return the results
     res.json({
       success: true,
-      results: products,
-      count: products.length,
+      results: formattedProducts, 
+      count: formattedProducts.length,
       query: query
     });
     

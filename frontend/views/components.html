@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/products.js"></script>
+    <script src="/js/products-js.js"></script>
     <script src="/js/cart-js.js"></script>
     <script src="/js/global-cart.js"></script>
+    <script src="/js/product-details.js"></script>
+
+    
 
     <style>
         .category-container {
@@ -700,5 +703,72 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
+    <script>
+        // Wait for the page to fully load
+        window.addEventListener('load', function() {
+          // Wait a short moment to ensure all products are rendered
+          setTimeout(function() {
+            makeAllProductCardsClickable();
+          }, 500);
+        });
+        
+        function makeAllProductCardsClickable() {
+          console.log('Making all product cards clickable...');
+          
+          // Get all product cards on the page
+          const productCards = document.querySelectorAll('.product-card');
+          console.log('Found', productCards.length, 'product cards');
+          
+          productCards.forEach((card, index) => {
+            // Skip if already made clickable
+            if (card.hasAttribute('data-clickable')) return;
+            
+            // Add clickable attribute to prevent duplicate handlers
+            card.setAttribute('data-clickable', 'true');
+            
+            // Make the whole card look clickable
+            card.style.cursor = 'pointer';
+            
+            // Get product ID and slug
+            const productId = card.getAttribute('data-product-id') || 'component-' + (index + 301);
+            
+            // Generate slug from product title if not already set
+            let productSlug = card.getAttribute('data-product-slug');
+            if (!productSlug) {
+              const titleElement = card.querySelector('.product-title');
+              if (titleElement) {
+                productSlug = titleElement.textContent.trim()
+                  .toLowerCase()
+                  .replace(/[^\w\s-]/g, '')
+                  .replace(/\s+/g, '-')
+                  .replace(/-+/g, '-');
+                
+                // Set the slug on the card for future use
+                card.setAttribute('data-product-slug', productSlug);
+              }
+            }
+            
+            // Log to debug
+            console.log('Card', index, 'ID:', productId, 'Slug:', productSlug);
+            
+            // Add click event handler
+            card.addEventListener('click', function(e) {
+              // Prevent navigation when clicking on buttons or links
+              if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                  e.target.closest('button') || e.target.closest('a')) {
+                return;
+              }
+              
+              console.log('Product card clicked:', productId, productSlug);
+              
+              // Navigate to product detail page
+              window.location.href = `/product-detail.html?id=${productId}`;
+            });
+          });
+          
+          console.log('Product cards initialized for clicking');
+        }
+        </script>
+
 </body>
 </html>
