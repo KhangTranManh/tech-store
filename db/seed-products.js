@@ -50,7 +50,7 @@ const productDetailsData = [
     "reviewCount": 92,
     "additionalImages": [
       "images/thinkpad-side.jpg",
-      "images/thinkpad-open.jpg",
+      "images/thinkpad.jpg",
       "images/thinkpad-keyboard.jpg"
     ],
     "brand": "Lenovo",
@@ -171,7 +171,7 @@ const productDetailsData = [
     "rating": 4.9,
     "reviewCount": 156,
     "additionalImages": [
-      "images/xps13-angle.jpg",
+      "images/xps13.jpg",
       "images/xps13-open.jpg",
       "images/xps13-side.jpg"
     ],
@@ -287,7 +287,7 @@ const productDetailsData = [
     "reviewCount": 108,
     "additionalImages": [
       "images/spectre-tablet.jpg",
-      "images/spectre-tent.jpg",
+      "images/spectre.jpg",
       "images/spectre-side.jpg"
     ],
     "brand": "HP",
@@ -405,7 +405,7 @@ const productDetailsData = [
     "reviewCount": 87,
     "additionalImages": [
       "images/pixelbook-side.jpg",
-      "images/pixelbook-bottom.jpg",
+      "images/pixelbook.jpg",
       "images/pixelbook-typing.jpg"
     ],
     "brand": "Google",
@@ -518,9 +518,9 @@ const productDetailsData = [
     "rating": 4.9,
     "reviewCount": 128,
     "additionalImages": [
-      "images/i9-top.jpg",
-      "images/i9-bottom.jpg",
-      "images/i9-box.jpg"
+      "images/i9-13900k-top.jpg",
+      "images/i9-13900k.jpg",
+      "images/i9-13900k-box.jpg"
     ],
     "brand": "Intel",
     "modelNumber": "BX8071513900K",
@@ -618,9 +618,9 @@ const productDetailsData = [
 "rating": 4.8,
 "reviewCount": 64,
 "additionalImages": [
-  "images/z790-io.jpg",
-  "images/z790-close.jpg",
-  "images/z790-box.jpg"
+  "images/z790-hero-io.jpg",
+  "images/z790.jpg",
+  "images/z790-hero-box.jpg"
 ],
 "brand": "ASUS",
 "modelNumber": "ROG MAXIMUS Z790 HERO",
@@ -726,9 +726,9 @@ const productDetailsData = [
 "rating": 4.9,
 "reviewCount": 256,
 "additionalImages": [
-  "images/ram-installed.jpg",
-  "images/ram-single.jpg",
-  "images/ram-lit.jpg"
+  "images/vengeance-rgb-2.jpg",
+  "images/vengeance-rgb.jpg",
+  "images/vengeance-rgb.jpg"
 ],
 "brand": "Corsair",
 "modelNumber": "CMW32GX4M2D3600C18",
@@ -815,9 +815,9 @@ const productDetailsData = [
 "rating": 4.9,
 "reviewCount": 187,
 "additionalImages": [
-  "images/ssd-angle.jpg",
-  "images/ssd-installed.jpg",
-  "images/ssd-box.jpg"
+  "images/990pro-2.jpg",
+  "images/990pro.jpg",
+  "images/990pro-2.jpg"
 ],
 "brand": "Samsung",
 "modelNumber": "MZ-V9P2T0BW",
@@ -911,7 +911,7 @@ const productDetailsData = [
 "reviewCount": 42,
 "additionalImages": [
   "images/titan-front.jpg",
-  "images/titan-interior.jpg",
+  "images/titan-x.jpg",
   "images/titan-side.jpg"
 ],
 "brand": "TechStore",
@@ -1051,7 +1051,7 @@ const productDetailsData = [
 "reviewCount": 86,
 "additionalImages": [
   "images/scout-front.jpg",
-  "images/scout-interior.jpg",
+  "images/scout.jpg",
   "images/scout-ports.jpg"
 ],
 "brand": "TechStore",
@@ -1180,8 +1180,8 @@ const productDetailsData = [
 "reviewCount": 28,
 "additionalImages": [
   "images/creator-front.jpg",
-  "images/creator-interior.jpg",
-  "images/creator-bench.jpg"
+  "images/creator-pc.jpg",
+  "images/creator-front.jpg"
 ],
 "brand": "TechStore",
 "modelNumber": "TS-CREATOR-2023",
@@ -1303,8 +1303,8 @@ const productDetailsData = [
 "reviewCount": 86,
 "additionalImages": [
   "images/pg259qn-side.jpg",
-  "images/pg259qn-back.jpg",
-  "images/pg259qn-ports.jpg"
+  "images/pg259qn.jpg",
+  "images/pg259qn-side.jpg"
 ],
 "brand": "ASUS",
 "modelNumber": "PG259QN",
@@ -1406,7 +1406,7 @@ const productDetailsData = [
 "additionalImages": [
   "images/g9-side.jpg",
   "images/g9-rear.jpg",
-  "images/g9-curve.jpg"
+  "images/g9-neo.jpg"
 ],
 "brand": "Samsung",
 "modelNumber": "LS49AG952NNXZA",
@@ -1518,7 +1518,7 @@ const productDetailsData = [
 "reviewCount": 104,
 "additionalImages": [
   "images/u2720q-side.jpg",
-  "images/u2720q-back.jpg",
+  "images/u2720q.jpg",
   "images/u2720q-ports.jpg"
 ],
 "brand": "Dell",
