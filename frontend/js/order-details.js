@@ -1,21 +1,29 @@
-// order-details.js - Add this to your js/order-details.js file
+// order-details.js - Updated with consistent order number formatting
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded for order details page');
+    
     // Get order ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('id');
     
+    console.log('Order ID from URL:', orderId);
+    
     if (orderId) {
         loadOrderDetails(orderId);
     } else {
-        showError('Order ID not provided');
+        showError('Order ID not provided. Please select an order from your order history.');
     }
 });
-
 // Load order details
 function loadOrderDetails(orderId) {
+    console.log('Loading details for order:', orderId);
+    
     const contentContainer = document.getElementById('order-details-content');
     
-    if (!contentContainer) return;
+    if (!contentContainer) {
+        console.error('Order details container not found');
+        return;
+    }
     
     contentContainer.innerHTML = '<div class="loading">Loading order details...</div>';
     
@@ -28,32 +36,47 @@ function loadOrderDetails(orderId) {
         credentials: 'include'
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch order details');
+        console.log('Order details API response status:', response.status);
+        
+        // Handle authentication issues
+        if (response.status === 401) {
+            // Redirect to login
+            window.location.href = `/login.html?redirect=/order-details.html?id=${orderId}`;
+            throw new Error('Authentication required. Redirecting to login...');
         }
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch order details: ${response.status} ${response.statusText}`);
+        }
+        
         return response.json();
     })
     .then(data => {
-        if (data.success) {
+        console.log('Order details data:', data);
+        
+        if (data.success && data.order) {
             displayOrderDetails(data.order);
         } else {
-            showError('Failed to load order details: ' + data.message);
+            showError('Failed to load order details: ' + (data.message || 'Unknown error'));
         }
     })
     .catch(error => {
         console.error('Error fetching order details:', error);
-        showError('Unable to load order details. Please try again later.');
+        
+        // Don't show error if we're redirecting to login
+        if (!error.message.includes('Redirecting to login')) {
+            showError('Unable to load order details. Please try again later.');
+        }
     });
 }
-
 // Display order details
 function displayOrderDetails(order) {
     const contentContainer = document.getElementById('order-details-content');
     
     if (!contentContainer) return;
     
-    // Format order number (TS + last 8 digits of order ID)
-    const orderNumber = 'TS' + order._id.toString().slice(-8);
+    // Format order number - Use the actual orderNumber if available, otherwise format from ID
+    const orderNumber = order.orderNumber || formatOrderNumber(order._id);
     
     // Format date
     const orderDate = new Date(order.createdAt);
@@ -135,8 +158,8 @@ function displayOrderDetails(order) {
                     
                     ${order.status === 'shipped' || order.status === 'delivered' ? `
                         <div class="tracking-info">
-                            <div class="tracking-number">Tracking Number: ${order.trackingNumber || 'TSTRACK123456789'}</div>
-                            <a href="#" class="tracking-link">Track your package</a>
+                            <div class="tracking-number">Tracking Number: ${order.trackingNumber || 'N/A'}</div>
+                            <a href="/track.html?orderNumber=${encodeURIComponent(orderNumber)}&email=${encodeURIComponent(getUserEmail())}" class="tracking-link">Track your package</a>
                         </div>
                     ` : ''}
                 </div>
@@ -188,6 +211,52 @@ function displayOrderDetails(order) {
             }
         });
     }
+}
+
+function formatOrderNumber(orderId) {
+    if (!orderId) return 'ORD-000000-0000';
+    
+    // If the input is already an order number, return it
+    if (typeof orderId === 'string' && (orderId.startsWith('ORD-') || orderId.startsWith('TS'))) {
+        return orderId;
+    }
+    
+    // Check if there's already an orderNumber format in localStorage
+    const formatPreference = localStorage.getItem('orderNumberFormat') || 'ORD';
+    
+    if (formatPreference === 'TS') {
+        // Convert ID to string and get last 8 characters
+        const idString = orderId.toString();
+        const lastEight = idString.length > 8 
+            ? idString.slice(-8) 
+            : idString.padStart(8, '0');
+        
+        return 'TS' + lastEight;
+    } else {
+        // Use ORD-XXXXXX-XXXX format
+        const idString = orderId.toString();
+        // Take characters from the end to ensure uniqueness
+        const sixDigits = idString.length > 6 ? idString.slice(-10, -4) : idString.padStart(6, '0');
+        const fourDigits = idString.length > 4 ? idString.slice(-4) : '0000';
+        
+        return `ORD-${sixDigits}-${fourDigits}`;
+    }
+}
+
+// Get user email for tracking link
+function getUserEmail() {
+    // First try to get from localStorage
+    const email = localStorage.getItem('userEmail');
+    if (email) return email;
+    
+    // If not available, try to get from data attribute on page
+    const userEmailElement = document.querySelector('[data-user-email]');
+    if (userEmailElement) {
+        return userEmailElement.getAttribute('data-user-email');
+    }
+    
+    // Default fallback
+    return '';
 }
 
 // Cancel an order

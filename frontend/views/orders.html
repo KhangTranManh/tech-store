@@ -295,6 +295,25 @@
             font-weight: bold;
         }
         
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 30px;
+            color: #c62828;
+        }
+        
+        .more-items {
+            padding: 10px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        
         @media (max-width: 768px) {
             .order-header {
                 flex-direction: column;
@@ -387,95 +406,8 @@
                 </div>
                 
                 <div class="order-list">
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div class="order-date">
-                                <span class="date-month">March</span>
-                                <span class="date-day">15</span>
-                                <span class="date-year">2025</span>
-                            </div>
-                            <div class="order-info">
-                                <div class="order-number">Order #TS87654321 <span class="order-status status-delivered">Delivered</span></div>
-                            </div>
-                        </div>
-                        
-                        <div class="order-items">
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="images/product1.jpg" alt="Gaming Laptop">
-                                </div>
-                                <div class="item-details">
-                                    <div class="item-name">Acer Predator Helios 300 Gaming Laptop</div>
-                                    <div class="item-price">$1,199</div>
-                                    <div class="item-quantity">Quantity: 1</div>
-                                </div>
-                            </div>
-                            
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="images/product4.jpg" alt="Gaming Keyboard">
-                                </div>
-                                <div class="item-details">
-                                    <div class="item-name">Logitech G Pro X Mechanical Gaming Keyboard</div>
-                                    <div class="item-price">$129</div>
-                                    <div class="item-quantity">Quantity: 1</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="order-footer">
-                            <div class="order-total">
-                                Total: <span class="total-amount">$1,328.00</span>
-                            </div>
-                            <div class="order-actions">
-                                <a href="#" class="view-details">View Order Details</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div class="order-date">
-                                <span class="date-month">March</span>
-                                <span class="date-day">5</span>
-                                <span class="date-year">2025</span>
-                            </div>
-                            <div class="order-info">
-                                <div class="order-number">Order #TS87654315 <span class="order-status status-shipped">Shipped</span></div>
-                            </div>
-                        </div>
-                        
-                        <div class="order-items">
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="images/product3.jpg" alt="Gaming Monitor">
-                                </div>
-                                <div class="item-details">
-                                    <div class="item-name">LG UltraGear 27" 1ms 144Hz Gaming Monitor</div>
-                                    <div class="item-price">$329</div>
-                                    <div class="item-quantity">Quantity: 1</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="order-footer">
-                            <div class="order-total">
-                                Total: <span class="total-amount">$329.00</span>
-                            </div>
-                            <div class="order-actions">
-                                <a href="#" class="view-details">View Order Details</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- If no orders are found, display this -->
-                    <!--
-                    <div class="empty-orders">
-                        <h3>No orders found</h3>
-                        <p>You haven't placed any orders yet.</p>
-                        <a href="/" class="shop-now-btn">Shop Now</a>
-                    </div>
-                    -->
+                    <div class="loading">Loading your orders...</div>
+                    <!-- Orders will be loaded here by JavaScript -->
                 </div>
             </div>
         </div>
@@ -519,36 +451,5 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Filter buttons functionality
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                });
-            });
-            
-            // Search functionality
-            const searchButton = document.querySelector('.search-orders button');
-            
-            if (searchButton) {
-                searchButton.addEventListener('click', function() {
-                    const searchQuery = document.querySelector('.search-orders input').value.trim();
-                    
-                    if (searchQuery) {
-                        // In a real app, this would filter the orders
-                        alert('Searching for: ' + searchQuery);
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>

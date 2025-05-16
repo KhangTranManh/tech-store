@@ -82,6 +82,9 @@ const OrderSchema = new Schema({
         required: true,
         min: 0
     },
+    estimatedDelivery: {
+        type: Date,
+    },
     status: {
         type: String,
         enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'],
@@ -137,7 +140,6 @@ OrderSchema.pre('validate', function(next) {
     }
     next();
 });
-
 // Pre-save middleware to generate order number and update timestamps
 OrderSchema.pre('save', async function(next) {
     // Update timestamp
@@ -145,15 +147,16 @@ OrderSchema.pre('save', async function(next) {
     
     // Generate order number if not provided
     if (!this.orderNumber) {
-        const prefix = 'ORD';
-        const timestamp = Date.now().toString().slice(-6);
-        const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-        this.orderNumber = `${prefix}-${timestamp}-${random}`;
+        // Use ORD-XXXXXX-XXXX format for consistency
+        const idString = this._id.toString();
+        const sixDigits = idString.length > 6 ? idString.slice(-10, -4) : idString.padStart(6, '0');
+        const fourDigits = idString.length > 4 ? idString.slice(-4) : '0000';
+        
+        this.orderNumber = `ORD-${sixDigits}-${fourDigits}`;
     }
     
     next();
 });
-
 // Method to update order status
 OrderSchema.methods.updateStatus = function(status, note) {
     // Update status

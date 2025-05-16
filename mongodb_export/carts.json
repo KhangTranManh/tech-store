@@ -31,10 +31,51 @@
     "_id": "68219c380e95b95c094d946b",
     "userId": "67e589ca0e5596bab131639d",
     "isGuest": false,
-    "items": [],
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d71",
+        "quantity": 1,
+        "name": "Acer Predator Helios 300",
+        "price": 1299.99,
+        "image": "images/placeholder.jpg",
+        "specs": "Intel Core i7-11800H, 16GB RAM, 512GB SSD, RTX 3060, 15.6\" FHD 144Hz",
+        "_id": "6824ef1c99e35828fae9744b",
+        "dateAdded": "2025-05-14T19:29:32.107Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d80",
+        "quantity": 1,
+        "name": "Samsung Odyssey G9 Neo",
+        "price": 1799.991999,
+        "image": "images/placeholder.jpg",
+        "specs": "49\" VA, 5120x1440 (32:9), 240Hz, 1ms, Quantum Mini LED, HDR2000",
+        "_id": "6824ef1c99e35828fae9744d",
+        "dateAdded": "2025-05-14T19:29:32.111Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d7f",
+        "quantity": 3,
+        "name": "ASUS ROG Swift 360Hz PG259QN",
+        "price": 699.99799,
+        "image": "images/placeholder.jpg",
+        "specs": "24.5\" IPS, 1920x1080, 360Hz, 1ms GTG, G-SYNC, DisplayHDR 400",
+        "_id": "6824ef1c99e35828fae9744f",
+        "dateAdded": "2025-05-14T19:29:32.113Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d72",
+        "quantity": 1,
+        "name": "Lenovo ThinkPad X1 Carbon",
+        "price": 1699.991899,
+        "image": "images/placeholder.jpg",
+        "specs": "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" WQHD, Windows 11 Pro",
+        "_id": "6824ef1c99e35828fae97452",
+        "dateAdded": "2025-05-14T19:29:32.116Z"
+      }
+    ],
     "createdAt": "2025-05-12T06:59:04.403Z",
-    "updatedAt": "2025-05-13T19:12:30.918Z",
-    "__v": 35
+    "updatedAt": "2025-05-14T19:29:32.117Z",
+    "__v": 40
   },
   {
     "_id": "6821e392b97a4d9ad0052602",
@@ -89,31 +130,28 @@
   {
     "_id": "6823991ebde82bb17065bc15",
     "userId": "681e241da52729f2a5eb8ceb",
-    "__v": 4,
+    "__v": 20,
     "createdAt": "2025-05-13T19:10:22.571Z",
     "isGuest": false,
-    "items": [
-      {
-        "productId": "681e3143bf1727e8bb3a3d76",
-        "quantity": 1,
-        "name": "NVIDIA GeForce RTX 4080",
-        "price": 1199.99,
-        "image": "images/placeholder.jpg",
-        "specs": "16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design",
-        "_id": "68239969089d37910aa88132",
-        "dateAdded": "2025-05-13T19:11:37.219Z"
-      },
-      {
-        "productId": "681e3143bf1727e8bb3a3d72",
-        "quantity": 1,
-        "name": "Lenovo ThinkPad X1 Carbon",
-        "price": 1699.991899,
-        "image": "images/placeholder.jpg",
-        "specs": "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" WQHD, Windows 11 Pro",
-        "_id": "68239969089d37910aa88134",
-        "dateAdded": "2025-05-13T19:11:37.224Z"
-      }
-    ],
-    "updatedAt": "2025-05-13T19:11:37.225Z"
+    "items": [],
+    "updatedAt": "2025-05-15T18:16:03.751Z"
+  },
+  {
+    "_id": "6824eba8045a4a1526673410",
+    "userId": "67fe99159d329b4538c085a8",
+    "__v": 7,
+    "createdAt": "2025-05-14T19:14:48.599Z",
+    "isGuest": false,
+    "items": [],
+    "updatedAt": "2025-05-14T19:37:52.696Z"
+  },
+  {
+    "_id": "6826d1fb045a4a1526673411",
+    "userId": "6826d1ec87138d2df974db0a",
+    "__v": 6,
+    "createdAt": "2025-05-16T05:49:47.554Z",
+    "isGuest": false,
+    "items": [],
+    "updatedAt": "2025-05-16T05:56:26.116Z"
   }
 ]

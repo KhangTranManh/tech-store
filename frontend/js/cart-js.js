@@ -1262,6 +1262,49 @@ window.cartFunctions = {
   transferGuestCart,
   handleLoginSuccess
 };
+/**
+ * Debug cart contents - logs cart data to console
+ * Helper function to assist with troubleshooting cart issues
+ */
+function debugCart() {
+  try {
+    console.log('===== CART DEBUG INFO =====');
+    
+    // Get cart data
+    const cartData = sessionStorage.getItem('cart');
+    
+    if (!cartData) {
+      console.log('No cart data found in session storage');
+      return;
+    }
+    
+    // Parse cart data
+    const cart = JSON.parse(cartData);
+    
+    // Log cart summary
+    console.log('Cart Summary:');
+    console.log(`- Total items: ${cart.itemCount || 0}`);
+    console.log(`- Total unique products: ${cart.items ? cart.items.length : 0}`);
+    
+    // Log each item
+    if (cart.items && cart.items.length > 0) {
+      console.log('Cart Items:');
+      
+      cart.items.forEach((item, index) => {
+        console.log(`Item ${index + 1}:`);
+        console.log(`- Product ID: ${item.productId} (${typeof item.productId})`);
+        console.log(`- Name: ${item.name}`);
+        console.log(`- Price: $${parseFloat(item.price).toFixed(2)}`);
+        console.log(`- Quantity: ${item.quantity}`);
+        console.log(`- Image: ${item.image}`);
+      });
+    }
+    
+    console.log('===== END CART DEBUG =====');
+  } catch (error) {
+    console.error('Error in debugCart function:', error);
+  }
+}
 
 // Add CSS for notifications
 const style = document.createElement('style');

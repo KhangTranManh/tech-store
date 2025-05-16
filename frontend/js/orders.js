@@ -1,19 +1,23 @@
-// orders.js - Handles order history functionality
+// Event listener for page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is logged in
-    if (window.authUtils && !window.authUtils.isUserLoggedIn()) {
-        // If not logged in, redirect to login page
-        window.location.href = '/login.html?redirect=orders.html';
+    console.log('DOM loaded for orders page');
+    
+    // Check if we're on the orders page by looking for the order-list element
+    const orderList = document.querySelector('.order-list');
+    if (!orderList) {
+        console.warn('Not on orders page or order-list element not found');
         return;
     }
     
-    // Initialize order display
+    console.log('Initializing orders page...');
+    
+    // Load the user's orders
     loadOrders();
     
-    // Filter buttons functionality
+    // Initialize filter buttons
     initializeFilters();
     
-    // Search functionality
+    // Initialize search functionality
     initializeSearch();
 });
 
@@ -21,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
  * Load orders from the server
  */
 function loadOrders(status = null, searchQuery = null) {
+    console.log('Loading orders...');
+    
     // Show loading state
     const orderList = document.querySelector('.order-list');
     if (orderList) {
@@ -45,22 +51,44 @@ function loadOrders(status = null, searchQuery = null) {
         credentials: 'include'
     })
     .then(response => {
+        console.log('Orders API response status:', response.status);
+        
+        // Handle authentication issues
+        if (response.status === 401) {
+            // Redirect to login
+            window.location.href = '/login.html?redirect=/orders.html';
+            throw new Error('Authentication required. Redirecting to login...');
+        }
+        
         if (!response.ok) {
-            throw new Error('Failed to fetch orders');
+            throw new Error(`Failed to fetch orders: ${response.status} ${response.statusText}`);
         }
         return response.json();
     })
     .then(data => {
+        console.log('Orders API response data:', data);
+        
         if (data.success) {
-            // Display orders
-            displayOrders(data.orders);
+            // Check if we have orders
+            if (data.orders && data.orders.length > 0) {
+                console.log(`Displaying ${data.orders.length} orders`);
+                displayOrders(data.orders);
+            } else {
+                console.log('No orders found');
+                showEmptyState();
+            }
         } else {
-            showError('Failed to load orders: ' + data.message);
+            console.error('API returned success: false', data.message);
+            showError(data.message || 'Failed to load orders');
         }
     })
     .catch(error => {
         console.error('Error fetching orders:', error);
-        showError('An error occurred while fetching your orders. Please try again.');
+        
+        // Don't show error if we're redirecting to login
+        if (!error.message.includes('Redirecting to login')) {
+            showError('An error occurred while fetching your orders. Please try again.');
+        }
     });
 }
 
@@ -69,33 +97,40 @@ function loadOrders(status = null, searchQuery = null) {
  * @param {Array} orders - Array of order objects
  */
 function displayOrders(orders) {
+    console.log('Displaying orders:', orders);
+    
     const orderList = document.querySelector('.order-list');
     
-    if (!orderList) return;
+    if (!orderList) {
+        console.error('Order list container not found');
+        return;
+    }
     
     // Clear previous content
     orderList.innerHTML = '';
     
     if (!orders || orders.length === 0) {
         // Display empty state
-        orderList.innerHTML = `
-            <div class="empty-orders">
-                <h3>No orders found</h3>
-                <p>You haven't placed any orders yet.</p>
-                <a href="/" class="shop-now-btn">Shop Now</a>
-            </div>
-        `;
+        showEmptyState();
         return;
     }
     
     // Sort orders by date (most recent first)
     orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     
+    console.log('Creating order cards...');
+    
     // Create and append order cards
     orders.forEach(order => {
-        const orderCard = createOrderCard(order);
-        orderList.appendChild(orderCard);
+        try {
+            const orderCard = createOrderCard(order);
+            orderList.appendChild(orderCard);
+        } catch (error) {
+            console.error('Error creating order card:', error, order);
+        }
     });
+    
+    console.log('Orders displayed successfully');
 }
 
 /**
@@ -104,6 +139,8 @@ function displayOrders(orders) {
  * @returns {HTMLElement} Order card element
  */
 function createOrderCard(order) {
+    console.log('Creating card for order:', order._id);
+    
     // Create order date elements
     const orderDate = new Date(order.createdAt);
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
@@ -116,12 +153,15 @@ function createOrderCard(order) {
     // Get status class
     const statusClass = getStatusClass(order.status);
     
-    // Format order number as TS + last 8 digits of ID
-    const formattedOrderNumber = formatOrderNumber(order._id);
+    // Format order number - Use the actual orderNumber if available, otherwise format from ID
+    const formattedOrderNumber = order.orderNumber || formatOrderNumber(order._id);
     
     // Create order card element
     const orderCard = document.createElement('div');
     orderCard.className = 'order-card';
+    orderCard.setAttribute('data-order-id', order._id);
+    orderCard.setAttribute('data-order-number', formattedOrderNumber);
+    orderCard.setAttribute('data-status', order.status.toLowerCase());
     
     // Create order header
     const orderHeader = document.createElement('div');
@@ -137,13 +177,14 @@ function createOrderCard(order) {
         </div>
     `;
     
-    
-    // Create order items section
+    // Create order items section - only show up to 2 items
     const orderItems = document.createElement('div');
     orderItems.className = 'order-items';
     
-    // Add each item
-    order.items.forEach(item => {
+    // Add each item (but limit to 2 with a "more items" message if there are more)
+    const displayItems = order.items.slice(0, 2);
+    
+    displayItems.forEach(item => {
         const orderItem = document.createElement('div');
         orderItem.className = 'order-item';
         
@@ -164,6 +205,14 @@ function createOrderCard(order) {
         orderItems.appendChild(orderItem);
     });
     
+    // If there are more items, add a "more items" message
+    if (order.items.length > 2) {
+        const moreItems = document.createElement('div');
+        moreItems.className = 'more-items';
+        moreItems.textContent = `+ ${order.items.length - 2} more item${order.items.length - 2 > 1 ? 's' : ''}`;
+        orderItems.appendChild(moreItems);
+    }
+    
     // Create order footer
     const orderFooter = document.createElement('div');
     orderFooter.className = 'order-footer';
@@ -171,12 +220,16 @@ function createOrderCard(order) {
     // Format total amount
     const formattedTotal = formatCurrency(order.total);
     
+    // Very important - Make sure the link to order details is correct!
     orderFooter.innerHTML = `
         <div class="order-total">
             Total: <span class="total-amount">${formattedTotal}</span>
         </div>
         <div class="order-actions">
             <a href="/order-details.html?id=${order._id}" class="view-details">View Order Details</a>
+            ${order.status === 'shipped' || order.status === 'processing' ? 
+                `<a href="/track.html?orderNumber=${encodeURIComponent(formattedOrderNumber)}&email=${encodeURIComponent(getUserEmail())}" class="track-order-btn">Track Order</a>` 
+                : ''}
         </div>
     `;
     
@@ -185,24 +238,75 @@ function createOrderCard(order) {
     orderCard.appendChild(orderItems);
     orderCard.appendChild(orderFooter);
     
+    console.log('Order card created successfully');
     return orderCard;
 }
+
+// Make sure we have a way to get the user's email
+function getUserEmail() {
+    // Try to get from localStorage
+    const email = localStorage.getItem('userEmail');
+    if (email) return email;
+    
+    // Try to get from page data attribute
+    const userElement = document.querySelector('[data-user-email]');
+    if (userElement) {
+        return userElement.getAttribute('data-user-email');
+    }
+    
+    // If not available, return empty string
+    return '';
+}
+
 /**
- * Format order number with TS prefix and last 8 digits
+ * Get the user's email (for tracking links)
+ * @returns {string} User email
+ */
+function getUserEmail() {
+    // First try to get from localStorage
+    const email = localStorage.getItem('userEmail');
+    if (email) return email;
+    
+    // If not available, try to get from data attribute on page
+    const userEmailElement = document.querySelector('[data-user-email]');
+    if (userEmailElement) {
+        return userEmailElement.getAttribute('data-user-email');
+    }
+    
+    // Default fallback
+    return '';
+}
+
+/**
+ * Format order number consistently
  * @param {string} orderId - Order ID
  * @returns {string} Formatted order number
  */
 function formatOrderNumber(orderId) {
-    if (!orderId) return 'TS00000000';
+    if (!orderId) return 'ORD-000000-0000';
     
-    // Convert ID to string and get last 8 characters
-    const idString = orderId.toString();
-    const lastEight = idString.length > 8 
-        ? idString.slice(-8) 
-        : idString.padStart(8, '0');
+    // Check if there's already an orderNumber format in localStorage
+    const formatPreference = localStorage.getItem('orderNumberFormat');
     
-    return 'TS' + lastEight;
+    if (formatPreference === 'TS') {
+        // Convert ID to string and get last 8 characters
+        const idString = orderId.toString();
+        const lastEight = idString.length > 8 
+            ? idString.slice(-8) 
+            : idString.padStart(8, '0');
+        
+        return 'TS' + lastEight;
+    } else {
+        // Use ORD-XXXXXX-XXXX format
+        const idString = orderId.toString();
+        // Take characters from the end to ensure uniqueness
+        const sixDigits = idString.length > 6 ? idString.slice(-10, -4) : idString.padStart(6, '0');
+        const fourDigits = idString.length > 4 ? idString.slice(-4) : '0000';
+        
+        return `ORD-${sixDigits}-${fourDigits}`;
+    }
 }
+
 /**
  * Initialize filter buttons
  */
@@ -328,5 +432,25 @@ function showError(message) {
     // Also show as notification if available
     if (typeof window.showNotification === 'function') {
         window.showNotification(message, 'error');
+    }
+}
+/**
+ * Show empty state when no orders are found
+ */
+function showEmptyState() {
+    console.log('Showing empty state - no orders found');
+    
+    const orderList = document.querySelector('.order-list');
+    
+    if (orderList) {
+        orderList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3>No Orders Found</h3>
+                <p>You haven't placed any orders yet.</p>
+            </div>
+        `;
     }
 }

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/track.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/cart-js.js"></script>
+
     <style>
         .track-container {
             max-width: 1200px;
@@ -653,62 +657,5 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Form submission handling
-            const trackForm = document.querySelector('.track-form');
-            const trackingInfo = document.querySelector('.tracking-info');
-            const emptyTracking = document.querySelector('.empty-tracking');
-            
-            trackForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const orderNumber = document.getElementById('order-number').value.trim();
-                const email = document.getElementById('email').value.trim();
-                
-                // Validate order number and email
-                if (!orderNumber || !email) {
-                    alert('Please enter both Order Number and Email Address.');
-                    return;
-                }
-                
-                // In a real application, this would make an API call to fetch tracking data
-                // For demonstration, we'll just toggle the display for the sample order
-                
-                if (orderNumber === 'TS87654321' && email === 'john.smith@example.com') {
-                    trackingInfo.style.display = 'block';
-                    emptyTracking.style.display = 'none';
-                    
-                    // On mobile, scroll to the tracking info
-                    if (window.innerWidth <= 1024) {
-                        trackingInfo.scrollIntoView({behavior: 'smooth'});
-                    }
-                } else {
-                    trackingInfo.style.display = 'none';
-                    emptyTracking.style.display = 'block';
-                }
-            });
-            
-            // Support button functionality
-            const supportButtons = document.querySelectorAll('.support-btn');
-            
-            supportButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const action = this.textContent.toLowerCase();
-                    
-                    if (action.includes('contact')) {
-                        window.location.href = '/contact.html';
-                    } else if (action.includes('report')) {
-                        alert('This would open a form to report issues with your order.');
-                    } else if (action.includes('view')) {
-                        window.location.href = '/orders.html';
-                    }
-                });
-            });
-        });
-    </script>
-    <script src="/js/main.js"></script>
-    <script src="/js/cart.js"></script>
 </body>
 </html>

@@ -37,6 +37,9 @@ const wishlistRoutes = require('./routes/wishlist');
 const categoryRoutes = require('./routes/categories');
 const searchRoutes = require('./routes/search');
 const adminRoutes = require('./routes/admin');
+const trackingRoutes = require('./routes/tracking');
+const messageRoutes = require('./routes/message');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -109,6 +112,8 @@ app.use('/api', searchRoutes);
 
 // Mount the social auth routes
 app.use('/auth', socialAuthRoutes);
+app.use('/', trackingRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Initialize Passport JS for authentication
 initializePassport(app);

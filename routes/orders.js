@@ -7,10 +7,7 @@ const Address = require('../models/address');
 const PaymentMethod = require('../models/payment-method');
 const { isAuthenticated } = require('../middleware/auth');
 
-// Apply authentication middleware to all routes
-router.use(isAuthenticated);
-
-// In routes/orders.js - Find your POST /api/orders route and update it
+// routes/orders.js - Update the POST route for order creation
 
 router.post('/', async (req, res) => {
     try {
@@ -29,7 +26,7 @@ router.post('/', async (req, res) => {
             items, 
             addressId, 
             paymentMethodId, 
-            paymentType, // New field for payment type
+            paymentType, 
             subtotal, 
             shipping, 
             tax,
@@ -100,8 +97,7 @@ router.post('/', async (req, res) => {
                 image: item.image
             })),
             shippingAddress: addressId,
-            paymentType: paymentType || 'card', // Set payment type
-            // Only include paymentMethod if not COD
+            paymentType: paymentType || 'card',
             ...(paymentType !== 'cod' && { paymentMethod: paymentMethodId }),
             paymentLast4,
             subtotal,
@@ -126,12 +122,17 @@ router.post('/', async (req, res) => {
             }];
         }
         
-        // Save order
+        // Save order to generate ID
         await newOrder.save();
         
-        // Generate order number (if your pre-save hook doesn't do this)
-        if (!newOrder.orderNumber) {
-            newOrder.orderNumber = `TS${newOrder._id.toString().slice(-8)}`;
+        // Generate consistent order number using ORD- format
+        // The pre-save middleware should handle this now, but we ensure it's properly formatted here
+        if (!newOrder.orderNumber || !newOrder.orderNumber.startsWith('ORD-')) {
+            const idString = newOrder._id.toString();
+            const sixDigits = idString.length > 6 ? idString.slice(-10, -4) : idString.padStart(6, '0');
+            const fourDigits = idString.length > 4 ? idString.slice(-4) : '0000';
+            
+            newOrder.orderNumber = `ORD-${sixDigits}-${fourDigits}`;
             await newOrder.save();
         }
         
@@ -165,16 +166,65 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
     try {
-        // Find all orders for the current user
-        const orders = await Order.find({ user: req.user._id })
+        // Get user ID from authenticated session
+        const userId = req.user._id;
+        
+        console.log(`Fetching orders for user ID: ${userId}`);
+        
+        // Add query parameters support
+        const { status, search } = req.query;
+        
+        // Build filter object
+        const filter = { user: userId };
+        
+        // Add status filter if provided
+        if (status && status !== 'all') {
+            filter.status = status.toLowerCase();
+        }
+        
+        // Add search filter if provided
+        if (search) {
+            // Create regex for case-insensitive search
+            const searchRegex = new RegExp(search, 'i');
+            
+            // Search in order number and item names
+            filter.$or = [
+                { orderNumber: searchRegex },
+                { 'items.name': searchRegex }
+            ];
+        }
+        
+        // Find all orders for the current user with filters
+        const orders = await Order.find(filter)
             .sort({ createdAt: -1 })
             .populate('shippingAddress')
             .populate('paymentMethod', '-paymentToken');
         
+        // Log how many orders were found
+        console.log(`Found ${orders.length} orders for user ${userId}`);
+        
+        // Transform orders to ensure consistent order number format
+        const formattedOrders = orders.map(order => {
+            const orderObj = order.toObject();
+            
+            // Ensure order number is in correct format
+            if (orderObj.orderNumber && !orderObj.orderNumber.startsWith('ORD-')) {
+                // Convert TS format to ORD- format if needed
+                if (orderObj.orderNumber.startsWith('TS')) {
+                    const idPart = orderObj.orderNumber.replace('TS', '');
+                    const sixDigits = idPart.length > 6 ? idPart.slice(0, 6) : idPart.padStart(6, '0');
+                    const fourDigits = idPart.length > 6 ? idPart.slice(6) : '0000';
+                    orderObj.orderNumber = `ORD-${sixDigits}-${fourDigits}`;
+                }
+            }
+            
+            return orderObj;
+        });
+        
         res.status(200).json({
             success: true,
-            count: orders.length,
-            orders
+            count: formattedOrders.length,
+            orders: formattedOrders
         });
     } catch (error) {
         console.error('Error fetching orders:', error);
@@ -222,8 +272,13 @@ router.get('/recent', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
+        const orderId = req.params.id;
+        const userId = req.user._id;
+        
+        console.log(`Fetching order ${orderId} for user ${userId}`);
+        
         // Find order by ID
-        const order = await Order.findById(req.params.id)
+        const order = await Order.findById(orderId)
             .populate('shippingAddress')
             .populate('paymentMethod', '-paymentToken')
             .populate('items.productId');
@@ -237,16 +292,31 @@ router.get('/:id', async (req, res) => {
         }
         
         // Check if order belongs to current user
-        if (order.user.toString() !== req.user._id.toString()) {
+        if (order.user.toString() !== userId.toString()) {
+            console.log(`User ${userId} attempted to access order ${orderId} which belongs to user ${order.user}`);
             return res.status(403).json({
                 success: false,
                 message: 'You do not have permission to view this order'
             });
         }
         
+        // Convert to plain object to modify
+        const orderObj = order.toObject();
+        
+        // Ensure order number is in correct format
+        if (orderObj.orderNumber && !orderObj.orderNumber.startsWith('ORD-')) {
+            // Convert TS format to ORD- format if needed
+            if (orderObj.orderNumber.startsWith('TS')) {
+                const idPart = orderObj.orderNumber.replace('TS', '');
+                const sixDigits = idPart.length > 6 ? idPart.slice(0, 6) : idPart.padStart(6, '0');
+                const fourDigits = idPart.length > 6 ? idPart.slice(6) : '0000';
+                orderObj.orderNumber = `ORD-${sixDigits}-${fourDigits}`;
+            }
+        }
+        
         res.status(200).json({
             success: true,
-            order
+            order: orderObj
         });
     } catch (error) {
         console.error('Error fetching order:', error);

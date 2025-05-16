@@ -513,26 +513,78 @@
     </footer>
 
     <script>
-        // FAQ toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const faqItems = document.querySelectorAll('.faq-item');
+            const contactForm = document.querySelector('.contact-form form');
             
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                
-                question.addEventListener('click', function() {
-                    // Toggle active class on the clicked FAQ item
-                    item.classList.toggle('active');
-                    
-                    // Optional: Close other open FAQs
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item && otherItem.classList.contains('active')) {
-                            otherItem.classList.remove('active');
-                        }
-                    });
+            contactForm.addEventListener('submit', async function(e) {
+              e.preventDefault();
+              
+              // Get form fields
+              const name = document.getElementById('name').value;
+              const email = document.getElementById('email').value;
+              const phone = document.getElementById('phone').value;
+              const subject = document.getElementById('subject').value;
+              const message = document.getElementById('message').value;
+              const newsletter = document.getElementById('newsletter').checked;
+              
+              // Disable submit button and show loading state
+              const submitBtn = document.querySelector('.submit-btn');
+              const originalBtnText = submitBtn.textContent;
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Sending...';
+              
+              try {
+                // Send form data to server
+                const response = await fetch('/api/messages/contact', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    subject,
+                    message
+                  })
                 });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                  // Show success message
+                  alert('Thank you! Your message has been sent. We will contact you soon.');
+                  contactForm.reset();
+                  
+                  // Handle newsletter subscription if checked
+                  if (newsletter) {
+                    try {
+                      await fetch('/api/newsletter/subscribe', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, name })
+                      });
+                      // You can add additional notification about successful newsletter subscription if needed
+                    } catch (err) {
+                      console.error('Error subscribing to newsletter:', err);
+                    }
+                  }
+                } else {
+                  // Show error message
+                  alert(data.message || 'Something went wrong. Please try again.');
+                }
+              } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('An error occurred. Please try again later.');
+              } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+              }
             });
-        });
+          });
     </script>
     <script src="/js/cart.js"></script>
 </body>

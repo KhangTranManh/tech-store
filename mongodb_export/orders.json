@@ -390,5 +390,638 @@
     "updatedAt": "2025-05-13T19:12:30.916Z",
     "orderNumber": "TS0aa88266",
     "__v": 0
+  },
+  {
+    "_id": "6824e0ee03a3e280375ba1d1",
+    "user": "67e589ca0e5596bab131639d",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "6824e0ee03a3e280375ba1d2"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentMethod": "67e9665d2b4d83b7603922c5",
+    "paymentLast4": "9842",
+    "subtotal": 2399.98,
+    "tax": 191.9984,
+    "shippingCost": 0,
+    "total": 2591.9784,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "6824e0ee03a3e280375ba1d3",
+        "timestamp": "2025-05-14T18:29:02.186Z"
+      }
+    ],
+    "tracking": [],
+    "createdAt": "2025-05-14T18:29:02.186Z",
+    "updatedAt": "2025-05-14T18:29:02.191Z",
+    "orderNumber": "TS375ba1d1",
+    "__v": 0
+  },
+  {
+    "_id": "6824f110ef36a5429e813f1a",
+    "user": "67fe99159d329b4538c085a8",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d71",
+        "name": "Acer Predator Helios 300",
+        "price": 1299.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6824f110ef36a5429e813f1b"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d80",
+        "name": "Samsung Odyssey G9 Neo",
+        "price": 1799.991999,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6824f110ef36a5429e813f1c"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d7f",
+        "name": "ASUS ROG Swift 360Hz PG259QN",
+        "price": 699.99799,
+        "quantity": 3,
+        "image": "images/placeholder.jpg",
+        "_id": "6824f110ef36a5429e813f1d"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d72",
+        "name": "Lenovo ThinkPad X1 Carbon",
+        "price": 1699.991899,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6824f110ef36a5429e813f1e"
+      }
+    ],
+    "shippingAddress": "6824ebc78a32b0490a9873aa",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 6899.967868,
+    "tax": 551.99742944,
+    "shippingCost": 0,
+    "total": 7451.96529744,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "6824f110ef36a5429e813f1f",
+        "timestamp": "2025-05-14T19:37:52.690Z"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [],
+    "createdAt": "2025-05-14T19:37:52.690Z",
+    "updatedAt": "2025-05-14T19:38:37.197Z",
+    "orderNumber": "ORD-472691-3699",
+    "__v": 1
+  },
+  {
+    "_id": "68262b99f875c61ab9b657e8",
+    "user": "681e241da52729f2a5eb8ceb",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "68262b99f875c61ab9b657e9"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68262b99f875c61ab9b657ea"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 3199.9700000000003,
+    "tax": 255.99760000000003,
+    "shippingCost": 0,
+    "total": 3455.9676000000004,
+    "status": "delivered",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "68262b99f875c61ab9b657eb",
+        "timestamp": "2025-05-15T17:59:53.298Z"
+      },
+      {
+        "status": "processing",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "note": "Status updated to processing via tracking update",
+        "_id": "68262bc6f875c61ab9b65880"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "68262c12f875c61ab9b659b5"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "68262c2ff875c61ab9b659eb"
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "note": "Status updated to delivered via tracking update",
+        "_id": "68262c48f875c61ab9b65a9a"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-15T17:59:53.299Z",
+        "_id": "68262b99f875c61ab9b657ec"
+      },
+      {
+        "status": "Order Processed",
+        "location": "asz, assasz sasaas",
+        "description": "Order order processed",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262bc6f875c61ab9b6587f"
+      },
+      {
+        "status": "Shipped",
+        "location": "ewewewew",
+        "description": "Order shipped",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262c12f875c61ab9b659b4"
+      },
+      {
+        "status": "In Transit",
+        "location": "rewfe",
+        "description": "Order in transit",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262c2ff875c61ab9b659ea"
+      },
+      {
+        "status": "Delivered",
+        "location": "ewew",
+        "description": "Order delivered",
+        "timestamp": "2025-05-15T10:59:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262c48f875c61ab9b65a99"
+      }
+    ],
+    "createdAt": "2025-05-15T17:59:53.299Z",
+    "updatedAt": "2025-05-15T18:02:48.269Z",
+    "orderNumber": "ORD-993302-0534",
+    "__v": 4
+  },
+  {
+    "_id": "68262d857d9526b4cbfa3590",
+    "user": "681e241da52729f2a5eb8ceb",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "68262d857d9526b4cbfa3591"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68262d857d9526b4cbfa3592"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 3199.9700000000003,
+    "tax": 255.99760000000003,
+    "shippingCost": 0,
+    "total": 3455.9676000000004,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "68262d857d9526b4cbfa3593",
+        "timestamp": "2025-05-15T18:08:05.284Z"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-15T18:08:05.284Z",
+        "_id": "68262d857d9526b4cbfa3594"
+      }
+    ],
+    "createdAt": "2025-05-15T18:08:05.284Z",
+    "updatedAt": "2025-05-15T18:08:05.286Z",
+    "orderNumber": "ORD-485286-1060",
+    "__v": 0
+  },
+  {
+    "_id": "68262decf6240780bd73990b",
+    "user": "681e241da52729f2a5eb8ceb",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 3,
+        "image": "images/placeholder.jpg",
+        "_id": "68262decf6240780bd73990c"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68262decf6240780bd73990d"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 4399.96,
+    "tax": 351.9968,
+    "shippingCost": 0,
+    "total": 4751.9568,
+    "status": "delivered",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "68262decf6240780bd73990e",
+        "timestamp": "2025-05-15T18:09:48.121Z"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T11:09:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "68262ea1f6240780bd739a98"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T11:09:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "68262ec3f6240780bd739abc"
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2025-05-15T11:09:00.000Z",
+        "note": "Status updated to delivered via tracking update",
+        "_id": "68262ed2f6240780bd739af6"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-15T18:09:48.122Z",
+        "_id": "68262decf6240780bd73990f"
+      },
+      {
+        "status": "Shipped",
+        "location": "",
+        "description": "Order shipped",
+        "timestamp": "2025-05-15T11:09:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262ea1f6240780bd739a97"
+      },
+      {
+        "status": "In Transit",
+        "location": "dsd",
+        "description": "Order in transit",
+        "timestamp": "2025-05-15T11:09:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262ec3f6240780bd739abb"
+      },
+      {
+        "status": "Delivered",
+        "location": "",
+        "description": "Order delivered",
+        "timestamp": "2025-05-15T11:09:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "68262ed2f6240780bd739af5"
+      }
+    ],
+    "createdAt": "2025-05-15T18:09:48.122Z",
+    "updatedAt": "2025-05-15T18:13:38.149Z",
+    "orderNumber": "ORD-588124-1502",
+    "__v": 3
+  },
+  {
+    "_id": "68262f634d54546ace183ec5",
+    "user": "681e241da52729f2a5eb8ceb",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 3,
+        "image": "images/placeholder.jpg",
+        "_id": "68262f634d54546ace183ec6"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68262f634d54546ace183ec7"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 4399.96,
+    "tax": 351.9968,
+    "shippingCost": 0,
+    "total": 4751.9568,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "68262f634d54546ace183ec8",
+        "timestamp": "2025-05-15T18:16:03.743Z"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-15T18:16:03.744Z",
+        "_id": "68262f634d54546ace183ec9"
+      }
+    ],
+    "createdAt": "2025-05-15T18:16:03.744Z",
+    "updatedAt": "2025-05-15T18:16:03.745Z",
+    "orderNumber": "ORD-963745-8617",
+    "__v": 0
+  },
+  {
+    "_id": "6826d20b87138d2df974dbc2",
+    "user": "6826d1ec87138d2df974db0a",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d72",
+        "name": "Lenovo ThinkPad X1 Carbon",
+        "price": 1699.991899,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6826d20b87138d2df974dbc3"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6826d20b87138d2df974dbc4"
+      }
+    ],
+    "shippingAddress": "6826d20a87138d2df974dbb9",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 2499.9818990000003,
+    "tax": 199.99855192000004,
+    "shippingCost": 0,
+    "total": 2699.9804509200003,
+    "status": "delivered",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "6826d20b87138d2df974dbc5",
+        "timestamp": "2025-05-16T05:50:03.932Z"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "6826d28687138d2df974dce9"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "6826d29f87138d2df974dd13"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "6826d2aa87138d2df974dd3d"
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to delivered via tracking update",
+        "_id": "6826d2ae87138d2df974dd6d"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T05:50:03.932Z",
+        "_id": "6826d20b87138d2df974dbc6"
+      },
+      {
+        "status": "Shipped",
+        "location": "",
+        "description": "Order shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d28687138d2df974dce8"
+      },
+      {
+        "status": "In Transit",
+        "location": "",
+        "description": "Order in transit",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d29f87138d2df974dd12"
+      },
+      {
+        "status": "Out for Delivery",
+        "location": "",
+        "description": "Order out for delivery",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d2aa87138d2df974dd3c"
+      },
+      {
+        "status": "Delivered",
+        "location": "",
+        "description": "Order delivered",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d2ae87138d2df974dd6c"
+      }
+    ],
+    "createdAt": "2025-05-16T05:50:03.932Z",
+    "updatedAt": "2025-05-16T05:52:46.698Z",
+    "orderNumber": "ORD-603936-5468",
+    "__v": 4
+  },
+  {
+    "_id": "6826d38a55b522d6e7175b66",
+    "user": "6826d1ec87138d2df974db0a",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d72",
+        "name": "Lenovo ThinkPad X1 Carbon",
+        "price": 1699.991899,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "6826d38a55b522d6e7175b67"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6826d38a55b522d6e7175b68"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d73",
+        "name": "Dell XPS 13",
+        "price": 1299.991399,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6826d38a55b522d6e7175b69"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d71",
+        "name": "Acer Predator Helios 300",
+        "price": 1299.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "6826d38a55b522d6e7175b6a"
+      }
+    ],
+    "shippingAddress": "6826d20a87138d2df974dbb9",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 6799.955196999999,
+    "tax": 543.99641576,
+    "shippingCost": 0,
+    "total": 7343.951612759999,
+    "status": "delivered",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "note": "Order created",
+        "_id": "6826d38a55b522d6e7175b6b",
+        "timestamp": "2025-05-16T05:56:26.109Z"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "6826d39b55b522d6e7175c39"
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to shipped via tracking update",
+        "_id": "6826d3a455b522d6e7175c63"
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "note": "Status updated to delivered via tracking update",
+        "_id": "6826d3ac55b522d6e7175c93"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T05:56:26.109Z",
+        "_id": "6826d38a55b522d6e7175b6c"
+      },
+      {
+        "status": "Shipped",
+        "location": "",
+        "description": "Order shipped",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d39b55b522d6e7175c38"
+      },
+      {
+        "status": "In Transit",
+        "location": "",
+        "description": "Order in transit",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d3a455b522d6e7175c62"
+      },
+      {
+        "status": "Delivered",
+        "location": "",
+        "description": "Order delivered",
+        "timestamp": "2025-05-15T22:50:00.000Z",
+        "carrier": "fedex",
+        "updatedBy": "67e589ca0e5596bab131639d",
+        "_id": "6826d3ac55b522d6e7175c92"
+      }
+    ],
+    "createdAt": "2025-05-16T05:56:26.109Z",
+    "updatedAt": "2025-05-16T05:57:00.493Z",
+    "orderNumber": "ORD-986112-8130",
+    "__v": 3
   }
 ]

@@ -603,5 +603,28 @@ router.delete('/api/admin/orders/:orderId/tracking/:trackingId', isAuthenticated
     });
   }
 });
+// Add this to your tracking.js file temporarily (remove in production)
+router.get('/api/debug-orders', async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .select('orderNumber user createdAt')
+      .populate('user', 'email')
+      .limit(20);
+    
+    const orderList = orders.map(order => ({
+      id: order._id,
+      orderNumber: order.orderNumber,
+      email: order.user?.email,
+      date: order.createdAt
+    }));
+    
+    res.json({
+      count: orderList.length,
+      orders: orderList
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

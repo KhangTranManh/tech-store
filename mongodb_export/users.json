@@ -79,5 +79,31 @@
     },
     "createdAt": "2025-05-09T15:49:49.601Z",
     "__v": 0
+  },
+  {
+    "_id": "6826d1ec87138d2df974db0a",
+    "firstName": "pro",
+    "lastName": "kxc",
+    "email": "kxckhang123@gmail.com",
+    "password": "$2a$10$PPq8.xhCb.2WFej4RBmMielR15ibRtcd9OHjgNsso.20z9jWdJhEK",
+    "role": "user",
+    "isSubscribed": false,
+    "googleId": "113604037951578268189",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocKkvhy_oWlYq7xDdwgtLG2JtbsJzJG9RUU5ksZeXIea4gBxvw=s96-c",
+    "isEmailVerified": true,
+    "preferences": {
+      "orderUpdates": true,
+      "promotions": false,
+      "newsletter": false,
+      "productAlerts": false,
+      "currency": "usd"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "loginAlerts": false,
+      "sessionTimeout": 60
+    },
+    "createdAt": "2025-05-16T05:49:32.652Z",
+    "__v": 0
   }
 ]

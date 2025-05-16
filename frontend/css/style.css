@@ -1086,7 +1086,126 @@ footer {
 .btn[data-action="wishlist"].in-wishlist:hover {
   background-color: #e6e6e6;
 }
+ /* Loading state styles */
+ .loading-state {
+    position: relative;
+    min-height: 200px;
+}
 
+.loading-state::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    margin-top: -25px;
+    margin-left: -25px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff6b00;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.tracking-info {
+    display: none; /* Hide tracking info by default */
+}
+/* Tracking timeline styles */
+.tracking-steps {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 30px;
+}
+
+.tracking-steps::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    bottom: 15px;
+    width: 2px;
+    background-color: #ddd;
+}
+
+.tracking-step {
+    position: relative;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+
+.tracking-step:last-child {
+    margin-bottom: 0;
+}
+
+.step-marker {
+    position: absolute;
+    left: -30px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+}
+
+.tracking-step.completed .step-marker {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.tracking-step.current .step-marker {
+    background-color: #ff6b00;
+    border-color: #ff6b00;
+}
+
+.step-content {
+    padding-left: 10px;
+}
+
+.step-title {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.tracking-step.completed .step-title {
+    color: #4CAF50;
+}
+
+.tracking-step.current .step-title {
+    color: #ff6b00;
+}
+
+/* Loading state */
+.loading-state {
+    position: relative;
+    min-height: 200px;
+}
+
+.loading-state::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    margin-top: -25px;
+    margin-left: -25px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff6b00;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
     
 }
