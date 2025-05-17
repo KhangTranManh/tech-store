@@ -47,28 +47,13 @@ services:
       - app-network
     environment:
       - MONGODB_URI=mongodb://mongo:27017/techstore
-      - PORT=3000
-      - NODE_ENV=development
-      - SESSION_SECRET=your_session_secret_here
       - HOST=0.0.0.0
-    # The command below ensures the app runs on 0.0.0.0 to accept connections from outside
-    command: >
-      sh -c "npm start"
-
-  # Ngrok service for exposing the web app to the internet
-  ngrok:
-    image: ngrok/ngrok:latest
-    container_name: techstore-ngrok
-    restart: unless-stopped
-    ports:
-      - "4040:4040"
-    depends_on:
-      - web
-    networks:
-      - app-network
-    environment:
-      - NGROK_AUTHTOKEN=2wqZ5nlVaRLrXls86Q4BCqTXovd_3NvmoeVvMprStewkCiUC3
-    command: "http web:3000 --log=stdout"
+      # Keep the existing environment variables from .env, but override MONGODB_URI
+      # Add any environment variables that need to be different in Docker here
+    volumes:
+      # Mount your local directory, but don't overwrite node_modules in the container
+      - ./:/app
+      - /app/node_modules
 
 networks:
   app-network:

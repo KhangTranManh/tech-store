@@ -10,26 +10,18 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy application files
+# First copy your application files excluding the .env
 COPY . .
 
-# Create .env file if it doesn't exist
-RUN echo "MONGODB_URI=mongodb://mongo:27017/techstore" > .env && \
-    echo "SESSION_SECRET=your_session_secret_here" >> .env && \
-    echo "PORT=3000" >> .env && \
-    echo "NODE_ENV=development" >> .env && \
-    echo "HOST=0.0.0.0" >> .env && \
-    echo ".env file created with defaults"
-
-# Set environment variables
-ENV PORT=3000
-ENV NODE_ENV=development
-ENV HOST=0.0.0.0
-ENV SESSION_SECRET=your_session_secret_here
-ENV MONGODB_URI=mongodb://mongo:27017/techstore
+# Create a Docker-specific .env file that overrides only what's needed for container environment
+RUN echo "# MongoDB Connection for Docker environment" > .env.docker && \
+    echo "MONGODB_URI=mongodb://mongo:27017/techstore" >> .env.docker && \
+    echo "HOST=0.0.0.0" >> .env.docker && \
+    cat .env >> .env.docker && \
+    mv .env.docker .env
 
 # Expose port
 EXPOSE 3000
 
-# Start the application (explicitly bind to 0.0.0.0)
-CMD ["sh", "-c", "node server.js"]
+# Start the application
+CMD ["npm", "start"]

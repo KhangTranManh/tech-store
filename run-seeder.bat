@@ -1,30 +1,18 @@
 @echo off
-echo Stopping all containers...
+echo Stopping current techstore containers...
 docker-compose down
 
-echo Rebuilding and starting containers...
-docker-compose up --build -d
+echo Rebuilding and starting all services...
+docker-compose up -d --build
 
-echo Waiting for containers to start...
-timeout /t 10 /nobreak > nul
+echo Waiting for database seeding to complete...
+docker logs -f techstore-seeder
 
-echo Checking container status:
-docker ps -a
+echo Web application is now running at:
+echo http://localhost:3000
 
-echo Checking if web container is running:
-docker logs techstore-web --tail 20
+echo Database is available at:
+echo mongodb://localhost:27017/techstore
 
-echo Checking ngrok connection:
-docker logs techstore-ngrok --tail 20
-
-echo Your ngrok URL is:
-docker exec techstore-ngrok ngrok api tunnels list | findstr public_url
-
-echo.
-echo If your web app isn't connecting properly, try testing:
-echo   1. In your browser: http://localhost:3000
-echo   2. From inside the web container: docker exec techstore-web curl http://localhost:3000
-echo.
-echo To see logs: 
-echo   docker logs techstore-web
-echo   docker logs techstore-ngrok
+echo To check web application logs:
+echo docker logs -f techstore-web
