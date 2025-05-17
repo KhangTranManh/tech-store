@@ -1,14 +1,78 @@
+version: '3.8'
+
 services:
-  frontend:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+  # MongoDB service
+  mongo:
+    image: mongo:latest
+    container_name: techstore-mongodb
     ports:
-      - "80:80"
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
     networks:
       - app-network
+    environment:
+      - MONGO_INITDB_DATABASE=techstore
+
+  # Database seeder service
+  db-seeder:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    container_name: techstore-seeder
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/techstore
+      - EXPORT_PATH=/app/mongodb_export
+    volumes:
+      - ./mongodb_export:/app/mongodb_export
+      - ./models:/app/models
+      - ./db:/app/db
+
+  # Web application service
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: techstore-web
     restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - db-seeder
+    networks:
+      - app-network
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/techstore
+      - PORT=3000
+      - NODE_ENV=development
+      - SESSION_SECRET=your_session_secret_here
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+  # Ngrok service for exposing the web app to the internet
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: techstore-ngrok
+    restart: unless-stopped
+    ports:
+      - "4040:4040"
+    depends_on:
+      - web
+    networks:
+      - app-network
+    environment:
+      - NGROK_AUTHTOKEN=2wqZ5nlVaRLrXls86Q4BCqTXovd_3NvmoeVvMprStewkCiUC3
+    command: http web:3000
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mongo-data:
