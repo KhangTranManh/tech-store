@@ -19,7 +19,7 @@ const User = require('../models/user');
 const Wishlist = require('../models/wishlist');
 
 // MongoDB connection string
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/techstore';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/your_database_name';
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI)
@@ -84,8 +84,45 @@ const seedModel = async (Model, dataArray) => {
 const seedDatabase = async () => {
   console.log('Starting database seeding...');
   
-  // Get export directory path
-  const exportDir = 'C:\\Users\\admin\\Documents\\Zalo Received Files\\tech-store\\tech-store\\mongodb_export';
+  // Determine the export directory path
+// 1. Use command-line argument if provided (node seedDatabase.js /path/to/export)
+// 2. Or use environment variable EXPORT_PATH if set
+// 3. Or try to find mongodb_export folder in current directory or parent directory
+// 4. Or use the default hardcoded path as fallback
+const determineExportPath = () => {
+  // Check for command-line argument
+  if (process.argv.length > 2) {
+    return process.argv[2];
+  }
+  
+  // Check for environment variable
+  if (process.env.EXPORT_PATH) {
+    return process.env.EXPORT_PATH;
+  }
+  
+  // Try to find mongodb_export in current directory
+  const currentDirExport = path.join(process.cwd(), 'mongodb_export');
+  if (fs.existsSync(currentDirExport)) {
+    return currentDirExport;
+  }
+  
+  // Try to find mongodb_export in parent directory
+  const parentDirExport = path.join(process.cwd(), '..', 'mongodb_export');
+  if (fs.existsSync(parentDirExport)) {
+    return parentDirExport;
+  }
+  
+  // Try to find in tech-store directory structure (common pattern)
+  const techStoreExport = path.join(process.cwd(), 'tech-store', 'mongodb_export');
+  if (fs.existsSync(techStoreExport)) {
+    return techStoreExport;
+  }
+  
+  // Default to your original path as fallback
+};
+
+const exportDir = determineExportPath();
+console.log(`Using export directory: ${exportDir}`);
   
   // Process each file in the export directory
   for (const [filename, Model] of Object.entries(modelMap)) {
