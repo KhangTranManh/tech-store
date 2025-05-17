@@ -1,95 +1,113 @@
 [
   {
-    "_id": "67e589ca0e5596bab131639d",
-    "firstName": "KXCP",
-    "lastName": "TRAN",
-    "email": "khangjaki12@gmail.com",
-    "password": "$2a$10$W3ZrnpQgv0W4wney2W7zxekefIslvPlyWkUCTYyjqZS25ZoPBg36W",
-    "phone": "",
+    "_id": "6828609ae20ec3cbada1f5d2",
+    "firstName": "Admin",
+    "lastName": "User",
+    "email": "admin@techstore.com",
+    "password": "$2a$10$lOKg0vms2.EISgRXxMKLYeQ20839D.EU8hzOIR3.RdJcblvyHSpUy",
+    "phone": "1234567890",
     "role": "admin",
     "isSubscribed": true,
-    "isEmailVerified": false,
-    "createdAt": "2025-03-27T17:24:26.468Z",
-    "__v": 0,
-    "resetPasswordExpires": "2025-05-09T16:55:36.291Z",
-    "resetPasswordToken": "1140790e572310d758992b2b74f0333720d258fd",
-    "preferences": {
-      "orderUpdates": true,
-      "promotions": false,
-      "newsletter": false,
-      "productAlerts": false,
-      "currency": "usd"
-    },
-    "security": {
-      "loginAlerts": false,
-      "sessionTimeout": 60,
-      "twoFactorEnabled": false
-    },
-    "googleId": "101605621987973372563",
-    "facebookId": "2096772937468981"
-  },
-  {
-    "_id": "67fe99159d329b4538c085a8",
-    "firstName": "eqqe",
-    "lastName": "ewqeqeqe",
-    "email": "kxcpro123@gmail.com",
-    "password": "$2a$10$64UYe1DFKm1DgWt/AmU/FOznAUPQqtbruCs/GPKhWytz06kNTojc.",
-    "role": "user",
-    "isSubscribed": false,
-    "googleId": "105116829984243468178",
-    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJvcGaRdUbrdNsuplGr7q86vXk7XTNtqdijYSytXYnR5it4DQ=s96-c",
     "isEmailVerified": true,
     "preferences": {
       "orderUpdates": true,
-      "promotions": false,
-      "newsletter": false,
-      "productAlerts": false,
+      "promotions": true,
+      "newsletter": true,
+      "productAlerts": true,
       "currency": "usd"
     },
     "security": {
       "twoFactorEnabled": false,
-      "loginAlerts": false,
+      "loginAlerts": true,
       "sessionTimeout": 60
     },
-    "createdAt": "2025-04-15T17:36:21.706Z",
+    "createdAt": "2025-05-17T10:10:34.188Z",
     "__v": 0
   },
   {
-    "_id": "681e241da52729f2a5eb8ceb",
-    "firstName": "Tran",
-    "lastName": "Kxc",
-    "email": "kxctran@gmail.com",
-    "password": "$2a$10$a2pF8Wohr1XDWov3NE048uopJLsJeafnZvXg0BTZ.ueCt2cXt2T8q",
+    "_id": "6828609ae20ec3cbada1f5d3",
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.smith@example.com",
+    "password": "$2a$10$XKouKKjyxwN9iD3Ho99fYOQAuFUAPYg2MiP09qJ4ECQB9OQ6YHKu.",
+    "phone": "9876543210",
     "role": "user",
-    "isSubscribed": false,
-    "googleId": "101896080296188087222",
-    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocI4TkF6gvzR1RasWl-iYq7yOUiE1lHGw40_RzYfDV2KtB_qKA=s96-c",
+    "isSubscribed": true,
     "isEmailVerified": true,
     "preferences": {
       "orderUpdates": true,
       "promotions": false,
-      "newsletter": false,
+      "newsletter": true,
       "productAlerts": false,
       "currency": "usd"
     },
     "security": {
       "twoFactorEnabled": false,
       "loginAlerts": false,
-      "sessionTimeout": 60
+      "sessionTimeout": 120
     },
-    "createdAt": "2025-05-09T15:49:49.601Z",
+    "createdAt": "2025-05-17T10:10:34.189Z",
     "__v": 0
   },
   {
-    "_id": "6826d1ec87138d2df974db0a",
-    "firstName": "pro",
-    "lastName": "kxc",
-    "email": "kxckhang123@gmail.com",
-    "password": "$2a$10$PPq8.xhCb.2WFej4RBmMielR15ibRtcd9OHjgNsso.20z9jWdJhEK",
+    "_id": "6828609ae20ec3cbada1f5d4",
+    "firstName": "Maria",
+    "lastName": "Garcia",
+    "email": "maria.garcia@example.com",
+    "password": "$2a$10$quW7wd9uL8ceUhp5qaza3.d7plIxX/ZvnSnHDbbfMUtrNByzslkV.",
+    "phone": "5556667777",
     "role": "user",
     "isSubscribed": false,
-    "googleId": "113604037951578268189",
-    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocKkvhy_oWlYq7xDdwgtLG2JtbsJzJG9RUU5ksZeXIea4gBxvw=s96-c",
+    "isEmailVerified": true,
+    "preferences": {
+      "orderUpdates": true,
+      "promotions": false,
+      "newsletter": false,
+      "productAlerts": true,
+      "currency": "usd"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "loginAlerts": true,
+      "sessionTimeout": 30
+    },
+    "createdAt": "2025-05-17T10:10:34.189Z",
+    "__v": 0
+  },
+  {
+    "_id": "6828609ae20ec3cbada1f5d5",
+    "firstName": "David",
+    "lastName": "Johnson",
+    "email": "david.johnson@example.com",
+    "password": "$2a$10$/wlM6iwC8gB6BUphnf0eOOiW0TRK0ptSPNgYDfaf4jQ4ptfGDftV2",
+    "phone": "3334445555",
+    "role": "user",
+    "isSubscribed": true,
+    "isEmailVerified": true,
+    "preferences": {
+      "orderUpdates": true,
+      "promotions": true,
+      "newsletter": true,
+      "productAlerts": true,
+      "currency": "usd"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "loginAlerts": false,
+      "sessionTimeout": 60
+    },
+    "createdAt": "2025-05-17T10:10:34.189Z",
+    "__v": 0
+  },
+  {
+    "_id": "6828609ae20ec3cbada1f5d6",
+    "firstName": "Sarah",
+    "lastName": "Williams",
+    "email": "sarah.williams@example.com",
+    "password": "$2a$10$EDMmo0bTt8SOidq/WNkYpexdho17VuoNLzE4N8ISHQ4qGrlTm/EzW",
+    "phone": "2223334444",
+    "role": "user",
+    "isSubscribed": true,
     "isEmailVerified": true,
     "preferences": {
       "orderUpdates": true,
@@ -99,11 +117,11 @@
       "currency": "usd"
     },
     "security": {
-      "twoFactorEnabled": false,
-      "loginAlerts": false,
-      "sessionTimeout": 60
+      "twoFactorEnabled": true,
+      "loginAlerts": true,
+      "sessionTimeout": 45
     },
-    "createdAt": "2025-05-16T05:49:32.652Z",
+    "createdAt": "2025-05-17T10:10:34.189Z",
     "__v": 0
   }
 ]
