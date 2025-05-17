@@ -6,6 +6,7 @@ const Cart = require('../models/cart');
 const Address = require('../models/address');
 const PaymentMethod = require('../models/payment-method');
 const { isAuthenticated } = require('../middleware/auth');
+const { sendOrderConfirmationEmail } = require('../frontend/js/email'); // Import the email module
 
 // routes/orders.js - Update the POST route for order creation
 
@@ -141,6 +142,16 @@ router.post('/', async (req, res) => {
         if (cart) {
             cart.items = [];
             await cart.save();
+        }
+        
+        // Send order confirmation email
+        try {
+            await sendOrderConfirmationEmail(user, newOrder);
+            console.log(`Order confirmation email sent to ${user.email} for order ${newOrder.orderNumber}`);
+        } catch (emailError) {
+            console.error('Failed to send order confirmation email:', emailError);
+            // We don't want to fail the order creation if the email fails
+            // Just log the error and continue
         }
         
         // Respond with success and order details

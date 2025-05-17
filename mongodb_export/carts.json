@@ -71,10 +71,30 @@
         "specs": "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" WQHD, Windows 11 Pro",
         "_id": "6824ef1c99e35828fae97452",
         "dateAdded": "2025-05-14T19:29:32.116Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d77",
+        "quantity": 1,
+        "name": "Intel Core i9-13900K",
+        "price": 599.99,
+        "image": "/images/placeholder.jpg",
+        "specs": "24 Cores (8P+16E), 32 Threads, 5.8GHz Max Turbo, 36MB Cache, LGA 1700",
+        "_id": "6827564bcecd9b521d28b84e",
+        "dateAdded": "2025-05-16T15:14:19.587Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d77",
+        "quantity": 1,
+        "name": "Intel Core i9-13900K",
+        "price": 599.99,
+        "image": "/images/placeholder.jpg",
+        "specs": "24 Cores (8P+16E), 32 Threads, 5.8GHz Max Turbo, 36MB Cache, LGA 1700",
+        "_id": "6827564bcecd9b521d28b850",
+        "dateAdded": "2025-05-16T15:14:19.588Z"
       }
     ],
     "createdAt": "2025-05-12T06:59:04.403Z",
-    "updatedAt": "2025-05-14T19:29:32.117Z",
+    "updatedAt": "2025-05-16T15:14:26.025Z",
     "__v": 40
   },
   {
@@ -148,10 +168,41 @@
   {
     "_id": "6826d1fb045a4a1526673411",
     "userId": "6826d1ec87138d2df974db0a",
-    "__v": 6,
+    "__v": 9,
     "createdAt": "2025-05-16T05:49:47.554Z",
     "isGuest": false,
-    "items": [],
-    "updatedAt": "2025-05-16T05:56:26.116Z"
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "quantity": 1,
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "image": "frontendimagesacer4070.jpg",
+        "specs": "16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design",
+        "_id": "6826da95a670479ca92d43f2",
+        "dateAdded": "2025-05-16T06:26:29.938Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "quantity": 1,
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "image": "frontendimagesacer4070.jpg",
+        "specs": "16GB GDDR6X, 9728 CUDA Cores, PCIe 4.0, 2.5 Slot Design",
+        "_id": "6826da95a670479ca92d43f4",
+        "dateAdded": "2025-05-16T06:26:29.941Z"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d71",
+        "quantity": 1,
+        "name": "Acer Predator Helios 300",
+        "price": 1299.99,
+        "image": "frontendimagesacer3000.jpg",
+        "specs": "Intel Core i7-11800H, 16GB RAM, 512GB SSD, RTX 3060, 15.6\" FHD 144Hz",
+        "_id": "6826da9ea670479ca92d441c",
+        "dateAdded": "2025-05-16T06:26:38.149Z"
+      }
+    ],
+    "updatedAt": "2025-05-16T06:26:24.599Z"
   }
 ]

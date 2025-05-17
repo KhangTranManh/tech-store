@@ -16,48 +16,247 @@ const isAuthenticated = (req, res, next) => {
         req.guestId = req.session.guestId;
     }
     next();
-};
-function formatCartForResponse(cart) {
-    if (!cart || !cart.items || !cart.items.length) {
-      return { items: [], itemCount: 0 };
+}
+// Update the POST route in orders.js to properly handle product images
+
+router.post('/', async (req, res) => {
+    try {
+        // Get user from authenticated session
+        const user = req.user;
+        
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'User not authenticated' 
+            });
+        }
+        
+        // Validate request body
+        const { 
+            items, 
+            addressId, 
+            paymentMethodId, 
+            paymentType, 
+            subtotal, 
+            shipping, 
+            tax,
+            notes 
+        } = req.body;
+        
+        // Validate required fields
+        if (!items || !addressId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required order information' 
+            });
+        }
+        
+        // Verify address belongs to user
+        const address = await Address.findOne({ 
+            _id: addressId, 
+            user: user._id
+        });
+        
+        if (!address) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid shipping address' 
+            });
+        }
+        
+        // For COD orders, skip payment method verification
+        let paymentLast4 = '';
+        
+        // Only verify payment method for card payments
+        if (paymentType !== 'cod') {
+            if (!paymentMethodId) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Payment method is required for non-COD orders'
+                });
+            }
+            
+            // Verify payment method belongs to user
+            const paymentMethod = await PaymentMethod.findOne({ 
+                _id: paymentMethodId, 
+                user: user._id
+            });
+            
+            if (!paymentMethod) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Invalid payment method' 
+                });
+            }
+            
+            // Set payment last4 if available
+            paymentLast4 = paymentMethod.last4 || '';
+        }
+        
+        // Calculate total
+        const total = subtotal + shipping + tax;
+        
+        // Process items to ensure they have valid images and data
+        const processedItems = items.map(item => {
+            // Ensure we have a valid image URL
+            const imageUrl = item.image && item.image !== '' ? item.image : '/images/placeholder.jpg';
+            
+            return {
+                productId: item.productId,
+                name: item.name || 'Product',
+                price: parseFloat(item.price) || 0,
+                quantity: parseInt(item.quantity) || 1,
+                image: imageUrl
+            };
+        });
+        
+        // Create new order
+        const newOrder = new Order({
+            user: user._id,
+            items: processedItems,
+            shippingAddress: addressId,
+            paymentType: paymentType || 'card',
+            ...(paymentType !== 'cod' && { paymentMethod: paymentMethodId }),
+            paymentLast4,
+            subtotal,
+            shippingCost: shipping,
+            tax,
+            total,
+            status: 'pending',
+            notes: notes || '',
+            statusHistory: [{
+                status: 'pending',
+                note: 'Order created'
+            }]
+        });
+        
+        // If this is a COD order, add an initial tracking entry
+        if (paymentType === 'cod') {
+            newOrder.tracking = [{
+                status: 'Order Placed',
+                description: 'Your order has been received and will be processed upon delivery',
+                timestamp: new Date(),
+                location: 'Online Store'
+            }];
+        }
+        
+        // Save order to generate ID
+        await newOrder.save();
+        
+        // Generate consistent order number using ORD- format
+        // The pre-save middleware should handle this now, but we ensure it's properly formatted here
+        if (!newOrder.orderNumber || !newOrder.orderNumber.startsWith('ORD-')) {
+            const idString = newOrder._id.toString();
+            const sixDigits = idString.length > 6 ? idString.slice(-10, -4) : idString.padStart(6, '0');
+            const fourDigits = idString.length > 4 ? idString.slice(-4) : '0000';
+            
+            newOrder.orderNumber = `ORD-${sixDigits}-${fourDigits}`;
+            await newOrder.save();
+        }
+        
+        // Clear user's cart
+        const cart = await Cart.findOne({ userId: user._id });
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+        
+        // Send order confirmation email
+        try {
+            await sendOrderConfirmationEmail(user, newOrder);
+            console.log(`Order confirmation email sent to ${user.email} for order ${newOrder.orderNumber}`);
+        } catch (emailError) {
+            console.error('Failed to send order confirmation email:', emailError);
+            // We don't want to fail the order creation if the email fails
+            // Just log the error and continue
+        }
+        
+        // Respond with success and order details
+        res.status(201).json({ 
+            success: true, 
+            order: newOrder,
+            message: 'Order placed successfully' 
+        });
+    } catch (error) {
+        console.error('Order placement error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to place order. Please try again.',
+            error: error.message 
+        });
     }
-  
-    // Keep track of products by ID to prevent duplicates
+});
+/**
+ * Deduplicates cart items by combining items with the same productId
+ * This function is for API response formatting only, not for database updates
+ * @param {Object} cart - The cart object with items array
+ * @returns {Object} - Deduplicated cart object for API response
+ */
+function deduplicateCart(cart) {
+    // Return early if cart is empty or invalid
+    if (!cart || !cart.items || cart.items.length === 0) {
+      return cart || { items: [], itemCount: 0 };
+    }
+    
+    // Create an object to store unique items by productId (as string)
     const uniqueItems = {};
     
-    // First pass to combine quantities for duplicates
+    // First, group items by their productId (as string)
     cart.items.forEach(item => {
-      const id = String(item.productId);
+      if (!item) return; // Skip null or undefined items
       
-      if (uniqueItems[id]) {
-        // If item exists, combine quantities
-        uniqueItems[id].quantity += parseInt(item.quantity || 1);
+      // Get a safe ID to use as a key
+      let safeId;
+      
+      if (item.productId) {
+        // If productId is an object with _id (populated mongoose document)
+        if (typeof item.productId === 'object' && item.productId !== null && item.productId._id) {
+          safeId = String(item.productId._id);
+        } 
+        // If productId is a string
+        else if (typeof item.productId === 'string') {
+          // Skip invalid productIds like 'undefined' or 'null'
+          if (item.productId === 'undefined' || item.productId === 'null') {
+            return;
+          }
+          safeId = item.productId;
+        }
+        // If productId is already an ObjectId
+        else {
+          safeId = String(item.productId);
+        }
       } else {
-        // New item
-        uniqueItems[id] = {
-          id: item._id || item.id,
-          productId: item.productId._id || item.productId,
-          name: item.name || (item.productId.name || "Product"),
-          price: parseFloat(item.price || (item.productId.price || 0)),
-          image: item.image || (item.productId.thumbnailUrl || 
-                  (item.productId.images && item.productId.images.length > 0 ? 
-                   item.productId.images[0] : '/images/placeholder.jpg')),
+        // If no productId, use item's _id or generate a fallback
+        safeId = item._id ? String(item._id) : 'item_' + Math.random().toString(36).substr(2, 9);
+      }
+      
+      if (uniqueItems[safeId]) {
+        // If this productId already exists, combine quantities
+        uniqueItems[safeId].quantity += parseInt(item.quantity || 1);
+      } else {
+        // Create a new item object with all needed properties
+        uniqueItems[safeId] = {
+          id: item._id ? String(item._id) : safeId,
+          productId: safeId,
+          name: item.name || 'Product',
+          price: parseFloat(item.price || 0),
+          image: item.image || '/images/placeholder.jpg',
           quantity: parseInt(item.quantity || 1),
-          specs: item.specs || (item.productId.specs || '')
+          specs: item.specs || ''
         };
       }
     });
     
-    // Convert back to array
-    const uniqueItemsArray = Object.values(uniqueItems);
+    // Convert object to array for the response
+    const itemsArray = Object.values(uniqueItems);
     
     // Calculate total item count
-    const itemCount = uniqueItemsArray.reduce(
-      (total, item) => total + (parseInt(item.quantity) || 1), 0
-    );
+    const itemCount = itemsArray.reduce((total, item) => total + parseInt(item.quantity || 1), 0);
     
+    // Return a new cart object with deduplicated items
     return {
-      items: uniqueItemsArray,
+      ...cart,
+      items: itemsArray,
       itemCount: itemCount
     };
   }
@@ -79,17 +278,54 @@ router.get('/', isAuthenticated, async (req, res) => {
             });
         }
 
-        // Apply deduplication before returning
-        cart = deduplicateCart(cart);
+        // Make a safe copy for formatting the response
+        const safeCart = {
+            _id: cart._id,
+            userId: cart.userId,
+            items: cart.items.filter(item => item).map(item => {
+                // Create a safe item copy without direct references to MongoDB document
+                return {
+                    _id: item._id,
+                    productId: item.productId,
+                    quantity: item.quantity || 1,
+                    name: item.name || (item.productId && item.productId.name ? item.productId.name : 'Product'),
+                    price: item.price || (item.productId && item.productId.price ? item.productId.price : 0),
+                    image: item.image || (item.productId && item.productId.thumbnailUrl ? item.productId.thumbnailUrl : '/images/placeholder.jpg'),
+                    specs: item.specs || (item.productId && item.productId.specs ? item.productId.specs : '')
+                };
+            })
+        };
+
+        // Apply deduplication for the response formatting
+        const deduplicatedCart = deduplicateCart(safeCart);
         
-        // Force a save to clean up any duplicates
-        await Cart.findOneAndUpdate(
-            { userId: userId },
-            { items: cart.items },
-            { new: true }
-        );
-        
-        const formattedCart = formatCartForResponse(cart);
+        // Format the cart for the API response
+        const formattedCart = formatCartForResponse(deduplicatedCart);
+
+        // Clean up invalid items in the actual MongoDB cart
+        // We need to make sure all items have a valid productId (ObjectId)
+        const validCartItems = cart.items.filter(item => {
+            // Keep only items with a valid productId that can be cast to ObjectId
+            return item && item.productId && 
+                   // Make sure productId is not a string like 'undefined'
+                   !(typeof item.productId === 'string' && 
+                     (item.productId === 'undefined' || item.productId === 'null'));
+        });
+
+        // Only update the database if we need to remove invalid items
+        if (validCartItems.length !== cart.items.length) {
+            try {
+                await Cart.findOneAndUpdate(
+                    { userId: userId },
+                    { $set: { items: validCartItems } },
+                    { new: true }
+                );
+                console.log('Removed invalid items from cart');
+            } catch (saveError) {
+                console.error('Error cleaning up cart:', saveError);
+                // Continue with the response even if the save fails
+            }
+        }
 
         res.status(200).json({
             success: true,
@@ -99,12 +335,11 @@ router.get('/', isAuthenticated, async (req, res) => {
         console.error('Error fetching cart:', error);
         res.status(500).json({
             success: false,
-            message: 'Error fetching cart'
+            message: 'Error fetching cart',
+            error: error.message
         });
     }
 });
-// Fix for the route/cart.js add method to handle version errors
-
 router.post('/add', isAuthenticated, async (req, res) => {
     try {
       const { productId, quantity = 1, name, price, image } = req.body;
@@ -173,6 +408,9 @@ router.post('/add', isAuthenticated, async (req, res) => {
         });
       } else {
         // Item doesn't exist yet, add it
+        // Get product image from database or fallback to provided image
+        const productImage = product.thumbnailUrl || product.images?.[0] || image || '/images/placeholder.jpg';
+
         const updatedCart = await Cart.findOneAndUpdate(
           { userId },
           { 
@@ -182,7 +420,7 @@ router.post('/add', isAuthenticated, async (req, res) => {
                 quantity,
                 name: name || product.name,
                 price: price || product.price,
-                image: image || product.thumbnailUrl || '/images/placeholder.jpg',
+                image: productImage,
                 specs: product.specs
               }
             }
@@ -208,7 +446,7 @@ router.post('/add', isAuthenticated, async (req, res) => {
         error: error.message
       });
     }
-  });
+});
 router.put('/update', isAuthenticated, async (req, res) => {
     try {
         // Accept either itemId or productId
@@ -455,8 +693,7 @@ router.post('/transfer', async (req, res) => {
         });
     }
 });
-
-// Sync cart route
+// Improved Sync cart route to better handle product images
 router.post('/sync', isAuthenticated, async (req, res) => {
     try {
         const { items } = req.body;
@@ -482,50 +719,74 @@ router.post('/sync', isAuthenticated, async (req, res) => {
         // Clear existing items
         cart.items = [];
       
-        // Add new items from local storage
+        // Process and add new items from request
+        const validItems = [];
+      
         for (const item of items) {
-            // Find product by ID
-            let product;
-            
+            // Skip invalid items
+            if (!item.productId) continue;
+
             try {
-                product = await Product.findById(item.productId);
-            } catch (error) {
-                console.warn(`Product not found for ID ${item.productId}:`, error);
-                // Continue with the next item
-                continue;
-            }
-            
-            if (product) {
-                cart.items.push({
-                    productId: product._id,
-                    quantity: parseInt(item.quantity) || 1,
-                    name: item.name || product.name,
-                    price: parseFloat(item.price) || product.price,
-                    image: item.image || product.thumbnailUrl || '/images/placeholder.jpg',
-                    specs: product.specs
-                });
-            } else {
-                // If product not found but we have name and price, still add it
-                if (item.name && item.price) {
-                    cart.items.push({
-                        productId: new mongoose.Types.ObjectId(), // Generate a temporary ID
-                        quantity: parseInt(item.quantity) || 1,
-                        name: item.name,
-                        price: parseFloat(item.price),
-                        image: item.image || '/images/placeholder.jpg',
-                        specs: item.specs || ''
-                    });
+                // Normalize the productId to make sure it's a valid ObjectId
+                const productId = mongoose.Types.ObjectId.isValid(item.productId) 
+                    ? mongoose.Types.ObjectId(item.productId) 
+                    : null;
+                
+                if (!productId) {
+                    console.warn(`Invalid productId format: ${item.productId}`);
+                    continue;
                 }
+                
+                // Find product in database
+                const product = await Product.findById(productId);
+                
+                if (product) {
+                    // If product exists in database, prefer its image
+                    validItems.push({
+                        productId: product._id,
+                        quantity: parseInt(item.quantity) || 1,
+                        name: item.name || product.name,
+                        price: parseFloat(item.price) || product.price,
+                        image: product.thumbnailUrl || item.image || '/images/placeholder.jpg',
+                        specs: product.specs || item.specs || ''
+                    });
+                } else {
+                    // If product not found but we have name and price, add it with provided info
+                    if (item.name && item.price) {
+                        // Ensure the image is valid
+                        const imageUrl = item.image && item.image !== '' 
+                            ? item.image 
+                            : '/images/placeholder.jpg';
+                            
+                        validItems.push({
+                            productId: productId,
+                            quantity: parseInt(item.quantity) || 1,
+                            name: item.name,
+                            price: parseFloat(item.price),
+                            image: imageUrl,
+                            specs: item.specs || ''
+                        });
+                    }
+                }
+            } catch (error) {
+                console.warn(`Error processing item ${item.productId}:`, error);
+                // Continue with next item
             }
         }
+      
+        // Update cart with valid items only
+        cart.items = validItems;
       
         // Save the updated cart
         await cart.save();
       
+        // Format the cart for response
+        const formattedCart = formatCartForResponse(cart);
+      
         res.status(200).json({
             success: true,
             message: 'Cart synced successfully',
-            cart: formatCartForResponse(cart)
+            cart: formattedCart
         });
       
     } catch (error) {
@@ -537,5 +798,92 @@ router.post('/sync', isAuthenticated, async (req, res) => {
         });
     }
 });
+/**
+ * Format cart data for API response
+ * @param {Object} cart - Cart object
+ * @returns {Object} - Formatted cart data
+ */
+function formatCartForResponse(cart) {
+    // Return empty cart if invalid
+    if (!cart || !cart.items || !cart.items.length) {
+      return { items: [], itemCount: 0 };
+    }
+    
+    // Process each item safely
+    const formattedItems = cart.items
+      .filter(item => item) // Remove null/undefined items
+      .map(item => {
+        // Get product name - check all possible sources
+        const name = item.name || 
+          (item.productId && typeof item.productId === 'object' && item.productId.name) || 
+          'Product';
+        
+        // Get product price - check all possible sources
+        const price = parseFloat(
+          item.price || 
+          (item.productId && typeof item.productId === 'object' && item.productId.price) || 
+          0
+        );
+        
+        // Get product image - check all possible sources
+        let image = item.image || '';
+        
+        // Try to get image from productId if it's an object
+        if (!image && item.productId && typeof item.productId === 'object') {
+          // Check thumbnailUrl first
+          if (item.productId.thumbnailUrl) {
+            image = item.productId.thumbnailUrl;
+          }
+          // Then try images array
+          else if (item.productId.images && item.productId.images.length > 0) {
+            image = item.productId.images[0];
+          }
+        }
+        
+        // Use placeholder if still no image
+        if (!image) {
+          image = '/images/placeholder.jpg';
+        }
+        
+        // Get specs - check all possible sources
+        const specs = item.specs || 
+          (item.productId && typeof item.productId === 'object' && item.productId.specs) || 
+          '';
+        
+        // Get product ID safely
+        let productId;
+        if (item.productId) {
+          if (typeof item.productId === 'object' && item.productId._id) {
+            productId = item.productId._id;
+          } else {
+            productId = item.productId;
+          }
+        } else {
+          productId = item._id || 'unknown';
+        }
+        
+        // Return safe item object
+        return {
+          id: item._id || 'item_' + Math.random().toString(36).substr(2, 9),
+          productId: productId,
+          name: name,
+          price: price, 
+          image: image,
+          quantity: parseInt(item.quantity || 1),
+          specs: specs
+        };
+      });
+    
+    // Calculate total item count
+    const itemCount = formattedItems.reduce(
+      (total, item) => total + (parseInt(item.quantity) || 1), 0
+    );
+    
+    // Return formatted cart
+    return {
+      items: formattedItems,
+      itemCount: itemCount
+    };
+  }
 
 module.exports = router;

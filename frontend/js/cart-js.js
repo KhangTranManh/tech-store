@@ -202,7 +202,6 @@ function initializeCart() {
   // Initialize cart count
   updateCartCountFromLocalStorage();
 }
-
 function addToCart(productId, productName, productPrice, productImage = '', buttonElement = null) {
   try {
     // Disable button to prevent multiple clicks
@@ -229,8 +228,11 @@ function addToCart(productId, productName, productPrice, productImage = '', butt
       ? parseFloat(productPrice.replace(/[^0-9.-]+/g, '')) 
       : parseFloat(productPrice) || 0;
     
+    // Ensure image URL is valid
+    const imageUrl = productImage && productImage !== '' ? productImage : '';
+    
     // Add to local storage cart first
-    addToCartLocal(productId, productName, price, productImage);
+    addToCartLocal(productId, productName, price, imageUrl);
     
     // Then send to server
     fetch('/api/cart/add', {
@@ -242,7 +244,7 @@ function addToCart(productId, productName, productPrice, productImage = '', butt
         productId: productId,
         name: productName || 'Product',
         price: price,
-        image: productImage || '',
+        image: imageUrl,
         quantity: 1
       }),
       credentials: 'include' // Important: include cookies for authentication
@@ -255,6 +257,12 @@ function addToCart(productId, productName, productPrice, productImage = '', butt
     })
     .then(data => {
       if (data.success) {
+        // Update local storage with server data - this ensures we get the correct product image
+        // from the database if available
+        if (data.cart) {
+          sessionStorage.setItem('cart', JSON.stringify(data.cart));
+        }
+        
         // Update UI with server data
         showNotification(`${productName} added to cart!`, 'success');
         updateCartCountUI(data.cart?.itemCount || 1);
@@ -288,9 +296,6 @@ function addToCart(productId, productName, productPrice, productImage = '', butt
     }
   }
 }
-
-
-// Fix for the addToCartLocal function - remove the debugCart call or implement it
 function addToCartLocal(productId, productName, productPrice, productImage = '') {
   try {
     // Get current cart or initialize if not exists
@@ -342,13 +347,16 @@ function addToCartLocal(productId, productName, productPrice, productImage = '')
       cart.items[existingItemIndex].quantity = Math.min(currentQty + 1, 10); // Max quantity limit
     } else {
       console.log('Adding new product to cart');
+      // Ensure we have a valid image URL or use a placeholder
+      const imageUrl = productImage && productImage !== '' ? productImage : 'images/placeholder.jpg';
+      
       // Add new item with all necessary details
       cart.items.push({
         productId: normalizedProductId, // Store as normalized string
         name: productName || 'Unknown Product',
         price: parseFloat(productPrice) || 0,
         quantity: 1,
-        image: productImage || 'images/placeholder.jpg'
+        image: imageUrl
       });
     }
     
@@ -363,7 +371,9 @@ function addToCartLocal(productId, productName, productPrice, productImage = '')
     updateCartCountUI(cart.itemCount);
     
     // Run debugger
-    debugCart();
+    if (typeof debugCart === 'function') {
+      debugCart();
+    }
     
     return cart;
   } catch (error) {
@@ -527,12 +537,7 @@ function findCartContainer() {
   
   return cartContainer;
 }
-
-/**
- * Update the cart display on the cart page
- * @param {Object} cart - Cart data
- * @param {HTMLElement} container - Container element to update
- */
+// Also update the updateCartDisplay function to better handle product images
 function updateCartDisplay(cart, container) {
   if (!container) {
     container = findCartContainer();
@@ -582,11 +587,14 @@ function updateCartDisplay(cart, container) {
             const itemQuantity = parseInt(item.quantity) || 1;
             const itemTotal = itemPrice * itemQuantity;
             
+            // Ensure we have a valid image URL or use a placeholder
+            const imageUrl = item.image && item.image !== '' ? item.image : 'images/placeholder.jpg';
+            
             return `
               <tr data-product-id="${item.productId}" style="border-bottom: 1px solid #eee;">
                 <td style="padding: 15px; vertical-align: middle;">
                   <div style="display: flex; align-items: center;">
-                    <img src="${item.image || 'images/placeholder.jpg'}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: contain; margin-right: 15px; background-color: #f8f8f8; padding: 5px;">
+                    <img src="${imageUrl}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: contain; margin-right: 15px; background-color: #f8f8f8; padding: 5px;">
                     <div>
                       <div style="font-weight: bold; color: #333;">${item.name || 'Unknown Product'}</div>
                       <div style="font-size: 14px; color: #666;">${item.specs || ''}</div>
@@ -849,7 +857,8 @@ function deduplicateCart(cart) {
   return cart;
 }
 
-module.exports = deduplicateCart;
+// Make the function available globally for browser usage
+window.deduplicateCart = deduplicateCart;
 
 
 /**
@@ -947,21 +956,65 @@ function setupCheckoutButton() {
         return;
       }
       
-      // Proceed with checkout - sync cart with server first
-      syncCartWithServer()
+      // Process the cart to ensure all images are valid before checkout
+      processCartForCheckout()
         .then(() => {
+          // Then proceed to checkout
           window.location.href = API_ENDPOINTS.CHECKOUT;
         })
         .catch(error => {
-          console.error('Error syncing cart:', error);
+          console.error('Error preparing cart for checkout:', error);
           showNotification('Error preparing checkout. Please try again.', 'error');
         });
     });
   }
 }
-
 /**
- * Sync the local cart with the server
+ * Process cart for checkout - ensures all items have valid images
+ * @returns {Promise} Promise that resolves when processing is complete
+ */
+function processCartForCheckout() {
+  return new Promise((resolve, reject) => {
+    // Get current cart
+    const cart = getCartFromLocalStorage();
+    
+    if (!cart.items || cart.items.length === 0) {
+      // Nothing to process
+      resolve();
+      return;
+    }
+    
+    // Process cart items to ensure valid images
+    const processedItems = cart.items.map(item => {
+      // Ensure we have a valid image URL
+      const imageUrl = item.image && item.image !== '' ? item.image : '/images/placeholder.jpg';
+      
+      return {
+        ...item,
+        image: imageUrl
+      };
+    });
+    
+    // Update cart with processed items
+    cart.items = processedItems;
+    
+    // Save updated cart to session storage
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Sync the updated cart with the server
+    syncCartWithServer()
+      .then(() => {
+        console.log('Cart processed and synced for checkout');
+        resolve();
+      })
+      .catch(error => {
+        console.error('Failed to process cart for checkout:', error);
+        reject(error);
+      });
+  });
+}
+/**
+ * Sync the local cart with the server with improved image handling
  * @returns {Promise} Promise that resolves when the cart is synced
  */
 function syncCartWithServer() {
@@ -974,19 +1027,25 @@ function syncCartWithServer() {
       return;
     }
 
+    // Process items to ensure they have valid images
+    const processedItems = cart.items.map(item => {
+      return {
+        productId: item.productId,
+        quantity: parseInt(item.quantity) || 1,
+        name: item.name || 'Product',
+        price: parseFloat(item.price) || 0,
+        image: item.image && item.image !== '' ? item.image : '/images/placeholder.jpg',
+        specs: item.specs || ''
+      };
+    });
+
     fetch(API_ENDPOINTS.SYNC_CART, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        items: cart.items.map(item => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          name: item.name,
-          price: item.price,
-          image: item.image
-        }))
+        items: processedItems
       }),
       credentials: 'include'
     })
@@ -999,6 +1058,26 @@ function syncCartWithServer() {
     .then(data => {
       if (data.success) {
         console.log('Cart synced with server successfully');
+        
+        // Update local storage with the server's version of the cart
+        if (data.cart) {
+          // Make sure all items in the returned cart have valid images
+          if (data.cart.items && Array.isArray(data.cart.items)) {
+            data.cart.items = data.cart.items.map(item => {
+              if (!item.image || item.image === '') {
+                item.image = '/images/placeholder.jpg';
+              }
+              return item;
+            });
+          }
+          
+          // Save the updated cart to session storage
+          sessionStorage.setItem('cart', JSON.stringify(data.cart));
+          
+          // Update cart count in UI
+          updateCartCountUI(data.cart.itemCount || 0);
+        }
+        
         resolve(data);
       } else {
         throw new Error(data.message || 'Cart sync failed');
@@ -1010,7 +1089,6 @@ function syncCartWithServer() {
     });
   });
 }
-
 /**
  * Show notification to user
  * @param {string} message - Message to show

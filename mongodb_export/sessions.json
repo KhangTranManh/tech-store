@@ -6,12 +6,12 @@
   },
   {
     "_id": "Abw6TEmPeL5PdXubgPPP5AOY8fjsv7l1",
-    "expires": "2025-05-17T06:07:07.848Z",
+    "expires": "2025-05-17T06:50:31.174Z",
     "session": "{\"cookie\":{\"originalMaxAge\":86400000,\"expires\":\"2025-05-17T05:49:32.745Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":\"6826d1ec87138d2df974db0a\"}}"
   },
   {
-    "_id": "qeXICDBVhC7ax_9yOEecIBFJMDh9ffBw",
-    "expires": "2025-05-17T06:00:24.435Z",
-    "session": "{\"cookie\":{\"originalMaxAge\":86400000,\"expires\":\"2025-05-17T05:50:23.124Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":\"67e589ca0e5596bab131639d\"}}"
+    "_id": "hkM-RaIELs7H1f56DbkJTG8HSEPntInK",
+    "expires": "2025-05-17T16:25:55.935Z",
+    "session": "{\"cookie\":{\"originalMaxAge\":86400000,\"expires\":\"2025-05-17T07:56:27.889Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":\"67e589ca0e5596bab131639d\"}}"
   }
 ]

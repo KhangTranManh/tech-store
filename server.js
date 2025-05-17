@@ -1,5 +1,3 @@
-// UPDATED server.js with correct path and mounting order
-
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
@@ -8,16 +6,17 @@ const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const http = require('http');
+const WebSocket = require('ws');
 const socialAuthRoutes = require('./routes/socialAuth');
-const User = require('./models/user'); // Database Connection
+const User = require('./models/user');
 const connectDB = require('./db/connection');
-// CORRECTED PATH: Use ./ not ../
 const { isAuthenticated, isAdmin, isTrackingAdmin } = require('./middleware/auth');
 
 // Auth service for passport configuration
 const { initializePassport } = require('./services/authService');
 
-// Routes (use optional chaining and error handling)
+// Safe require function to handle missing modules
 const safeRequire = (modulePath) => {
   try {
     return require(modulePath);
@@ -27,6 +26,7 @@ const safeRequire = (modulePath) => {
   }
 };
 
+// Load routes
 const productRoutes = safeRequire('./routes/products');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = safeRequire('./routes/orders');
@@ -40,6 +40,8 @@ const adminRoutes = require('./routes/admin');
 const trackingRoutes = require('./routes/tracking');
 const messageRoutes = require('./routes/message');
 
+// New: Load review routes
+const reviewRoutes = require('./routes/review');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -105,7 +107,53 @@ app.use(session({
 
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
-app.use(passport.session());  // MOVED here to be right after initialize
+app.use(passport.session());
+
+// Create HTTP server for WebSocket support
+const server = http.createServer(app);
+
+// Create WebSocket server
+const wss = new WebSocket.Server({ server });
+
+// WebSocket connection handler
+wss.on('connection', (ws, req) => {
+  // Extract product ID from URL
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const path = url.pathname;
+  const matches = path.match(/\/ws\/product\/([^\/]+)\/reviews/);
+  
+  if (!matches) {
+    console.log('Invalid WebSocket URL');
+    ws.close();
+    return;
+  }
+  
+  const productId = matches[1];
+  console.log(`WebSocket connection established for product: ${productId}`);
+  
+  // Add product ID to WebSocket object for reference
+  ws.productId = productId;
+  
+  ws.on('message', (message) => {
+    console.log('Received message:', message);
+  });
+  
+  ws.on('close', () => {
+    console.log('WebSocket connection closed');
+  });
+});
+
+// Global function to broadcast review updates
+global.broadcastReviewUpdate = (productId, type, data) => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN && client.productId === productId) {
+      client.send(JSON.stringify({
+        type,
+        ...data
+      }));
+    }
+  });
+};
 
 // Mount API routes that require search
 app.use('/api', searchRoutes);
@@ -129,12 +177,11 @@ if (authRoutes) {
   console.error('Auth routes not available to mount!');
 }
 
-// IMPORTANT: Mount admin routes BEFORE 404 handler but AFTER authentication
-// This is the correct position for admin routes
+// Mount admin routes
 console.log('Mounting admin routes');
 app.use(adminRoutes);
 
-// Add this before your 404 handler
+// Product detail page route
 app.get('/product/:slug', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'product-detail.html'));
 });
@@ -150,8 +197,6 @@ if (paymentMethodRoutes) {
   app.use('/api/payment-methods', paymentMethodRoutes);
 }
 
-// IMPORTANT: Mount cart routes BEFORE the 404 handler
-// Added debug middleware
 console.log('Mounting cart routes at /api/cart');
 app.use('/api/cart', (req, res, next) => {
   console.log('Cart API Request:', req.method, req.path);
@@ -176,6 +221,10 @@ if (wishlistRoutes) {
 }
 
 app.use('/api/categories', categoryRoutes);
+
+// NEW: Mount review routes
+console.log('Mounting review routes at /api');
+app.use('/api', reviewRoutes);
 
 // Serve static HTML pages
 const serveStaticPage = (route, filename) => {
@@ -231,6 +280,50 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is running correctly' });
 });
 
+// NEW: Temporary review routes for testing if models and controllers aren't fully ready
+// These can be removed once the full implementation is ready
+app.get('/api/products/:productId/reviews-mock', (req, res) => {
+  // Mock data for testing
+  const productId = req.params.productId;
+  res.json({
+    success: true,
+    totalReviews: 42,
+    totalPages: 5,
+    currentPage: 1,
+    reviews: [
+      {
+        _id: new mongoose.Types.ObjectId().toString(),
+        authorName: 'John Doe',
+        rating: 5,
+        title: 'Excellent product',
+        content: 'This is one of the best purchases I have made. The performance is outstanding.',
+        createdAt: new Date('2025-04-20'),
+        isVerifiedPurchase: true,
+        helpfulCount: 8
+      },
+      {
+        _id: new mongoose.Types.ObjectId().toString(),
+        authorName: 'Jane Smith',
+        rating: 4,
+        title: 'Great product with minor issues',
+        content: 'Great performance overall, but the fans can get a bit loud under heavy load.',
+        createdAt: new Date('2025-04-15'),
+        isVerifiedPurchase: true,
+        helpfulCount: 3
+      }
+    ],
+    averageRating: 4.7,
+    ratingCounts: {
+      5: 38,
+      4: 3,
+      3: 1,
+      2: 0,
+      1: 0
+    },
+    productId
+  });
+});
+
 // 404 handler - AFTER all route registrations
 app.use((req, res, next) => {
   console.log('404 Not Found:', req.method, req.path);
@@ -251,11 +344,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start the server
-const server = app.listen(PORT, () => {
+// Start the server using the HTTP server for WebSocket support
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log(`- Static files served from: ${path.join(__dirname, 'frontend')}`);
   console.log(`- Test the server: http://localhost:${PORT}/api/test`);
+  console.log(`- WebSocket is available at ws://localhost:${PORT}/ws/product/:productId/reviews`);
 });
 
 // Graceful shutdown
