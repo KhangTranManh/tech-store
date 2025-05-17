@@ -43,7 +43,6 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
-      - db-seeder
     networks:
       - app-network
     environment:
@@ -51,9 +50,10 @@ services:
       - PORT=3000
       - NODE_ENV=development
       - SESSION_SECRET=your_session_secret_here
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      - HOST=0.0.0.0
+    # The command below ensures the app runs on 0.0.0.0 to accept connections from outside
+    command: >
+      sh -c "npm start"
 
   # Ngrok service for exposing the web app to the internet
   ngrok:
@@ -68,7 +68,7 @@ services:
       - app-network
     environment:
       - NGROK_AUTHTOKEN=2wqZ5nlVaRLrXls86Q4BCqTXovd_3NvmoeVvMprStewkCiUC3
-    command: http web:3000
+    command: "http web:3000 --log=stdout"
 
 networks:
   app-network:

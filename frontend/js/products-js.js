@@ -382,7 +382,7 @@ function initializeFilters() {
       filterButton.addEventListener('click', function() {
           // In a real implementation, this would apply filters
           // For demo purposes, we'll just show an alert
-          alert('Filters would be applied here.');
+          
       });
   }
   
