@@ -1,0 +1,21 @@
+# Dockerfile for database seeding
+FROM node:18-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies 
+RUN npm install
+
+# Copy the seed script and models directory
+COPY db /app/db
+COPY models /app/models
+
+# Set environment variable for MongoDB connection
+ENV MONGODB_URI=mongodb://mongo:27017/techstore
+
+# Command to run the seeder script
+CMD ["node", "db/seedata.js"]

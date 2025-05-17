@@ -1,0 +1,35 @@
+# Dockerfile for web application
+FROM node:18-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application files
+COPY . .
+
+# Create .env file if it doesn't exist
+RUN if [ ! -f .env ]; then \
+    echo "MONGODB_URI=mongodb://mongo:27017/techstore" > .env && \
+    echo "SESSION_SECRET=your_session_secret_here" >> .env && \
+    echo "PORT=3000" >> .env && \
+    echo "NODE_ENV=development" >> .env && \
+    echo ".env file created with default values"; \
+    fi
+
+# Set environment variables
+ENV PORT=3000
+ENV NODE_ENV=development
+ENV SESSION_SECRET=your_session_secret_here
+ENV MONGODB_URI=mongodb://mongo:27017/techstore
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]

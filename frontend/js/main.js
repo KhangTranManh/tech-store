@@ -904,7 +904,6 @@ function initializeCategoryPage(categorySlug) {
               ${discountHTML}
             </div>
             <button class="add-to-cart" data-product-id="${product._id}">Add to Cart</button>
-            <button class="compare-btn" data-product-id="${product._id}">Add to Compare</button>
           </div>
         </div>
       `;
