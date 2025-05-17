@@ -729,8 +729,8 @@ router.post('/sync', isAuthenticated, async (req, res) => {
             try {
                 // Normalize the productId to make sure it's a valid ObjectId
                 const productId = mongoose.Types.ObjectId.isValid(item.productId) 
-                    ? mongoose.Types.ObjectId(item.productId) 
-                    : null;
+                ? new mongoose.Types.ObjectId(item.productId) 
+                : null;
                 
                 if (!productId) {
                     console.warn(`Invalid productId format: ${item.productId}`);
