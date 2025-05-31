@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechStore - Your Premium Tech Store</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
     <script src="/js/authUtils.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/products-js.js"></script>
     <script src="/js/cart-js.js"></script>
+    <script src="/js/chat.js"></script>
+    
 </head>
 <body>
     <header>
@@ -120,5 +123,83 @@
             &copy; 2025 TechStore. All Rights Reserved.
         </div>
     </footer>
+    <!-- Chat Widget HTML -->
+<button class="chat-toggle" id="chatToggle">
+    💬
+    <div class="notification-dot">!</div>
+</button>
+
+<div class="chat-container" id="chatContainer">
+    <!-- Default Header -->
+    <div class="chat-header" id="defaultHeader">
+        <span>Hỗ trợ khách hàng</span>
+        <button class="close-btn" id="closeChat">×</button>
+    </div>
+
+    <!-- AI Chat Header -->
+    <div class="chat-header ai-header" id="aiHeader" style="display: none;">
+        <button class="back-btn" id="backToMenu">←</button>
+        <span class="ai-status-dot"></span>
+        <span>AI Assistant Online</span>
+        <button class="close-btn" id="closeChatAI">×</button>
+    </div>
+
+    <!-- Default Options -->
+    <div class="chat-options" id="chatOptions">
+        <button class="chat-option" onclick="startAIChat()">
+            <div class="option-icon ai-icon">🤖</div>
+            <div class="option-text">Chat với AI Assistant</div>
+        </button>
+        <button class="chat-option" onclick="startStaffChat()">
+            <div class="option-icon staff-icon">👥</div>
+            <div class="option-text">Chat với nhân viên</div>
+        </button>
+        <button class="contact-button" onclick="startCall()">
+            Liên hệ
+        </button>
+    </div>
+
+    <!-- AI Chat Messages -->
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+            <div class="message-avatar bot-avatar">🤖</div>
+            <div class="message-content">
+                Xin chào! Tôi là AI Assistant của TechStore. Tôi có thể giúp bạn:
+                • Tìm sản phẩm phù hợp
+                • Kiểm tra đơn hàng
+                • Tư vấn cấu hình
+                • Trả lời các câu hỏi về dịch vụ
+                
+                Bạn cần hỗ trợ gì?
+                <div class="quick-responses">
+                    <div class="quick-response" onclick="sendQuickResponse('Tìm laptop gaming')">Tìm laptop gaming</div>
+                    <div class="quick-response" onclick="sendQuickResponse('Kiểm tra đơn hàng')">Kiểm tra đơn hàng</div>
+                    <div class="quick-response" onclick="sendQuickResponse('Chính sách bảo hành')">Chính sách bảo hành</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div class="typing-indicator" id="typingIndicator">
+        <div class="message-avatar bot-avatar">🤖</div>
+        <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container" id="chatInputContainer">
+        <div class="chat-input-wrapper">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Nhập tin nhắn..." maxlength="500">
+            <button class="send-btn" id="sendBtn">
+                <span>📤</span>
+            </button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

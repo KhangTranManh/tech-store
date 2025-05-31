@@ -39,6 +39,7 @@ const searchRoutes = require('./routes/search');
 const adminRoutes = require('./routes/admin');
 const trackingRoutes = require('./routes/tracking');
 const messageRoutes = require('./routes/message');
+const aiChatRoutes = require('./routes/aiChat');
 
 // New: Load review routes
 const reviewRoutes = require('./routes/review');
@@ -77,9 +78,11 @@ connectDB().catch(err => {
   process.exit(1);
 });
 
-// Middleware for request body parsing
+// FIXED: Body parser middleware MUST come before routes that need req.body
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'frontend')));
@@ -154,6 +157,10 @@ global.broadcastReviewUpdate = (productId, type, data) => {
     }
   });
 };
+
+// FIXED: Mount AI chat routes AFTER body parser middleware
+console.log('Mounting AI chat routes at /api/ai');
+app.use('/api/ai', aiChatRoutes);
 
 // Mount API routes that require search
 app.use('/api', searchRoutes);
@@ -265,6 +272,7 @@ const staticPages = [
   '/checkout.html',
   '/order-details.html',
   '/wishlist.html',
+  '/test-chat.html',
 ];
 
 staticPages.forEach(page => {
@@ -349,6 +357,7 @@ server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log(`- Static files served from: ${path.join(__dirname, 'frontend')}`);
   console.log(`- Test the server: http://localhost:${PORT}/api/test`);
+  console.log(`- Test AI chat: http://localhost:${PORT}/api/ai/chat/health`);
   console.log(`- WebSocket is available at ws://localhost:${PORT}/ws/product/:productId/reviews`);
 });
 
