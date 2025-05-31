@@ -239,8 +239,16 @@ router.post('/chat', rateLimit, validateChatInput, manageSession, logChatRequest
             chatSession.messages = chatSession.messages.slice(-20);
         }
         
-        // Generate AI response with session context
-        const aiResponse = await aiChatService.generateResponse(message, userId, sessionId, chatSession);
+        // Generate AI response with session context and user info
+        let aiResponse;
+        try {
+            // Pass userId to the AI service for personalized responses
+            aiResponse = await aiChatService.generateResponse(message, userId, sessionId, chatSession);
+        } catch (aiError) {
+            console.log(`[AI Fallback] AI service failed, using fallback response for: "${message}"`);
+            // Use fallback response from aiChatService
+            aiResponse = await aiChatService.getFallbackResponse(message);
+        }
         
         // Add AI response to session history
         chatSession.messages.push({

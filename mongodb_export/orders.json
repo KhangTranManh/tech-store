@@ -2,6 +2,7 @@
   {
     "_id": "67eee02f563f0b457e7943f8",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS7e7943f8",
     "items": [
       {
         "productId": "65f2b89d3cd9e23e8c6a1234",
@@ -33,6 +34,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1059,
@@ -43,9 +45,9 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-04-03T19:23:27.991Z",
         "note": "Order created",
-        "_id": "67eee02f563f0b457e7943fd",
-        "timestamp": "2025-04-03T19:23:27.991Z"
+        "_id": "67eee02f563f0b457e7943fd"
       },
       {
         "status": "cancelled",
@@ -56,12 +58,13 @@
     ],
     "createdAt": "2025-04-03T19:23:27.991Z",
     "updatedAt": "2025-04-03T19:23:58.800Z",
-    "orderNumber": "TS7e7943f8",
-    "__v": 1
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "67eee06d563f0b457e794542",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS7e794542",
     "items": [
       {
         "productId": "65f2b89d3cd9e23e8c6a1234",
@@ -93,6 +96,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1059,
@@ -103,19 +107,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-04-03T19:24:29.977Z",
         "note": "Order created",
-        "_id": "67eee06d563f0b457e794547",
-        "timestamp": "2025-04-03T19:24:29.977Z"
+        "_id": "67eee06d563f0b457e794547"
       }
     ],
     "createdAt": "2025-04-03T19:24:29.977Z",
     "updatedAt": "2025-04-03T19:24:29.980Z",
-    "orderNumber": "TS7e794542",
-    "__v": 0
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "67eee0b74baddda4a635bf5a",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TSa635bf5a",
     "items": [
       {
         "productId": "65f2b89d3cd9e23e8c6a1234",
@@ -147,6 +152,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1059,
@@ -157,19 +163,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-04-03T19:25:43.559Z",
         "note": "Order created",
-        "_id": "67eee0b74baddda4a635bf5f",
-        "timestamp": "2025-04-03T19:25:43.559Z"
+        "_id": "67eee0b74baddda4a635bf5f"
       }
     ],
     "createdAt": "2025-04-03T19:25:43.559Z",
     "updatedAt": "2025-04-03T19:25:43.567Z",
-    "orderNumber": "TSa635bf5a",
-    "__v": 0
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "67eee1f4bef4907f4c2170af",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS4c2170af",
     "items": [
       {
         "productId": "65f2b89d3cd9e23e8c6a1234",
@@ -201,6 +208,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1059,
@@ -211,19 +219,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-04-03T19:31:00.448Z",
         "note": "Order created",
-        "_id": "67eee1f4bef4907f4c2170b4",
-        "timestamp": "2025-04-03T19:31:00.448Z"
+        "_id": "67eee1f4bef4907f4c2170b4"
       }
     ],
     "createdAt": "2025-04-03T19:31:00.448Z",
     "updatedAt": "2025-04-03T19:31:00.458Z",
-    "orderNumber": "TS4c2170af",
-    "__v": 0
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "67eee20b9441977f3cb0d642",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS3cb0d642",
     "items": [
       {
         "productId": "65f2b89d3cd9e23e8c6a1234",
@@ -255,6 +264,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1059,
@@ -265,9 +275,9 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-04-03T19:31:23.088Z",
         "note": "Order created",
-        "_id": "67eee20b9441977f3cb0d647",
-        "timestamp": "2025-04-03T19:31:23.088Z"
+        "_id": "67eee20b9441977f3cb0d647"
       },
       {
         "status": "cancelled",
@@ -278,12 +288,13 @@
     ],
     "createdAt": "2025-04-03T19:31:23.088Z",
     "updatedAt": "2025-04-03T19:31:35.470Z",
-    "orderNumber": "TS3cb0d642",
-    "__v": 1
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "6821ea6f8b6221aeb9da9830",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TSb9da9830",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d81",
@@ -303,6 +314,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 4399.96,
@@ -313,19 +325,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-12T12:32:47.641Z",
         "note": "Order created",
-        "_id": "6821ea6f8b6221aeb9da9833",
-        "timestamp": "2025-05-12T12:32:47.641Z"
+        "_id": "6821ea6f8b6221aeb9da9833"
       }
     ],
     "createdAt": "2025-05-12T12:32:47.641Z",
     "updatedAt": "2025-05-12T12:32:47.645Z",
-    "orderNumber": "TSb9da9830",
-    "__v": 0
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "68239995089d37910aa88223",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS0aa88223",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d81",
@@ -337,6 +350,7 @@
       }
     ],
     "shippingAddress": "67e96134c49a99a69150c01d",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1599.98,
@@ -347,19 +361,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-13T19:12:21.985Z",
         "note": "Order created",
-        "_id": "68239995089d37910aa88225",
-        "timestamp": "2025-05-13T19:12:21.985Z"
+        "_id": "68239995089d37910aa88225"
       }
     ],
     "createdAt": "2025-05-13T19:12:21.985Z",
     "updatedAt": "2025-05-13T19:12:21.989Z",
-    "orderNumber": "TS0aa88223",
-    "__v": 0
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "6823999e089d37910aa88266",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS0aa88266",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d81",
@@ -371,6 +386,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 1599.98,
@@ -381,19 +397,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-13T19:12:30.913Z",
         "note": "Order created",
-        "_id": "6823999e089d37910aa88268",
-        "timestamp": "2025-05-13T19:12:30.913Z"
+        "_id": "6823999e089d37910aa88268"
       }
     ],
     "createdAt": "2025-05-13T19:12:30.913Z",
     "updatedAt": "2025-05-13T19:12:30.916Z",
-    "orderNumber": "TS0aa88266",
-    "__v": 0
+    "__v": 0,
+    "tracking": []
   },
   {
     "_id": "6824e0ee03a3e280375ba1d1",
     "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "TS375ba1d1",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d76",
@@ -405,6 +422,7 @@
       }
     ],
     "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "card",
     "paymentMethod": "67e9665d2b4d83b7603922c5",
     "paymentLast4": "9842",
     "subtotal": 2399.98,
@@ -415,20 +433,20 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-14T18:29:02.186Z",
         "note": "Order created",
-        "_id": "6824e0ee03a3e280375ba1d3",
-        "timestamp": "2025-05-14T18:29:02.186Z"
+        "_id": "6824e0ee03a3e280375ba1d3"
       }
     ],
     "tracking": [],
     "createdAt": "2025-05-14T18:29:02.186Z",
     "updatedAt": "2025-05-14T18:29:02.191Z",
-    "orderNumber": "TS375ba1d1",
     "__v": 0
   },
   {
     "_id": "6824f110ef36a5429e813f1a",
     "user": "67fe99159d329b4538c085a8",
+    "orderNumber": "ORD-472691-3699",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d71",
@@ -474,21 +492,21 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-14T19:37:52.690Z",
         "note": "Order created",
-        "_id": "6824f110ef36a5429e813f1f",
-        "timestamp": "2025-05-14T19:37:52.690Z"
+        "_id": "6824f110ef36a5429e813f1f"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-14T19:37:52.690Z",
     "updatedAt": "2025-05-14T19:38:37.197Z",
-    "orderNumber": "ORD-472691-3699",
-    "__v": 1
+    "__v": 0
   },
   {
     "_id": "68262b99f875c61ab9b657e8",
     "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-993302-0534",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d76",
@@ -518,9 +536,9 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-15T17:59:53.298Z",
         "note": "Order created",
-        "_id": "68262b99f875c61ab9b657eb",
-        "timestamp": "2025-05-15T17:59:53.298Z"
+        "_id": "68262b99f875c61ab9b657eb"
       },
       {
         "status": "processing",
@@ -547,7 +565,6 @@
         "_id": "68262c48f875c61ab9b65a9a"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [
       {
         "status": "Order Placed",
@@ -593,14 +610,15 @@
         "_id": "68262c48f875c61ab9b65a99"
       }
     ],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-15T17:59:53.299Z",
     "updatedAt": "2025-05-15T18:02:48.269Z",
-    "orderNumber": "ORD-993302-0534",
-    "__v": 4
+    "__v": 0
   },
   {
     "_id": "68262d857d9526b4cbfa3590",
     "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-485286-1060",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d76",
@@ -630,12 +648,11 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-15T18:08:05.284Z",
         "note": "Order created",
-        "_id": "68262d857d9526b4cbfa3593",
-        "timestamp": "2025-05-15T18:08:05.284Z"
+        "_id": "68262d857d9526b4cbfa3593"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [
       {
         "status": "Order Placed",
@@ -645,14 +662,15 @@
         "_id": "68262d857d9526b4cbfa3594"
       }
     ],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-15T18:08:05.284Z",
     "updatedAt": "2025-05-15T18:08:05.286Z",
-    "orderNumber": "ORD-485286-1060",
     "__v": 0
   },
   {
     "_id": "68262decf6240780bd73990b",
     "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-588124-1502",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d76",
@@ -682,9 +700,9 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-15T18:09:48.121Z",
         "note": "Order created",
-        "_id": "68262decf6240780bd73990e",
-        "timestamp": "2025-05-15T18:09:48.121Z"
+        "_id": "68262decf6240780bd73990e"
       },
       {
         "status": "shipped",
@@ -705,7 +723,6 @@
         "_id": "68262ed2f6240780bd739af6"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [
       {
         "status": "Order Placed",
@@ -742,14 +759,15 @@
         "_id": "68262ed2f6240780bd739af5"
       }
     ],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-15T18:09:48.122Z",
     "updatedAt": "2025-05-15T18:13:38.149Z",
-    "orderNumber": "ORD-588124-1502",
-    "__v": 3
+    "__v": 0
   },
   {
     "_id": "68262f634d54546ace183ec5",
     "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-963745-8617",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d76",
@@ -779,12 +797,11 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-15T18:16:03.743Z",
         "note": "Order created",
-        "_id": "68262f634d54546ace183ec8",
-        "timestamp": "2025-05-15T18:16:03.743Z"
+        "_id": "68262f634d54546ace183ec8"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [
       {
         "status": "Order Placed",
@@ -794,14 +811,15 @@
         "_id": "68262f634d54546ace183ec9"
       }
     ],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-15T18:16:03.744Z",
     "updatedAt": "2025-05-15T18:16:03.745Z",
-    "orderNumber": "ORD-963745-8617",
     "__v": 0
   },
   {
     "_id": "6826d20b87138d2df974dbc2",
     "user": "6826d1ec87138d2df974db0a",
+    "orderNumber": "ORD-603936-5468",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d72",
@@ -831,9 +849,9 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-16T05:50:03.932Z",
         "note": "Order created",
-        "_id": "6826d20b87138d2df974dbc5",
-        "timestamp": "2025-05-16T05:50:03.932Z"
+        "_id": "6826d20b87138d2df974dbc5"
       },
       {
         "status": "shipped",
@@ -860,7 +878,6 @@
         "_id": "6826d2ae87138d2df974dd6d"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [
       {
         "status": "Order Placed",
@@ -906,14 +923,15 @@
         "_id": "6826d2ae87138d2df974dd6c"
       }
     ],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-16T05:50:03.932Z",
     "updatedAt": "2025-05-16T05:52:46.698Z",
-    "orderNumber": "ORD-603936-5468",
-    "__v": 4
+    "__v": 0
   },
   {
     "_id": "6826d38a55b522d6e7175b66",
     "user": "6826d1ec87138d2df974db0a",
+    "orderNumber": "ORD-986112-8130",
     "items": [
       {
         "productId": "681e3143bf1727e8bb3a3d72",
@@ -959,9 +977,9 @@
     "statusHistory": [
       {
         "status": "pending",
+        "timestamp": "2025-05-16T05:56:26.109Z",
         "note": "Order created",
-        "_id": "6826d38a55b522d6e7175b6b",
-        "timestamp": "2025-05-16T05:56:26.109Z"
+        "_id": "6826d38a55b522d6e7175b6b"
       },
       {
         "status": "shipped",
@@ -982,7 +1000,6 @@
         "_id": "6826d3ac55b522d6e7175c93"
       }
     ],
-    "notes": "Cash on Delivery order",
     "tracking": [
       {
         "status": "Order Placed",
@@ -1019,9 +1036,289 @@
         "_id": "6826d3ac55b522d6e7175c92"
       }
     ],
+    "notes": "Cash on Delivery order",
     "createdAt": "2025-05-16T05:56:26.109Z",
     "updatedAt": "2025-05-16T05:57:00.493Z",
-    "orderNumber": "ORD-986112-8130",
-    "__v": 3
+    "__v": 0
+  },
+  {
+    "_id": "68276951d8bb79fe283a1c7b",
+    "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "ORD-fe283a-1c7b",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68276951d8bb79fe283a1c7c"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 799.99,
+    "tax": 63.9992,
+    "shippingCost": 0,
+    "total": 863.9892,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "timestamp": "2025-05-16T16:35:29.475Z",
+        "note": "Order created",
+        "_id": "68276951d8bb79fe283a1c7d"
+      }
+    ],
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T16:35:29.475Z",
+        "_id": "68276951d8bb79fe283a1c7e"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "createdAt": "2025-05-16T16:35:29.475Z",
+    "updatedAt": "2025-05-16T16:35:29.478Z",
+    "__v": 0
+  },
+  {
+    "_id": "68276e2f12a25939292be0b6",
+    "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-39292b-e0b6",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68276e2f12a25939292be0b7"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 799.99,
+    "tax": 63.9992,
+    "shippingCost": 0,
+    "total": 863.9892,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "timestamp": "2025-05-16T16:56:15.646Z",
+        "note": "Order created",
+        "_id": "68276e2f12a25939292be0b8"
+      }
+    ],
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T16:56:15.646Z",
+        "_id": "68276e2f12a25939292be0b9"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "createdAt": "2025-05-16T16:56:15.646Z",
+    "updatedAt": "2025-05-16T16:56:15.647Z",
+    "__v": 0
+  },
+  {
+    "_id": "68276e6e4d8df040fef4e71b",
+    "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-40fef4-e71b",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68276e6e4d8df040fef4e71c"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 2,
+        "image": "images/placeholder.jpg",
+        "_id": "68276e6e4d8df040fef4e71d"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 3199.9700000000003,
+    "tax": 255.99760000000003,
+    "shippingCost": 0,
+    "total": 3455.9676000000004,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "timestamp": "2025-05-16T16:57:18.924Z",
+        "note": "Order created",
+        "_id": "68276e6e4d8df040fef4e71e"
+      }
+    ],
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T16:57:18.924Z",
+        "_id": "68276e6e4d8df040fef4e71f"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "createdAt": "2025-05-16T16:57:18.924Z",
+    "updatedAt": "2025-05-16T16:57:18.926Z",
+    "__v": 0
+  },
+  {
+    "_id": "68278c9cdcd7b08dd1814ea5",
+    "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-8dd181-4ea5",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d81",
+        "name": "LG 27GN950-B UltraGear",
+        "price": 799.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68278c9cdcd7b08dd1814ea6"
+      },
+      {
+        "productId": "681e3143bf1727e8bb3a3d7c",
+        "name": "TechStore Voyager",
+        "price": 2299.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "68278c9cdcd7b08dd1814ea7"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 3099.9799999999996,
+    "tax": 247.99839999999998,
+    "shippingCost": 0,
+    "total": 3347.9783999999995,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "timestamp": "2025-05-16T19:06:04.230Z",
+        "note": "Order created",
+        "_id": "68278c9cdcd7b08dd1814ea8"
+      }
+    ],
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T19:06:04.231Z",
+        "_id": "68278c9cdcd7b08dd1814ea9"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "createdAt": "2025-05-16T19:06:04.231Z",
+    "updatedAt": "2025-05-16T19:06:04.233Z",
+    "__v": 0
+  },
+  {
+    "_id": "682792b6508b84283fde0fa2",
+    "user": "681e241da52729f2a5eb8ceb",
+    "orderNumber": "ORD-283fde-0fa2",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d76",
+        "name": "NVIDIA GeForce RTX 4080",
+        "price": 1199.99,
+        "quantity": 1,
+        "image": "images/placeholder.jpg",
+        "_id": "682792b6508b84283fde0fa3"
+      }
+    ],
+    "shippingAddress": "68262b98f875c61ab9b657df",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 1199.99,
+    "tax": 95.9992,
+    "shippingCost": 0,
+    "total": 1295.9892,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "timestamp": "2025-05-16T19:32:06.167Z",
+        "note": "Order created",
+        "_id": "682792b6508b84283fde0fa4"
+      }
+    ],
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-16T19:32:06.167Z",
+        "_id": "682792b6508b84283fde0fa5"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "createdAt": "2025-05-16T19:32:06.167Z",
+    "updatedAt": "2025-05-16T19:32:06.169Z",
+    "__v": 0
+  },
+  {
+    "_id": "68282073a0fe37fcbca7cc18",
+    "user": "67e589ca0e5596bab131639d",
+    "orderNumber": "ORD-fcbca7-cc18",
+    "items": [
+      {
+        "productId": "681e3143bf1727e8bb3a3d7c",
+        "name": "TechStore Voyager",
+        "price": 2299.99,
+        "quantity": 1,
+        "image": "images/voyage.jpg",
+        "_id": "68282073a0fe37fcbca7cc19"
+      }
+    ],
+    "shippingAddress": "67e95d5d9e670a3fad034781",
+    "paymentType": "cod",
+    "paymentLast4": "",
+    "subtotal": 2299.99,
+    "tax": 183.99919999999997,
+    "shippingCost": 0,
+    "total": 2483.9892,
+    "status": "pending",
+    "statusHistory": [
+      {
+        "status": "pending",
+        "timestamp": "2025-05-17T05:36:51.791Z",
+        "note": "Order created",
+        "_id": "68282073a0fe37fcbca7cc1a"
+      }
+    ],
+    "tracking": [
+      {
+        "status": "Order Placed",
+        "location": "Online Store",
+        "description": "Your order has been received and will be processed upon delivery",
+        "timestamp": "2025-05-17T05:36:51.792Z",
+        "_id": "68282073a0fe37fcbca7cc1b"
+      }
+    ],
+    "notes": "Cash on Delivery order",
+    "createdAt": "2025-05-17T05:36:51.792Z",
+    "updatedAt": "2025-05-17T05:36:51.794Z",
+    "__v": 0
   }
 ]
