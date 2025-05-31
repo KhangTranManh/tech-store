@@ -1542,16 +1542,7 @@ function initializeLiveSearch() {
       
       searchResultsContainer.appendChild(item);
     });
-    
-    // Add "View all results" link
-    const viewAllLink = document.createElement('a');
-    viewAllLink.className = 'all-results-link';
-    viewAllLink.href = `/search-results.html?q=${encodeURIComponent(query)}`;
-    viewAllLink.textContent = `View all results for "${query}"`;
-    searchResultsContainer.appendChild(viewAllLink);
-    
-    // Show the container
-    searchResultsContainer.style.display = 'block';
+  
   }
   
   // Function to format price - consistent with product listings
